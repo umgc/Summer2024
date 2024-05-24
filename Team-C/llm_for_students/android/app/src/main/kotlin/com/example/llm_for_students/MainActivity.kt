@@ -1,4 +1,4 @@
-package com.example.llm_for_students
+package com.example.test_wizard
 
 import io.flutter.embedding.android.FlutterActivity
 
