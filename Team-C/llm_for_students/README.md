@@ -1,6 +1,6 @@
-# llm_for_students
+# TestWizard
 
-A new Flutter project.
+TestWizard aims to leverage Large Language Models (LLMs) to generate unique assessments and keys for middle and high school students, ensuring high-quality education and reducing cheating.
 
 ## Getting Started
 
