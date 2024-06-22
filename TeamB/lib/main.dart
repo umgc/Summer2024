@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:teamb_intelligrade/searchPage.dart';
-import 'testingPage.dart';
-import 'dashboardPage.dart';
-import 'helpPage.dart';
+import 'package:teamb_intelligrade/create_page.dart';
+import 'package:teamb_intelligrade/notifications_page.dart';
+import 'package:teamb_intelligrade/search_page.dart';
+import 'package:teamb_intelligrade/setting_page.dart';
+import 'package:teamb_intelligrade/view_exam_page.dart';
+import 'help_page.dart';
+import 'testing_page.dart';
+import 'dashboard_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,14 +26,19 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
-        '/dashboard': (context) =>  const Dashboard(),
-        '/search': (context) =>  const Search(),
-        '/testing': (context) =>  const TestingPage(),
-        //'/help': (context) =>  const Help(),
+        '/dashboard': (context) => const Dashboard(),
+        '/search': (context) => const Search(),
+        '/testing': (context) => const TestingPage(),
+        '/help': (context) => const Help(),
+        '/notifications': (context) => const Notifications(),
+        '/create': (context) => const CreatePage(),
+        '/viewExams': (context) => const ViewExamPage(),
+        '/settings': (context) => const Setting(),
       },
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -37,6 +46,7 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -51,7 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ElevatedButton(
               onPressed: () {
-                // Navigate to the dashboard
                 Navigator.pushNamed(context, '/dashboard');
               },
               child: const Text('Go to the dashboard Page'),
@@ -59,7 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the SearchPage
                 Navigator.pushNamed(context, '/search');
               },
               child: const Text('Go to the Search Page'),
@@ -67,10 +75,16 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the test page
                 Navigator.pushNamed(context, '/testing');
               },
               child: const Text('Go to the Test Page'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/help');
+              },
+              child: const Text('Go to the Help Page'),
             ),
           ],
         ),
