@@ -24,9 +24,11 @@ jobs:
       - run: cd Team-C/test_wizard && flutter --version
 
       - name: Install dependencies
-        run: flutter pub get
+        run: cd Team-C/test_wizard && flutter pub get
       - name: Analyze Dart
         uses: zgosalvez/github-actions-analyze-dart@v3.0.3
+        with:
+          working-directory: './Team-C/test_wizard'
 
   test:
     runs-on: ubuntu-latest
@@ -46,6 +48,6 @@ jobs:
       - run: cd Team-C/test_wizard && flutter --version
 
       - name: Install dependencies
-        run: flutter pub get
+        run: cd Team-C/test_wizard && flutter pub get
       - name: Run Tests
-        run: flutter test
+        run: cd Team-C/test_wizard && flutter test
