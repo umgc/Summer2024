@@ -15,12 +15,14 @@ jobs:
       # Note: This workflow uses the latest stable version of the Dart SDK.
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 4.0.0
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.19.0'
+          flutter-version: 3.19.0
       - run: cd Team-C/test_wizard && flutter --version
 
       - name: Install dependencies
@@ -39,12 +41,14 @@ jobs:
       # Note: This workflow uses the latest stable version of the Dart SDK.
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 4.0.0
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.19.0'
+          flutter-version: 3.19.0
       - run: cd Team-C/test_wizard && flutter --version
 
       - name: Install dependencies
