@@ -25,11 +25,11 @@ class LLMService {
         'messages': [
           {
             'role': 'system',
-            'content': 'Be precise and return json only.',
+            'content': 'You are a teacher creating tests for your students.',
           },
           {
             'role': 'user',
-            'content': 'Give me a multiple choice geometry question.',
+            'content': prompt,
           }
         ]
       }),
