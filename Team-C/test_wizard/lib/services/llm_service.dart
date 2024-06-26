@@ -4,7 +4,6 @@ import 'dart:convert';
 class LLMService {
   String url = 'https://api.perplexity.ai/chat/completions';
   String apiKey = const String.fromEnvironment('API_KEY');
-  http.Response? response;
 
   LLMService();
 
