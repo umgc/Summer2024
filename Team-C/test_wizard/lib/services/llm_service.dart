@@ -7,8 +7,8 @@ class LLMService {
 
   LLMService();
 
-  Future<http.Response> sendRequest(String prompt) {
-    return http.post(
+  Future<http.Response> sendRequest(http.Client httpClient, String prompt) {
+    return httpClient.post(
       Uri.parse(url),
       headers: <String, String>{
         'Accept': 'application/json',
