@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/create_base_assessment_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -112,6 +113,17 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateBaseAssessmentView(),
+                  ),
+                );
+              },
+              child: const Text('Navigate to Assessment Generation workflow'),
+            )
           ],
         ),
       ),
