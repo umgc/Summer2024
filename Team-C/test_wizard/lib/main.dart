@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Test Wizard',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        useMaterial3: true,
       ),
       initialRoute: '/',
       routes: {
@@ -26,16 +27,16 @@ class MyApp extends StatelessWidget {
               future: AuthService().getToken(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasData && snapshot.data != null) {
-                  return HomeScreen();
+                  return const HomeScreen();
                 } else {
-                  return LoginScreen();
+                  return const LoginScreen();
                 }
               },
             ),
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
       },
     );
   }
