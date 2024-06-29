@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moodle_auth/services/auth_service.dart';
+import 'package:test_wizard/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

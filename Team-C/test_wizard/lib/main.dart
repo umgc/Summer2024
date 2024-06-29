@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/screens/login_screen.dart';
+import 'package:test_wizard/screens/home_screen.dart';
+import 'package:test_wizard/services/auth_service.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
-
+/*
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -35,6 +39,43 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+*/
+
+/*
+void main() {
+  runApp(MyApp());
+}
+*/
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Test Wizard',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => FutureBuilder<String?>(
+              future: AuthService().getToken(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  return HomeScreen();
+                } else {
+                  return LoginScreen();
+                }
+              },
+            ),
+        '/login': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen(),
+      },
+    );
+  }
+}
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
