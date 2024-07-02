@@ -10,29 +10,42 @@ import 'dashboard_page.dart';
 import 'login_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget
+{
+  MyApp({super.key});
+  final ValueNotifier<ThemeMode> _themeModeNotifier = ValueNotifier(ThemeMode.light);
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Launching Page',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const LoginPage(),
-      routes: {
-        '/dashboard': (context) => const Dashboard(),
-        '/search': (context) => const Search(),
-        '/testing': (context) => const TestingPage(),
-        '/help': (context) => const Help(),
-        '/notifications': (context) => const Notifications(),
-        '/create': (context) => const CreatePage(),
-        '/viewExams': (context) => const ViewExamPage(),
-        '/settings': (context) => const Setting(),
+  Widget build(BuildContext context)
+  {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: _themeModeNotifier,
+      builder: (context, themeMode, child)
+      {
+        return MaterialApp(
+          title: 'Launching Page',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData.dark(),
+          themeMode: themeMode,
+          home: const LoginPage(),
+          routes:
+          {
+            '/dashboard': (context) => const Dashboard(),
+            '/search': (context) => const Search(),
+            //'/testing': (context) => const Testing(),
+            '/help': (context) => const Help(),
+            '/notifications': (context) => const Notifications(),
+            '/create': (context) => const CreatePage(),
+            '/viewExams': (context) => const ViewExamPage(),
+            '/settings': (context) => Setting(themeModeNotifier: _themeModeNotifier)
+          },
+        );
       },
     );
   }

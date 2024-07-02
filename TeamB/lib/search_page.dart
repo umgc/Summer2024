@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Search extends StatelessWidget {
+class Search extends StatelessWidget
+{
   const Search({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       appBar: AppBar(
         title: const Text('IntelliGrade'),
@@ -17,13 +19,15 @@ class Search extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.notifications),
-            onPressed: () {
+            onPressed: ()
+            {
               Navigator.pushNamed(context, '/notifications');
             },
           ),
           IconButton(
             icon: const Icon(Icons.help_outline),
-            onPressed: () {
+            onPressed: ()
+            {
               Navigator.pushNamed(context, '/help');
             },
           ),
@@ -51,28 +55,32 @@ class Search extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.dashboard),
               title: const Text('Dashboard'),
-              onTap: () {
+              onTap: ()
+              {
                 Navigator.pushNamed(context, '/dashboard');
               },
             ),
             ListTile(
               leading: const Icon(Icons.create),
               title: const Text('Create...'),
-              onTap: () {
+              onTap: ()
+              {
                 Navigator.pushNamed(context, '/create');
               },
             ),
             ListTile(
               leading: const Icon(Icons.view_list),
               title: const Text('View Exams'),
-              onTap: () {
+              onTap: ()
+              {
                 Navigator.pushNamed(context, '/viewExams');
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
-              onTap: () {
+              onTap: ()
+              {
                 Navigator.pushNamed(context, '/settings');
               },
             ),

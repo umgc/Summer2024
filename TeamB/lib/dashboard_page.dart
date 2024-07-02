@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 
-
-
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatelessWidget
+{
   const Dashboard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       appBar: AppBar(
         title: const Text('IntelliGrade'),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () {
+            onPressed: ()
+            {
               Navigator.pushNamed(context, '/search');
             },
           ),
           IconButton(
             icon: const Icon(Icons.notifications),
-            onPressed: () {
+            onPressed: ()
+            {
               Navigator.pushNamed(context, '/notifications');
             },
           ),
           IconButton(
             icon: const Icon(Icons.help_outline),
-            onPressed: () {
+            onPressed: ()
+            {
               Navigator.pushNamed(context, '/help');
             },
           ),

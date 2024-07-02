@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
-
-class TestingPage extends StatelessWidget {
-  const TestingPage({super.key});
+class Testing extends StatelessWidget {
+  const Testing({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +80,8 @@ class TestingPage extends StatelessWidget {
         ),
       ),
       body: const Center(
-        child: Text('Testing page'),
+        child: Text('Notifications Page Content'),
       ),
     );
   }
-}
+}*/
