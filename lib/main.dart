@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mindinsync/RecordingScreen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -67,7 +68,7 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.mic),
               onPressed: () {
-                // Handle mic button press
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RecordingScreen()),);
               },
               iconSize: 50,
             ),
