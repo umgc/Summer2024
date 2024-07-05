@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/utils/customized_widgets.dart';
 
 class CreateBaseAssessmentView extends StatelessWidget {
   const CreateBaseAssessmentView({super.key});
@@ -6,7 +7,7 @@ class CreateBaseAssessmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('TestWizard')),
+      appBar: CustomizedWidgets.buildAppBar(context: context),
     );
   }
 }
