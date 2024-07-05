@@ -14,7 +14,7 @@ class Setting extends StatefulWidget
 class _SettingPageState extends State<Setting>
 {
   ImageProvider _image = const AssetImage('assets/avatars/ducky.jpeg');
-
+  String _name = "User";
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async

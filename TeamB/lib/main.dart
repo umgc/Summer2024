@@ -9,6 +9,7 @@ import 'testing_page.dart';
 import 'dashboard_page.dart';
 import 'login_page.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget
           {
             '/dashboard': (context) => const Dashboard(),
             '/search': (context) => const Search(),
-            //'/testing': (context) => const Testing(),
+            '/testing': (context) => const Testing(),
             '/help': (context) => const Help(),
             '/notifications': (context) => const Notifications(),
             '/create': (context) => const CreatePage(),
