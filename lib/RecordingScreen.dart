@@ -23,7 +23,7 @@ class RecordingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mic Stream Example',
+      title: '',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -75,7 +75,6 @@ class _AudioRecognizeState extends State<AudioRecognize> {
         StreamingRecognitionConfigBeta(config: config, interimResults: true),
         _audioStream!);
 
-    var responseText = '';
 
     responseStream.listen((data) {
       final words = data.results.first.alternatives.first.words;
@@ -89,25 +88,18 @@ class _AudioRecognizeState extends State<AudioRecognize> {
         transcript += words[i].word + " ";
       }
       if(words.length > 0){
-      print(transcript);
       setState(() {
           text = transcript;
-         // text = speakers[data.results.first.alternatives.first.words.last.speakerTag - 1];
-          //recognizeFinished = true;
         });
       }
       final currentText =
           data.results.map((e) => e.alternatives.first.transcript).join('\n');
       if (data.results.first.isFinal) {
-        responseText += '\n' + currentText;
         setState(() {
-         // text = responseText;
           recognizeFinished = true;
         });
       } else {
         setState(() {
-          //text = responseText + '\n' + currentText;
-         // text = speakers[data.results.first.alternatives.first.words.last.speakerTag - 1];
           recognizeFinished = true;
         });
       }
@@ -135,13 +127,6 @@ class _AudioRecognizeState extends State<AudioRecognize> {
 
 
 
-  Future<String> get _localPath async {
-  final directory = await getApplicationDocumentsDirectory();
-  // For your reference print the AppDoc directory 
-  print(directory.path);
-  return directory.path;
-  }
-
   RecognitionConfigBeta _getConfig() => RecognitionConfigBeta(
       encoding: AudioEncoding.LINEAR16,
       model: RecognitionModel.basic,
@@ -157,22 +142,25 @@ class _AudioRecognizeState extends State<AudioRecognize> {
       appBar: AppBar(
         title: const Text('Recording Audio'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: SingleChildScrollView(
+        scrollDirection:Axis.vertical,
+        reverse: true, 
+        child: Center( child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             if (recognizeFinished)
               _RecognizeContent(
                 text: text,
-              ),
-            ElevatedButton(
+              ),                        
+              ElevatedButton(               
               onPressed: recognizing ? stopRecording : streamingRecognize,
               child: recognizing
-                  ? const Text('Stop recording')
-                  : const Text('Start Streaming from mic'),
+                  ? const Text('Finish Recording')
+                  : const Text('Begin Recording Your Conversation'),
             ),
           ],
         ),
+        )
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -190,7 +178,7 @@ class _RecognizeContent extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Text(
-            'Transcribed Audio:',
+            'Transcribed Conversation:',
           ),
           const SizedBox(
             height: 16.0,
