@@ -1,0 +1,17 @@
+name: dart_ai_test_app
+description: An absolute bare-bones web app.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.4.0
+
+# Add regular dependencies here.
+dependencies:
+  web: ^0.5.1
+  webdev: ^3.5.0
+
+dev_dependencies:
+  build_runner: ^2.4.11
+  build_web_compilers: ^4.0.10
+  lints: ^3.0.0
