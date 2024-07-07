@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 void main() {
   runApp(const RecordingScreen());
 }
-List<String> speakers = ["\nSpeaker 1: ", "\nSpeaker 2: ", "\nSpeaker 3: ", "\nSpeaker 4: ", "\nSpeaker 5: ", "\nSpeaker 6: "];
+List<String> speakers = ["\n'Username': ", "\nSpeaker 2: ", "\nSpeaker 3: ", "\nSpeaker 4: ", "\nSpeaker 5: ", "\nSpeaker 6: "];
  
 
 class RecordingScreen extends StatelessWidget {
@@ -57,11 +57,25 @@ class _AudioRecognizeState extends State<AudioRecognize> {
   }
 
   void streamingRecognize() async {
+    _copyFileFromAssets('register.wav');
+    //File.writeAsBytes();   await rootBundle.load('assets/register.wav');
+
+    var stream = _getAudioStream('register.wav');
+    var data = await rootBundle.load('assets/register.wav');
+    var started = false;
+
+
     _audioStream = BehaviorSubject<List<int>>();
     _audioStreamSubscription = _recorder.audioStream.listen((event) {
+      
+      if(started == false){
+      _audioStream!.add(data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+      started = true;
+      }
+      else{
       _audioStream!.add(event);
+      }
     });
-
     await _recorder.start();
 
     setState(() {
@@ -75,18 +89,26 @@ class _AudioRecognizeState extends State<AudioRecognize> {
         StreamingRecognitionConfigBeta(config: config, interimResults: true),
         _audioStream!);
 
-
+    var firstsentence = true;
     responseStream.listen((data) {
       final words = data.results.first.alternatives.first.words;
-      String transcript = speakers[0];
-      int currentSpeaker = 1;
+      String transcript = "";
+      int currentSpeaker = 0;
       for(int i = 0; i < words.length; i++){
+        if(firstsentence){
+          if(words[i].word.contains('.')){
+            firstsentence = false;
+          }
+        }
+        else{
         if(currentSpeaker != words[i].speakerTag){
           currentSpeaker = words[i].speakerTag;
           transcript += speakers[currentSpeaker-1];
         }
         transcript += words[i].word + " ";
+        }
       }
+      firstsentence = true;
       if(words.length > 0){
       setState(() {
           text = transcript;
@@ -96,6 +118,7 @@ class _AudioRecognizeState extends State<AudioRecognize> {
           data.results.map((e) => e.alternatives.first.transcript).join('\n');
       if (data.results.first.isFinal) {
         setState(() {
+          started = true;
           recognizeFinished = true;
         });
       } else {
@@ -108,6 +131,20 @@ class _AudioRecognizeState extends State<AudioRecognize> {
         recognizing = false;
       });
     });
+  }
+
+Future<Stream<List<int>>> _getAudioStream(String name) async {
+       final directory = await getApplicationDocumentsDirectory();
+       final path = directory.path + '/$name';
+       return File(path).openRead();
+}
+
+Future<void> _copyFileFromAssets(String name) async {
+    var data = await rootBundle.load('assets/$name');
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path + '/$name';
+    await File(path).writeAsBytes(
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
   void stopRecording() async {
@@ -124,6 +161,7 @@ class _AudioRecognizeState extends State<AudioRecognize> {
     });
     Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen(title: 'MindInSync',)),);
   }
+
 
 
 
