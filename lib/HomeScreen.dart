@@ -155,6 +155,13 @@ class Home extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.library_books),
               title: Text('Knowledge Base'),
               onTap: () {
