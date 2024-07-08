@@ -18,7 +18,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   // not a GlobalKey<MyCustomFormState>.
   final GlobalKey _formKey = GlobalKey<FormState>();
   final TextEditingController assessmentController = TextEditingController();
-  final String courseName = 'Select Course';
+  final TextEditingController courseName = TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
   final TextEditingController subjectDescriptionController =
       TextEditingController();
@@ -45,7 +45,9 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                 validator: Validators.checkIsEmpty,
               ),
               // ** Select Course Dropdown
-              const CourseSelect(),
+              CourseSelect(
+                controller: courseName,
+              ),
               // ** Number of Tests **
               TextFormField(
                 decoration: const InputDecoration(
@@ -55,6 +57,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
                 ],
+                controller: numOfStudentsController,
                 validator: Validators.checkIsEmpty,
               )
             ],

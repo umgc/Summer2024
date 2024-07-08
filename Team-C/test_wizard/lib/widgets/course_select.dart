@@ -3,7 +3,8 @@ import 'package:test_wizard/models/temp.dart';
 import 'package:test_wizard/utils/validators.dart';
 
 class CourseSelect extends StatefulWidget {
-  const CourseSelect({super.key});
+  final TextEditingController controller;
+  const CourseSelect({super.key, required this.controller});
 
   @override
   State<CourseSelect> createState() => CourseSelectState();
@@ -28,6 +29,7 @@ class CourseSelectState extends State<CourseSelect> {
               setState(() {
                 if (newValue != null) {
                   selectedValue = newValue;
+                  widget.controller.text = newValue;
                 }
               });
             },
