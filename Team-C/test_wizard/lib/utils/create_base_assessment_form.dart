@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/course_select.dart';
 
@@ -35,6 +36,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
+              // ** Assessment Name **
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Assessment Name',
@@ -42,7 +44,19 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                 controller: assessmentController,
                 validator: Validators.checkIsEmpty,
               ),
+              // ** Select Course Dropdown
               const CourseSelect(),
+              // ** Number of Tests **
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Number of Tests',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                validator: Validators.checkIsEmpty,
+              )
             ],
           ),
         ),
