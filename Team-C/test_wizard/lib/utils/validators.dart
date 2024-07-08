@@ -5,4 +5,11 @@ class Validators {
     }
     return null;
   }
+
+  static String? checkCourseHasBeenSelected(String? value) {
+    if (value == 'Select Course') {
+      return 'Please select a course';
+    }
+    return null;
+  }
 }
