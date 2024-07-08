@@ -9,13 +9,7 @@ class CreateBaseAssessmentView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomizedWidgets.buildAppBar(context: context),
-      body: const Center(
-        child: Column(
-          children: [
-            CreateBaseAssessmentForm(),
-          ],
-        ),
-      ),
+      body: const CreateBaseAssessmentForm(),
     );
   }
 }

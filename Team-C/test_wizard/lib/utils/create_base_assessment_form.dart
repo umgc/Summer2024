@@ -25,17 +25,27 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          TextFormField(
-            decoration: const InputDecoration(label: Text('Assessment Name')),
-            controller: assessmentController,
-            validator: Validators.checkIsEmpty,
+    return Container(
+      alignment: Alignment.topCenter,
+      child: FractionallySizedBox(
+        widthFactor: 0.7,
+        heightFactor: 0.5,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Assessment Name',
+                ),
+                controller: assessmentController,
+                validator: Validators.checkIsEmpty,
+              ),
+              const CourseSelect(),
+            ],
           ),
-          const CourseSelect(),
-        ],
+        ),
       ),
     );
   }

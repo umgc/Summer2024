@@ -38,6 +38,10 @@ class CourseSelectState extends State<CourseSelect> {
               );
             }).toList(),
             validator: Validators.checkCourseHasBeenSelected,
+            decoration: const InputDecoration(
+              label: Text('Course'),
+              border: OutlineInputBorder(),
+            ),
           );
         }
       },
