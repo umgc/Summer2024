@@ -29,17 +29,18 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
     return Container(
       alignment: Alignment.topCenter,
       child: FractionallySizedBox(
-        widthFactor: 0.7,
-        heightFactor: 0.5,
+        widthFactor: 0.8,
+        heightFactor: 0.8,
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               // ** Assessment Name **
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Assessment Name',
+                  border: OutlineInputBorder(),
                 ),
                 controller: assessmentController,
                 validator: Validators.checkIsEmpty,
@@ -52,6 +53,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Number of Tests',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
@@ -59,6 +61,16 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                 ],
                 controller: numOfStudentsController,
                 validator: Validators.checkIsEmpty,
+              ),
+              // ** Subject Description **
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Subject Description',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.multiline,
+                minLines: null,
+                maxLines: 4,
               )
             ],
           ),
