@@ -36,7 +36,7 @@ class KnowledgeBase extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             IconButton(
-              icon: const Icon(Icons.help_outline, size: 60),
+              icon: const Icon(Icons.help_outline, size: 50),
               onPressed: () {
                 // Handle ask button press
               },
