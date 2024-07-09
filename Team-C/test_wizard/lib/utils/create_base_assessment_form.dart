@@ -19,6 +19,8 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController assessmentController = TextEditingController();
   final TextEditingController courseNameController = TextEditingController();
+  final TextEditingController assessmentTypeController =
+      TextEditingController();
   final TextEditingController gradingBasisController = TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
   final TextEditingController subjectDescriptionController =
@@ -84,6 +86,16 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         maxLines: 4,
                         validator: Validators.checkIsEmpty,
                         controller: subjectDescriptionController,
+                      ),
+                      // ** Assessment Type **
+                      DropdownSelect(
+                        controller: assessmentTypeController,
+                        dropdownTitle: 'Assessment Type',
+                      ),
+                      // ** Grading Basis **
+                      DropdownSelect(
+                        controller: gradingBasisController,
+                        dropdownTitle: 'Graded On',
                       )
                     ],
                   ),
@@ -112,8 +124,15 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                    'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                                content: Column(
+                                  children: [
+                                    Text(
+                                        'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                                    Text(
+                                      'Grading Basis: ${gradingBasisController.text}, Assessment Type: ${assessmentTypeController.text}',
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           }
