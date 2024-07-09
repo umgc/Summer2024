@@ -5,6 +5,7 @@ class CustomizedWidgets {
     required BuildContext context,
     String? assessment,
     String? className,
+    required String screenTitle,
     bool implyLeading = false,
   }) {
     Text? leadingWidget;
@@ -21,8 +22,19 @@ class CustomizedWidgets {
       );
     }
     return AppBar(
-      backgroundColor: Colors.red,
+      backgroundColor: const Color(0xFFFF6600),
       foregroundColor: Colors.white,
+      bottom: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xFF0072BB),
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Create Assessment',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       automaticallyImplyLeading: implyLeading,
       title: Row(
         children: [

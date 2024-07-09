@@ -8,7 +8,10 @@ class CreateBaseAssessmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomizedWidgets.buildAppBar(context: context),
+      appBar: CustomizedWidgets.buildAppBar(
+        context: context,
+        screenTitle: 'Create Assessment',
+      ),
       body: const CreateBaseAssessmentForm(),
     );
   }
