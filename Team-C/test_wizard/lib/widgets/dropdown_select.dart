@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:test_wizard/models/temp.dart';
 import 'package:test_wizard/utils/validators.dart';
 
-class CourseSelect extends StatefulWidget {
+class DropdownSelect extends StatefulWidget {
   final TextEditingController controller;
-  const CourseSelect({super.key, required this.controller});
+  final String dropdownTitle;
+  const DropdownSelect({
+    super.key,
+    required this.controller,
+    required this.dropdownTitle,
+  });
 
   @override
-  State<CourseSelect> createState() => CourseSelectState();
+  State<DropdownSelect> createState() => DropdownSelectState();
 }
 
-class CourseSelectState extends State<CourseSelect> {
-  late String selectedValue = 'Select Course';
+class DropdownSelectState extends State<DropdownSelect> {
+  late String selectedValue = 'Select ${widget.dropdownTitle}';
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
-      future: TempModel.fetchDropdownOptions(),
+      future: TempModel.fetchDropdownOptions(widget.dropdownTitle),
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -40,9 +45,9 @@ class CourseSelectState extends State<CourseSelect> {
               );
             }).toList(),
             validator: Validators.checkCourseHasBeenSelected,
-            decoration: const InputDecoration(
-              label: Text('Course'),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              label: Text(widget.dropdownTitle),
+              border: const OutlineInputBorder(),
             ),
           );
         }

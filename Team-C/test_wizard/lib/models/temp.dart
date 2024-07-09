@@ -12,7 +12,7 @@ class TempModel {
         ];
       case 'Graded On':
         return [
-          'Select Grading Basis',
+          'Select Graded On',
           'Standards Based Grading',
           'Points Based Grading'
         ];

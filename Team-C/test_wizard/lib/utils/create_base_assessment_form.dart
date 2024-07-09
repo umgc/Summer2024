@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_wizard/utils/validators.dart';
-import 'package:test_wizard/widgets/course_select.dart';
+import 'package:test_wizard/widgets/dropdown_select.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
   const CreateBaseAssessmentForm({super.key});
@@ -18,7 +18,8 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   // not a GlobalKey<MyCustomFormState>.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController assessmentController = TextEditingController();
-  final TextEditingController courseName = TextEditingController();
+  final TextEditingController courseNameController = TextEditingController();
+  final TextEditingController gradingBasisController = TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
   final TextEditingController subjectDescriptionController =
       TextEditingController();
@@ -55,8 +56,9 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         validator: Validators.checkIsEmpty,
                       ),
                       // ** Select Course Dropdown
-                      CourseSelect(
-                        controller: courseName,
+                      DropdownSelect(
+                        controller: courseNameController,
+                        dropdownTitle: 'Course',
                       ),
                       // ** Number of Tests **
                       TextFormField(
@@ -103,7 +105,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             String assessmentName = assessmentController.text;
-                            String course = courseName.text;
+                            String course = courseNameController.text;
                             String numOfStudents = numOfStudentsController.text;
                             String subjectDescription =
                                 subjectDescriptionController.text;
