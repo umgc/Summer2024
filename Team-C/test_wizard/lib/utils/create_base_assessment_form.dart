@@ -69,7 +69,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           FilteringTextInputFormatter.digitsOnly
                         ],
                         controller: numOfStudentsController,
-                        validator: Validators.checkIsEmpty,
+                        validator: Validators.checkIsOneOrTwoDigits,
                       ),
                       // ** Subject Description **
                       TextFormField(
@@ -81,6 +81,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         minLines: null,
                         maxLines: 4,
                         validator: Validators.checkIsEmpty,
+                        controller: subjectDescriptionController,
                       )
                     ],
                   ),
@@ -101,10 +102,17 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
+                            String assessmentName = assessmentController.text;
+                            String course = courseName.text;
+                            String numOfStudents = numOfStudentsController.text;
+                            String subjectDescription =
+                                subjectDescriptionController.text;
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
+                              SnackBar(
+                                content: Text(
+                                    'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                              ),
                             );
                           }
                         },
