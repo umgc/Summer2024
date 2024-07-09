@@ -107,13 +107,13 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0072BB),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             String assessmentName = assessmentController.text;
@@ -138,6 +138,20 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           }
                         },
                         child: const Text('Generate Assessment'),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0072BB),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
                       ),
                     ],
                   ),
