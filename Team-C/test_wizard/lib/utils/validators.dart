@@ -1,6 +1,6 @@
 class Validators {
-  static String? checkIsEmpty(value) {
-    if (value == null || value.isEmpty) {
+  static String? checkIsEmpty(String? value) {
+    if (value == null || value.isEmpty || value.trim().isEmpty) {
       return 'This field cannot be blank.';
     }
     return null;
