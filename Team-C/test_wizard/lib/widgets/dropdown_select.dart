@@ -44,7 +44,7 @@ class DropdownSelectState extends State<DropdownSelect> {
                 child: Text(value),
               );
             }).toList(),
-            validator: Validators.checkCourseHasBeenSelected,
+            validator: Validators.checkOptionHasBeenSelected,
             decoration: InputDecoration(
               label: Text(widget.dropdownTitle),
               border: const OutlineInputBorder(),

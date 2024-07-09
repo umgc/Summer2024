@@ -6,9 +6,9 @@ class Validators {
     return null;
   }
 
-  static String? checkCourseHasBeenSelected(String? value) {
-    if (value == 'Select Course') {
-      return 'Please select a course.';
+  static String? checkOptionHasBeenSelected(String? value) {
+    if (value!.startsWith('Select')) {
+      return 'Please select an option.';
     }
     return null;
   }
