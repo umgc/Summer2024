@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mindinsync/HomeScreen.dart';
+import 'package:mindinsync/document_upload.dart';
 import 'package:mindinsync/navigation.dart';
 import 'login_page.dart';
 import 'KnowledgeBase.dart';
+import 'document_upload.dart';
 
 void main() => runApp(const MyApp());
 
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const Home(),
         '/knowledge_base': (context) => const KnowledgeBase(),
-        // '/saved_files': (context) => const SavedFiles(),
+        '/document_upload': (context) => const DocumentUpload(),
       },
     );
   }
