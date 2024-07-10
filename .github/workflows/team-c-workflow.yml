@@ -1,0 +1,57 @@
+name: Team C Workflow
+
+on:
+  pull_request:
+    branches: ['developer']
+    paths: 'Team-C/**'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Note: This workflow uses the latest stable version of the Dart SDK.
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.22.0
+      - run: cd Team-C/test_wizard && flutter --version
+
+      - name: Install dependencies
+        run: cd Team-C/test_wizard && flutter pub get
+      - name: Analyze Dart
+        uses: zgosalvez/github-actions-analyze-dart@v3.0.3
+        with:
+          working-directory: './Team-C/test_wizard'
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Note: This workflow uses the latest stable version of the Dart SDK.
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.22.0
+      - run: cd Team-C/test_wizard && flutter --version
+
+      - name: Install dependencies
+        run: cd Team-C/test_wizard && flutter pub get
+      - name: Run Tests
+        run: cd Team-C/test_wizard && flutter test

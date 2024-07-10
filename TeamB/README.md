@@ -1,4 +1,4 @@
-# teacher_dashboard
+# teamb_intelligrade
 
 A new Flutter project.
 
@@ -14,13 +14,3 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-
-# Summer2024
-
-Summer 2024 Cohort for UMGC 670
-
-Team -A working on Short-term memory loss.
-
-Team -B working on integrating LLM with university workflows.
-
-Team -C: TestWizard - working on integrating LLM with middle/high schools.
