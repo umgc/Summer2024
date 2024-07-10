@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_wizard/widgets/create_base_assessment_form.dart';
-import 'package:test_wizard/widgets/customized_widgets.dart';
+import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class CreateBaseAssessmentView extends StatelessWidget {
   const CreateBaseAssessmentView({super.key});
@@ -8,7 +8,7 @@ class CreateBaseAssessmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomizedWidgets.buildAppBar(
+      appBar: TWAppBar(
         context: context,
         screenTitle: 'Create Assessment',
       ),

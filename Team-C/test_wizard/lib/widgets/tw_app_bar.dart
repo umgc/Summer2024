@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-class CustomizedWidgets {
-  static AppBar buildAppBar({
-    required BuildContext context,
-    String? assessment,
-    String? className,
-    required String screenTitle,
-    bool implyLeading = false,
+class TWAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final BuildContext context;
+  final String? assessment;
+  final String? className;
+  final String screenTitle;
+  final bool implyLeading;
+  late final Text? leadingWidget;
+
+  TWAppBar({
+    super.key,
+    required this.context,
+    this.assessment,
+    this.className,
+    required this.screenTitle,
+    this.implyLeading = false,
   }) {
-    Text? leadingWidget;
     if ((assessment != null && className == null) ||
         (assessment == null && className != null)) {
       throw ArgumentError(
@@ -20,7 +27,13 @@ class CustomizedWidgets {
           fontSize: 16.0,
         ),
       );
+    } else {
+      leadingWidget = null;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: const Color(0xFFFF6600),
       foregroundColor: Colors.white,
@@ -61,4 +74,8 @@ class CustomizedWidgets {
       ),
     );
   }
+
+  @override
+  Size get preferredSize =>
+      const Size.fromHeight(kToolbarHeight + kBottomNavigationBarHeight);
 }
