@@ -5,10 +5,12 @@ import 'package:test_wizard/utils/validators.dart';
 class DropdownSelect extends StatefulWidget {
   final TextEditingController controller;
   final String dropdownTitle;
+  final Future<List<String>> Function(String) future;
   const DropdownSelect({
     super.key,
     required this.controller,
     required this.dropdownTitle,
+    this.future = TempModel.fetchDropdownOptions,
   });
 
   @override
@@ -21,7 +23,7 @@ class DropdownSelectState extends State<DropdownSelect> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
-      future: TempModel.fetchDropdownOptions(widget.dropdownTitle),
+      future: widget.future(widget.dropdownTitle),
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
