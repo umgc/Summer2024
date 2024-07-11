@@ -16,8 +16,9 @@ void main() {
         await TempModel.fetchDropdownOptions('Graded On'),
         ['Select Graded On', 'Standards Based Grading', 'Points Based Grading'],
       );
-      expect(await TempModel.fetchDropdownOptions('anything else'), []);
-      expect(await TempModel.fetchDropdownOptions(''), []);
+      expect(() => TempModel.fetchDropdownOptions('anything else'),
+          throwsArgumentError);
+      expect(() => TempModel.fetchDropdownOptions(''), throwsArgumentError);
     });
   });
 }

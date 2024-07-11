@@ -17,7 +17,7 @@ class TempModel {
           'Points Based Grading'
         ];
       default:
-        return [];
+        throw ArgumentError.value(optionName);
     }
   }
 }
