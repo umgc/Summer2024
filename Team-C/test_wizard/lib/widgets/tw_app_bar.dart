@@ -41,9 +41,9 @@ class TWAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF0072BB),
         foregroundColor: Colors.white,
-        title: const Text(
-          'Create Assessment',
-          style: TextStyle(
+        title: Text(
+          screenTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
