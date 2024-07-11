@@ -23,68 +23,93 @@ class TeacherDashboard extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xffe6f2ff),
       body: Center(
-        child: Container(
-          width: 1200,
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Color(0xffff6600),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        child: SingleChildScrollView(
+          child: Container(
+            width: 1200,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
                 ),
-                child: Text(
-                  'Welcome to TestWizard',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.right,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Color(0xff0072bb),
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                ),
-                child: Text(
-                  'Teacher\'s Dashboard',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: Container(
-                  width: 300,
-                  child: Image.asset('assets/wizard2.png'),
-                ),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff0072bb),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Color(0xffff6600),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
                   ),
-                  onPressed: () {},
-                  child: Text('Create Assessment'),
+                  child: Text(
+                    'Welcome to TestWizard',
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              SearchFilter(),
-              AssessmentTable(),
-            ],
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Color(0xff0072bb),
+                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                  ),
+                  child: Text(
+                    'Teacher\'s Dashboard',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: Container(
+                    width: 300,
+                    child: Image.asset('assets/wizard2.png'),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff0072bb),
+                        foregroundColor: Colors.white, // Ensure text color is white
+                      ),
+                      onPressed: () {},
+                      child: Text('Create Assessment'),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffff6600),
+                        foregroundColor: Colors.white, // Ensure text color is white
+                      ),
+                      onPressed: () {},
+                      child: Text('Login'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    'For full access, login is required.',
+                    style: TextStyle(fontSize: 16, color: Color(0xff0072bb)),
+                  ),
+                ),
+                SizedBox(height: 20),
+                SearchFilter(),
+                SizedBox(height: 20),
+                SizedBox(
+                  height: 300, // Set an appropriate height for the table
+                  child: AssessmentTable(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -121,7 +146,10 @@ class _SearchFilterState extends State<SearchFilter> {
           },
         ),
         SizedBox(height: 10),
-        AssessmentTable(filter: _filter),
+        SizedBox(
+          height: 300, // Set an appropriate height for the filtered table
+          child: AssessmentTable(filter: _filter),
+        ),
       ],
     );
   }
