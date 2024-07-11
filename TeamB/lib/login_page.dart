@@ -48,9 +48,9 @@ class _LoginPageState extends State<LoginPage> {
             ElevatedButton(
               onPressed: ()
               {
-                Navigator.pushNamed(context, '/help');
+                Navigator.pushNamed(context, '/questiondetails');
               },
-              child: const Text('Go to the Help Page'),
+              child: const Text('Go to the Detail Page'),
             ),
           ],
         ),

@@ -144,6 +144,19 @@ class _SettingPageState extends State<Setting>
             ),
             const SizedBox(height: 20),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: ()
+                  {
+                    // Handle form submission
+                  },
+                  child: const Text('Change'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
               children: [
                 CircleAvatar(
                   backgroundImage: _image,

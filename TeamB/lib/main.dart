@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamb_intelligrade/create_page.dart';
+import 'package:teamb_intelligrade/question_details_Page.dart';
 import 'package:teamb_intelligrade/notifications_page.dart';
 import 'package:teamb_intelligrade/search_page.dart';
 import 'package:teamb_intelligrade/setting_page.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget
             '/notifications': (context) => const Notifications(),
             '/create': (context) => const CreatePage(),
             '/viewExams': (context) => const ViewExamPage(),
+            '/questiondetails': (context) => const QuestionDetail(),
             '/settings': (context) => Setting(themeModeNotifier: _themeModeNotifier)
           },
         );

@@ -1,0 +1,27 @@
+[
+  {
+    "type": "multiple-choice",
+    "question": "Which of the following is the primary function of ribosomes in a cell?",
+    "choices": ["Photosynthesis", "Protein synthesis", "Lipid synthesis", "DNA replication"],
+    "answer": "Protein synthesis",
+    "dateCreated": "2024-05-23"
+  },
+  {
+    "type": "essay",
+    "question": "Describe the process of photosynthesis.",
+    "answer": "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll...",
+    "dateCreated": "2024-05-24"
+  },
+  {
+    "type": "short-answer",
+    "question": "What is the powerhouse of the cell?",
+    "answer": "Mitochondria",
+    "dateCreated": "2024-05-25"
+  },
+  {
+    "type": "coding",
+    "question": "Write a function in Python to add two numbers.",
+    "answer": "def add(a, b): return a + b",
+    "dateCreated": "2024-05-26"
+  }
+]
