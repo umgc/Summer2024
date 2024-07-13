@@ -51,7 +51,9 @@ class TeacherDashboard extends StatelessWidget {
                             foregroundColor:
                                 Colors.white, // Ensure text color is white
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/createAssessment');
+                          },
                           child: const Text('Create Assessment'),
                         ),
                         const SizedBox(height: 20),
@@ -174,6 +176,10 @@ class AssessmentTable extends StatelessWidget {
               DataCell(
                 ElevatedButton(
                   onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff0072bb),
+                    foregroundColor: Colors.white,
+                  ),
                   child: const Text('Open'),
                 ),
               ),
