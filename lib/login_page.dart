@@ -42,8 +42,8 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                // primary: Colors.green,
-              ),
+                  // primary: Colors.green,
+                  ),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/home');
               },
@@ -52,9 +52,9 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                // primary: Colors.black,
-                // onPrimary: Colors.white,
-              ),
+                  // primary: Colors.black,
+                  // onPrimary: Colors.white,
+                  ),
               icon: const Icon(Icons.login),
               label: const Text('Single Sign-On'),
               onPressed: () {
