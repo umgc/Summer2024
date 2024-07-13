@@ -51,7 +51,8 @@ class TeacherDashboard extends StatelessWidget {
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Color(0xffff6600),
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(8)),
                       ),
                       child: Text(
                         'Welcome to TestWizard',
@@ -63,7 +64,8 @@ class TeacherDashboard extends StatelessWidget {
                       padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Color(0xff0072bb),
-                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                        borderRadius:
+                            BorderRadius.vertical(bottom: Radius.circular(8)),
                       ),
                       child: Text(
                         'Teacher\'s Dashboard',
@@ -85,7 +87,8 @@ class TeacherDashboard extends StatelessWidget {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xff0072bb),
-                            foregroundColor: Colors.white, // Ensure text color is white
+                            foregroundColor:
+                                Colors.white, // Ensure text color is white
                           ),
                           onPressed: () {},
                           child: Text('Create Assessment'),
@@ -94,7 +97,8 @@ class TeacherDashboard extends StatelessWidget {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xffff6600),
-                            foregroundColor: Colors.white, // Ensure text color is white
+                            foregroundColor:
+                                Colors.white, // Ensure text color is white
                           ),
                           onPressed: () {},
                           child: Text('Login'),
@@ -105,7 +109,8 @@ class TeacherDashboard extends StatelessWidget {
                     Center(
                       child: Text(
                         'For full access, login is required.',
-                        style: TextStyle(fontSize: 16, color: Color(0xff0072bb)),
+                        style:
+                            TextStyle(fontSize: 16, color: Color(0xff0072bb)),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -183,8 +188,8 @@ class AssessmentTable extends StatelessWidget {
     List<Map<String, String>> filteredAssessments = assessments;
     if (filter != null && filter!.isNotEmpty) {
       filteredAssessments = assessments
-          .where((assessment) =>
-              assessment.values.any((value) => value.toLowerCase().contains(filter!)))
+          .where((assessment) => assessment.values
+              .any((value) => value.toLowerCase().contains(filter!)))
           .toList();
     }
 
