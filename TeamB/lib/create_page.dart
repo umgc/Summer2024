@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
 
@@ -154,7 +155,7 @@ class _CreatePageState extends State<CreatePage> {
                               onCancel: _clearForm,
                             )
                           else if (_selectedForm == 'Edit')
-                              EditForm(onCancel: _clearForm),
+                            EditForm(onCancel: _clearForm),
                         ],
                       ),
                     ),
@@ -723,12 +724,14 @@ class _AssignmentFormState extends State<AssignmentForm> {
   }
 }
 
-class EditForm extends StatelessWidget {
+class EditForm extends StatelessWidget
+{
   final VoidCallback onCancel;
   const EditForm({super.key, required this.onCancel});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -753,15 +756,6 @@ class EditForm extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Container(
-            height: 200, // Adjust height as needed
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-            ),
-            child: const Center(
-              child: Text('No files found'),
-            ),
-          ),
         ],
       ),
     );
