@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
+import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -111,6 +112,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: const Text('Navigate to Assessment Generation workflow'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TeacherDashboard(),
+                  ),
+                );
+              },
+              child: const Text('Navigate to Teacher Dashboard'),
             )
           ],
         ),
