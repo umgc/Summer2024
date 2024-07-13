@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_speech/generated/google/cloud/speech/v1p1beta1/cloud_speech.pb.dart';
 import 'package:google_speech/google_speech.dart';
+import 'package:mindinsync/StorageService.dart';
 import 'package:mindinsync/main.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sound_stream/sound_stream.dart';
@@ -26,6 +27,7 @@ class _RecordScreenState extends State<RecordScreen> {
   BehaviorSubject<List<int>>? _audioStream;
   List<String> transcriptArray = [];
   List<int> speakerArray = [];
+  var tran_store;
 
   List<String> speakers = [
     "'Username': ",
@@ -48,7 +50,7 @@ class _RecordScreenState extends State<RecordScreen> {
   @override
   void initState() {
     super.initState();
-
+     tran_store = StorageService();
     _recorder.initialize();
 
     //streamingRecognize();
@@ -122,9 +124,7 @@ class _RecordScreenState extends State<RecordScreen> {
         });
       } else {
         recognizeFinished = false;
-        /*setState(() {
-          recognizeFinished = false;
-        });*/
+
       }
     }, onDone: () {
       setState(() {
@@ -154,24 +154,29 @@ class _RecordScreenState extends State<RecordScreen> {
     await _audioStream?.close();
 
     setState(() {
-      //recognizing = false;
+
     });
   }
 
   void saveAndExit() async {
     final directory = await getApplicationDocumentsDirectory();
     var dt = DateTime.now();
-    final file = File(directory.path +
-        '/transcription' +
+    var file_name = 'transcription' +
         dt.year.toString() +
         dt.month.toString() +
         dt.day.toString() +
         dt.hour.toString() +
         dt.minute.toString() +
         dt.second.toString() +
-        '.txt');
-    file.writeAsString(text);
-    //Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen(title: 'MindInSync',)),);
+        '.txt';
+    final file = File(directory.path + '/' + file_name
+        );
+    file.writeAsString(transcriptArray.toString());
+    tran_store.insertTranscriptFile(file_name,transcriptArray.toString());
+    /*var scripts = await tran_store.getTranscripts();
+    for(int i = 0; i < scripts.length; i++){
+    print(scripts[i]['transcript_content']);
+    }*/
   }
 
   RecognitionConfigBeta _getConfig() => RecognitionConfigBeta(
@@ -228,54 +233,3 @@ class _RecordScreenState extends State<RecordScreen> {
     );
   }
 }
-/*
-
-class _RecognizeContent extends StatelessWidget {
-  final String? text;
-
-
-  const _RecognizeContent({Key? key, this.text}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: new ListView.builder
-              (
-                itemCount: transcriptArray.length()
-                itemBuilder: (BuildContext ctxt, int Index) {
-                  return new Text((text?.split(" "))![Index]);
-                }
-            )
-    );
-  }
-}
-
-
-
-class _RecognizeContent extends StatelessWidget {
-  final String? text;
-
-  const _RecognizeContent({Key? key, this.text}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: <Widget>[
-          const Text(
-            'Transcribed Conversation:',
-          ),
-          const SizedBox(
-            height: 16.0,
-          ),
-          Text(
-            text ?? '---',
-          ),
-        ],
-      ),
-    );
-  }
-}
-*/

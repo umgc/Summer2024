@@ -11,7 +11,7 @@ void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   final String appTitle = 'Flutter Drawer Demo';
-
+  
   const MyApp({Key? key}) : super(key: key);
 
   @override
