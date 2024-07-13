@@ -1,29 +1,16 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(TeacherDashboardApp());
-}
-
-class TeacherDashboardApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Teacher\'s Dashboard',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: TeacherDashboard(),
-    );
-  }
-}
+import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class TeacherDashboard extends StatelessWidget {
+  const TeacherDashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color(0xffe6f2ff),
+      backgroundColor: const Color(0xffe6f2ff),
+      appBar: TWAppBar(context: context, screenTitle: "Teacher's Dashboard"),
       body: Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -33,7 +20,7 @@ class TeacherDashboard extends StatelessWidget {
             child: IntrinsicHeight(
               child: Container(
                 width: 1200,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -47,74 +34,48 @@ class TeacherDashboard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Color(0xffff6600),
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        'Welcome to TestWizard',
-                        style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Color(0xff0072bb),
-                        borderRadius:
-                            BorderRadius.vertical(bottom: Radius.circular(8)),
-                      ),
-                      child: Text(
-                        'Teacher\'s Dashboard',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Center(
-                      child: Container(
+                      child: SizedBox(
                         width: 300,
                         child: Image.asset('lib/assets/wizard2.png'),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff0072bb),
+                            backgroundColor: const Color(0xff0072bb),
                             foregroundColor:
                                 Colors.white, // Ensure text color is white
                           ),
                           onPressed: () {},
-                          child: Text('Create Assessment'),
+                          child: const Text('Create Assessment'),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xffff6600),
+                            backgroundColor: const Color(0xffff6600),
                             foregroundColor:
                                 Colors.white, // Ensure text color is white
                           ),
                           onPressed: () {},
-                          child: Text('Login'),
+                          child: const Text('Login'),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    Center(
+                    const SizedBox(height: 20),
+                    const Center(
                       child: Text(
                         'For full access, login is required.',
                         style:
                             TextStyle(fontSize: 16, color: Color(0xff0072bb)),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    SearchFilter(),
+                    const SizedBox(height: 20),
+                    const SearchFilter(),
                   ],
                 ),
               ),
@@ -127,12 +88,14 @@ class TeacherDashboard extends StatelessWidget {
 }
 
 class SearchFilter extends StatefulWidget {
+  const SearchFilter({super.key});
+
   @override
-  _SearchFilterState createState() => _SearchFilterState();
+  SearchFilterState createState() => SearchFilterState();
 }
 
-class _SearchFilterState extends State<SearchFilter> {
-  TextEditingController _controller = TextEditingController();
+class SearchFilterState extends State<SearchFilter> {
+  final TextEditingController _controller = TextEditingController();
   String _filter = '';
 
   @override
@@ -154,7 +117,7 @@ class _SearchFilterState extends State<SearchFilter> {
             });
           },
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         SizedBox(
           height: 300, // Set an appropriate height for the filtered table
           child: AssessmentTable(filter: _filter),
@@ -165,9 +128,9 @@ class _SearchFilterState extends State<SearchFilter> {
 }
 
 class AssessmentTable extends StatelessWidget {
-  final String? filter;
+  final String filter;
 
-  AssessmentTable({this.filter});
+  AssessmentTable({super.key, required this.filter});
 
   final List<Map<String, String>> assessments = [
     {
@@ -186,17 +149,17 @@ class AssessmentTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Map<String, String>> filteredAssessments = assessments;
-    if (filter != null && filter!.isNotEmpty) {
+    if (filter.isNotEmpty) {
       filteredAssessments = assessments
           .where((assessment) => assessment.values
-              .any((value) => value.toLowerCase().contains(filter!)))
+              .any((value) => value.toLowerCase().contains(filter)))
           .toList();
     }
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
-        columns: [
+        columns: const [
           DataColumn(label: Text('Assessment Name')),
           DataColumn(label: Text('Course')),
           DataColumn(label: Text('Percentage Complete')),
@@ -208,10 +171,12 @@ class AssessmentTable extends StatelessWidget {
               DataCell(Text(assessment['name']!)),
               DataCell(Text(assessment['course']!)),
               DataCell(Text(assessment['percentage']!)),
-              DataCell(ElevatedButton(
-                onPressed: () {},
-                child: Text('Open'),
-              )),
+              DataCell(
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Open'),
+                ),
+              ),
             ],
           );
         }).toList(),
