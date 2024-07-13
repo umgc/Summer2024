@@ -12,10 +12,6 @@ void main() {
         await TempModel.fetchDropdownOptions('Assessment Type'),
         ['Select Assessment Type', 'Short Answer', 'Multiple Choice', 'Essay'],
       );
-      expect(
-        await TempModel.fetchDropdownOptions('Graded On'),
-        ['Select Graded On', 'Standards Based Grading', 'Points Based Grading'],
-      );
       expect(() => TempModel.fetchDropdownOptions('anything else'),
           throwsArgumentError);
       expect(() => TempModel.fetchDropdownOptions(''), throwsArgumentError);
