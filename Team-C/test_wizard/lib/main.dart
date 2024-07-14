@@ -111,6 +111,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: const Text('Navigate to Assessment Generation workflow'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateBaseAssessmentView(),
+                  ),
+                );
+              },
+              child: const Text('View Assessment Results'),
             )
           ],
         ),
