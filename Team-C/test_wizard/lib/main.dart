@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/views/create_base_assessment_view.dart';
+import 'package:test_wizard/views/login_page_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CreateBaseAssessmentView(),
+                    builder: (context) => const LoginPage(),
                   ),
                 );
               },
