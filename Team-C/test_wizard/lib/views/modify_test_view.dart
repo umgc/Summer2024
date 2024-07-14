@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/widgets/column_header.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class ModifyTestView extends StatelessWidget {
@@ -74,51 +75,12 @@ class ColumnHeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xff0072bb),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Text(
-              'Question',
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xff0072bb),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Text(
-              'Answer',
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xff0072bb),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Text(
-              'Previous Question',
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        Expanded(child: ColumnHeader(headerText: 'Question')),
+        Expanded(child: ColumnHeader(headerText: 'Answer')),
+        Expanded(child: ColumnHeader(headerText: 'Previous Question')),
       ],
     );
   }
