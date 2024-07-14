@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/widgets/assessment_data_editor.dart';
 import 'package:test_wizard/widgets/column_header.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
@@ -103,122 +104,21 @@ class QuestionRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: QuestionWidget(
-            questionId: questionId,
-            questionText: questionText,
-            answerText: answerText,
+          child: AssessmentDataEditor(
+            editorType: DataEditorType.question,
+            text: questionText,
           ),
         ),
         Expanded(
-          child: AnswerWidget(
-            answerText: answerText,
+          child: AssessmentDataEditor(
+            editorType: DataEditorType.answer,
+            text: answerText,
           ),
         ),
         Expanded(
           child: Container(),
         ),
       ],
-    );
-  }
-}
-
-class QuestionWidget extends StatelessWidget {
-  final String questionId;
-  final String questionText;
-  final String answerText;
-
-  const QuestionWidget({
-    super.key,
-    required this.questionId,
-    required this.questionText,
-    required this.answerText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(top: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Question:'),
-          const SizedBox(height: 5),
-          TextField(
-            maxLines: 4,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              hintText: questionText,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AnswerWidget extends StatelessWidget {
-  final String answerText;
-
-  const AnswerWidget({super.key, required this.answerText});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(top: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Answer:'),
-          const SizedBox(height: 5),
-          TextField(
-            maxLines: 4,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              hintText: answerText,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
