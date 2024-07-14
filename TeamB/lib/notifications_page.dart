@@ -41,11 +41,9 @@ class _NotificationsState extends State<Notifications> {
       "Discussion Thread Started - PMAN 634 9040 Foundations of Project Management (2245)",
       time: "June 29 at 11:35 AM",
     ),
-    // Add more notifications as needed
   ];
 
   void _loadMoreNotifications() {
-    // Logic to load more notifications
     setState(() {
       _notifications.addAll([
         NotificationItem(
