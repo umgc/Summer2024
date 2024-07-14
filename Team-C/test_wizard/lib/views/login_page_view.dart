@@ -48,7 +48,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Image.asset(
-                'assets/wizard2.png', // Ensure this path is correct
+                'lib/assets/wizard2.png', // Ensure this path is correct
                 width: 200,
               ),
               const SizedBox(height: 20),
