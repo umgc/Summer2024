@@ -1,32 +1,17 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MathQuizApp());
-}
+class ModifyTestView extends StatelessWidget {
+  const ModifyTestView({super.key});
 
-class MathQuizApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Math Quiz 1 Version 1',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MathQuizScreen(),
-    );
-  }
-}
-
-class MathQuizScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe6f2ff),
+      backgroundColor: const Color(0xffe6f2ff),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
             width: 1200,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
@@ -41,59 +26,63 @@ class MathQuizScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.all(5),
+                  decoration: const BoxDecoration(
                     color: Color(0xffff6600),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(8)),
                   ),
-                  child: Text(
+                  child: const Text(
                     'TestWizard',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                     textAlign: TextAlign.right,
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
                     color: Color(0xff0072bb),
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(8)),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Math Quiz 1 Version 1',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: 20),
-                ColumnHeader(),
-                QuestionRow(
+                const SizedBox(height: 20),
+                const ColumnHeader(),
+                const QuestionRow(
                   questionId: 'question1',
                   questionText: 'Solve the equation: 3x - 7 = 11',
                   answerText: 'x = 6',
                 ),
-                QuestionRow(
+                const QuestionRow(
                   questionId: 'question2',
-                  questionText: 'Factor the quadratic equation: x^2 - 5x + 6 = 0',
+                  questionText:
+                      'Factor the quadratic equation: x^2 - 5x + 6 = 0',
                   answerText: '(x - 2)(x - 3) = 0',
                 ),
-                QuestionRow(
+                const QuestionRow(
                   questionId: 'question3',
-                  questionText: 'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
+                  questionText:
+                      'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
                   answerText: 'Slope = 2',
                 ),
-                QuestionRow(
+                const QuestionRow(
                   questionId: 'question4',
                   questionText: 'Evaluate the expression: 2(3x - 4) when x = 5',
                   answerText: '22',
                 ),
-                QuestionRow(
+                const QuestionRow(
                   questionId: 'question5',
                   questionText: 'Simplify the expression: 5x - 2(x - 3)',
                   answerText: '3x + 6',
                 ),
-                ButtonContainer(),
-                EditPrompt(),
-                DeletedQuestions(),
+                const ButtonContainer(),
+                const EditPrompt(),
+                const DeletedQuestions(),
               ],
             ),
           ),
@@ -104,6 +93,8 @@ class MathQuizScreen extends StatelessWidget {
 }
 
 class ColumnHeader extends StatelessWidget {
+  const ColumnHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -111,12 +102,12 @@ class ColumnHeader extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Color(0xff0072bb),
+              color: const Color(0xff0072bb),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(
+            child: const Text(
               'Question',
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
@@ -125,12 +116,12 @@ class ColumnHeader extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Color(0xff0072bb),
+              color: const Color(0xff0072bb),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(
+            child: const Text(
               'Answer',
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
@@ -139,12 +130,12 @@ class ColumnHeader extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Color(0xff0072bb),
+              color: const Color(0xff0072bb),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(
+            child: const Text(
               'Previous Question',
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
@@ -161,7 +152,8 @@ class QuestionRow extends StatelessWidget {
   final String questionText;
   final String answerText;
 
-  QuestionRow({
+  const QuestionRow({
+    super.key,
     required this.questionId,
     required this.questionText,
     required this.answerText,
@@ -196,7 +188,8 @@ class QuestionWidget extends StatelessWidget {
   final String questionText;
   final String answerText;
 
-  QuestionWidget({
+  const QuestionWidget({
+    super.key,
     required this.questionId,
     required this.questionText,
     required this.answerText,
@@ -205,8 +198,8 @@ class QuestionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey),
@@ -215,29 +208,29 @@ class QuestionWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Question:'),
-          SizedBox(height: 5),
+          const Text('Question:'),
+          const SizedBox(height: 5),
           TextField(
             maxLines: 4,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               hintText: questionText,
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(Icons.refresh),
+                icon: const Icon(Icons.refresh),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {},
               ),
             ],
@@ -251,13 +244,13 @@ class QuestionWidget extends StatelessWidget {
 class AnswerWidget extends StatelessWidget {
   final String answerText;
 
-  AnswerWidget({required this.answerText});
+  const AnswerWidget({super.key, required this.answerText});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey),
@@ -266,21 +259,21 @@ class AnswerWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Answer:'),
-          SizedBox(height: 5),
+          const Text('Answer:'),
+          const SizedBox(height: 5),
           TextField(
             maxLines: 4,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               hintText: answerText,
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () {},
               ),
             ],
@@ -292,36 +285,38 @@ class AnswerWidget extends StatelessWidget {
 }
 
 class ButtonContainer extends StatelessWidget {
+  const ButtonContainer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ElevatedButton(
             onPressed: () {},
-            child: Text('Print'),
+            child: const Text('Print'),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Print Questions Only'),
+            child: const Text('Print Questions Only'),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Add a Question'),
+            child: const Text('Add a Question'),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Save'),
+            child: const Text('Save'),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -330,18 +325,20 @@ class ButtonContainer extends StatelessWidget {
 }
 
 class EditPrompt extends StatelessWidget {
+  const EditPrompt({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       child: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
-            foregroundColor: Color(0xff0072bb),
+            foregroundColor: const Color(0xff0072bb),
           ),
           onPressed: () {},
-          child: Text('Edit Prompt (Advanced)'),
+          child: const Text('Edit Prompt (Advanced)'),
         ),
       ),
     );
@@ -349,25 +346,27 @@ class EditPrompt extends StatelessWidget {
 }
 
 class DeletedQuestions extends StatelessWidget {
+  const DeletedQuestions({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Recently Deleted Questions:',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             height: 100,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: SingleChildScrollView(
+            child: const SingleChildScrollView(
               child: Column(
                 children: [
                   Text('Deleted question will be shown here...'),
