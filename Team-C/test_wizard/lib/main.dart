@@ -106,7 +106,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ModifyTestView(),
+                    builder: (context) => const ModifyTestView(
+                      screenTitle: 'Math Quiz 1 Version 1',
+                    ),
                   ),
                 );
               },

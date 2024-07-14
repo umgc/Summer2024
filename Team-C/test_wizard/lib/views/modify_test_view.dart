@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class ModifyTestView extends StatelessWidget {
-  const ModifyTestView({super.key});
+  final String screenTitle;
+  const ModifyTestView({super.key, required this.screenTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: TWAppBar(context: context, screenTitle: screenTitle),
       backgroundColor: const Color(0xffe6f2ff),
       body: Center(
         child: SingleChildScrollView(
@@ -22,67 +25,41 @@ class ModifyTestView extends StatelessWidget {
                 ),
               ],
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                    color: Color(0xffff6600),
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(8)),
-                  ),
-                  child: const Text(
-                    'TestWizard',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                    textAlign: TextAlign.right,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    color: Color(0xff0072bb),
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(8)),
-                  ),
-                  child: const Text(
-                    'Math Quiz 1 Version 1',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const ColumnHeader(),
-                const QuestionRow(
+                SizedBox(height: 20),
+                ColumnHeaderRow(),
+                QuestionRow(
                   questionId: 'question1',
                   questionText: 'Solve the equation: 3x - 7 = 11',
                   answerText: 'x = 6',
                 ),
-                const QuestionRow(
+                QuestionRow(
                   questionId: 'question2',
                   questionText:
                       'Factor the quadratic equation: x^2 - 5x + 6 = 0',
                   answerText: '(x - 2)(x - 3) = 0',
                 ),
-                const QuestionRow(
+                QuestionRow(
                   questionId: 'question3',
                   questionText:
                       'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
                   answerText: 'Slope = 2',
                 ),
-                const QuestionRow(
+                QuestionRow(
                   questionId: 'question4',
                   questionText: 'Evaluate the expression: 2(3x - 4) when x = 5',
                   answerText: '22',
                 ),
-                const QuestionRow(
+                QuestionRow(
                   questionId: 'question5',
                   questionText: 'Simplify the expression: 5x - 2(x - 3)',
                   answerText: '3x + 6',
                 ),
-                const ButtonContainer(),
-                const EditPrompt(),
-                const DeletedQuestions(),
+                ButtonContainer(),
+                EditPrompt(),
+                DeletedQuestions(),
               ],
             ),
           ),
@@ -92,8 +69,8 @@ class ModifyTestView extends StatelessWidget {
   }
 }
 
-class ColumnHeader extends StatelessWidget {
-  const ColumnHeader({super.key});
+class ColumnHeaderRow extends StatelessWidget {
+  const ColumnHeaderRow({super.key});
 
   @override
   Widget build(BuildContext context) {
