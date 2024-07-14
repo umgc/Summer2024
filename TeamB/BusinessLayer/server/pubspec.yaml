@@ -8,8 +8,12 @@ environment:
 
 dependencies:
   args: ^2.4.0
+  dotenv: ^4.2.0
+  intl: ^0.19.0
+  pdf: ^3.11.0
   shelf: ^1.4.0
   shelf_router: ^1.1.0
+  xml: ^6.5.0
 
 dev_dependencies:
   http: ^1.1.0
