@@ -28,7 +28,7 @@ class _RecordScreenState extends State<RecordScreen> {
   List<String> transcriptArray = [];
   List<int> speakerArray = [];
   var tran_store;
-
+  ScrollController _scrollController = new ScrollController();
   List<String> speakers = [
     "'Username': ",
     "Speaker 2: ",
@@ -50,7 +50,7 @@ class _RecordScreenState extends State<RecordScreen> {
   @override
   void initState() {
     super.initState();
-     tran_store = StorageService();
+    tran_store = StorageService();
     _recorder.initialize();
 
     //streamingRecognize();
@@ -58,6 +58,19 @@ class _RecordScreenState extends State<RecordScreen> {
 
   void streamingRecognize() async {
     _copyFileFromAssets('register.wav');
+
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {Navigator.of(context).pop();},
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Transcription Overflow"),
+      content: Text("Your Transcription has hit the 5 minute limit and stopped recording, please start a new transcription"),
+      actions: [
+        okButton,
+      ],
+    );
 
     var stream = _getAudioStream('register.wav');
     var data = await rootBundle.load('assets/register.wav');
@@ -90,41 +103,49 @@ class _RecordScreenState extends State<RecordScreen> {
     var firstsentence = true;
 
     responseStream.listen((data) {
-      final words = data.results.first.alternatives.first.words;
-      String transcript = "";
-      transcriptArray = [];
-      speakerArray = [];
-      int currentSpeaker = 0;
-      for (int i = 0; i < words.length; i++) {
-        if (firstsentence) {
-          if (words[i].word.contains('.')) {
-            firstsentence = false;
-          }
-        } else {
-          if (currentSpeaker != words[i].speakerTag) {
-            if (currentSpeaker != 0) {
-              transcriptArray.add(transcript);
-              speakerArray.add(currentSpeaker);
+      try {
+        final words = data.results.first.alternatives.first.words;
+        String transcript = "";
+        transcriptArray = [];
+        speakerArray = [];
+        int currentSpeaker = 0;
+        for (int i = 0; i < words.length; i++) {
+          if (firstsentence) {
+            if (words[i].word.contains('.')) {
+              firstsentence = false;
             }
-            currentSpeaker = words[i].speakerTag;
-            transcript = speakers[currentSpeaker - 1];
+          } else {
+            if (currentSpeaker != words[i].speakerTag) {
+              if (currentSpeaker != 0) {
+                transcriptArray.add(transcript);
+                speakerArray.add(currentSpeaker);
+              }
+              currentSpeaker = words[i].speakerTag;
+              transcript = speakers[currentSpeaker - 1];
+            }
+            transcript += words[i].word + " ";
           }
-          transcript += words[i].word + " ";
         }
-      }
-      if (transcript.length > 0) {
-        transcriptArray.add(transcript);
-        speakerArray.add(currentSpeaker);
-      }
-      firstsentence = true;
-      if (data.results.first.isFinal) {
-        setState(() {
-          started = true;
-          recognizeFinished = true;
-        });
-      } else {
-        recognizeFinished = false;
-
+        if (transcript.length > 0) {
+          transcriptArray.add(transcript);
+          speakerArray.add(currentSpeaker);
+        }
+        firstsentence = true;
+        if (data.results.first.isFinal) {
+          setState(() {
+            started = true;
+            recognizeFinished = true;
+          });
+        } else {
+          recognizeFinished = false;
+        }
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
       }
     }, onDone: () {
       setState(() {
@@ -153,9 +174,7 @@ class _RecordScreenState extends State<RecordScreen> {
     await _audioStreamSubscription?.cancel();
     await _audioStream?.close();
 
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void saveAndExit() async {
@@ -169,10 +188,9 @@ class _RecordScreenState extends State<RecordScreen> {
         dt.minute.toString() +
         dt.second.toString() +
         '.txt';
-    final file = File(directory.path + '/' + file_name
-        );
+    final file = File(directory.path + '/' + file_name);
     file.writeAsString(transcriptArray.toString());
-    tran_store.insertTranscriptFile(file_name,transcriptArray.toString());
+    tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
     /*var scripts = await tran_store.getTranscripts();
     for(int i = 0; i < scripts.length; i++){
     print(scripts[i]['transcript_content']);
@@ -185,6 +203,7 @@ class _RecordScreenState extends State<RecordScreen> {
       enableAutomaticPunctuation: true,
       sampleRateHertz: 16000,
       languageCode: 'en-US',
+      profanityFilter: true,
       diarizationConfig: SpeakerDiarizationConfig(
           enableSpeakerDiarization: true,
           minSpeakerCount: 1,
@@ -203,25 +222,25 @@ class _RecordScreenState extends State<RecordScreen> {
           ElevatedButton(
             onPressed: recognizing ? stopRecording : streamingRecognize,
             child: recognizing
-                ? const Text('Finish Recording')
+                ? const Text('Finish Recording(5 Minute Maximum)')
                 : const Text('Begin Recording Your Conversation'),
           ),
           if (recognizeFinished)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: new ListView.builder(
+                  physics: ScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  
+                  reverse: true,
                   itemCount: transcriptArray.length,
                   itemBuilder: (BuildContext ctxt, int Index) {
                     return new Container(
-                          margin: EdgeInsets.all(5),
-                          padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.all(10),
                       //color: Colors.amber[600],
                       decoration: BoxDecoration(
-                        
-                        color: speakercolor[speakerArray[Index]-1],
+                        color: speakercolor[speakerArray[Index] - 1],
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(transcriptArray[Index]),
