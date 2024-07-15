@@ -11,7 +11,7 @@ void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   final String appTitle = 'Flutter Drawer Demo';
-  
+
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       home: const LoginPage(),
       routes: {
         '/home': (context) => const Home(),
+        '/login': (context) => const LoginPage(),
         '/knowledge_base': (context) => const KnowledgeBase(),
         '/document_upload': (context) => const DocumentUpload(),
       },

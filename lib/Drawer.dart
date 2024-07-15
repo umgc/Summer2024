@@ -58,7 +58,7 @@ class DrawerMenu extends StatelessWidget {
             leading: Icon(Icons.logout),
             title: Text('LogOut'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pushNamed(context, '/login');
             },
           ),
         ],
