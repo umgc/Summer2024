@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:teamb_intelligrade/feedbackpage.dart';
+import 'package:teamb_intelligrade/gradesuggestionpage.dart';
 import 'package:teamb_intelligrade/create_page.dart';
+import 'package:teamb_intelligrade/feedbackpage.dart';
+import 'package:teamb_intelligrade/gradesuggestionpage.dart';
 import 'package:teamb_intelligrade/notifications_page.dart';
+import 'package:teamb_intelligrade/questiondetailpage.dart';
 import 'package:teamb_intelligrade/search_page.dart';
 import 'package:teamb_intelligrade/setting_page.dart';
 import 'package:teamb_intelligrade/view_exam_page.dart';
@@ -37,6 +42,10 @@ class MyApp extends StatelessWidget
           routes:
           {
             '/dashboard': (context) => const Dashboard(),
+            '/login': (context) => LoginPage(),
+            '/feedback': (context) => FeedbackPage(),
+            '/gradesuggestion': (context) => GradeSuggestionPage(),
+            '/questiondetail': (context) => QuestionDetailPage(),
             '/search': (context) => const Search(),
             //'/testing': (context) => const Testing(),
             '/help': (context) => const Help(),
