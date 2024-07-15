@@ -23,7 +23,8 @@ final _router = Router()
   ..post('/save', _saveHandler)
   ..post('/download', _downloadHandler)
   ..get('/listFiles', _listFilesHandler)
-  ..post('/getFileContent', _getFileContentHandler);
+  ..post('/getFileContent', _getFileContentHandler)
+  ..put('/updateFile', _updateFileHandler);
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
@@ -83,6 +84,29 @@ Future<Response> _saveHandler(Request request) async {
   await file.writeAsString(xmlContent);
 
   return Response.ok('File saved as $filePath.');
+}
+
+Future<Response> _updateFileHandler(Request request) async {
+  final payload = await request.readAsString();
+  final formData = Uri(query: payload).queryParameters;
+  final fileName = formData['fileName'] ?? '';
+  final newXmlContent = formData['xmlContent'] ?? '';
+
+  if (fileName.isEmpty || newXmlContent.isEmpty) {
+    return Response.badRequest(
+        body: 'File name and new XML content are required.');
+  }
+
+  final filePath = 'TeamB/BusinessLayer/SavedAssessments/$fileName';
+  final file = File(filePath);
+
+  if (!await file.exists()) {
+    return Response.notFound('File not found.');
+  }
+
+  await file.writeAsString(newXmlContent);
+
+  return Response.ok('File updated successfully.');
 }
 
 Future<Response> _downloadHandler(Request request) async {
