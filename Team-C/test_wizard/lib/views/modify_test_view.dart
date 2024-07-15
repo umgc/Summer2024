@@ -130,8 +130,9 @@ class ButtonContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      child: Wrap(
+        alignment: WrapAlignment.end,
+        runSpacing: 10,
         children: [
           ElevatedButton(
             onPressed: () {},
