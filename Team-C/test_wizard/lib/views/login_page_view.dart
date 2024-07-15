@@ -65,6 +65,20 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: const Text('Login with Moodle'),
               ),
+               const SizedBox(height: 10),
+               ElevatedButton(
+                onPressed: () {
+                //Guest Login here
+               },
+               style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff009688),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                textStyle: const TextStyle(fontSize: 16),
+               ),
+               child: const Text('Login as Guest'),
+
+               ),
             ],
           ),
         ),
