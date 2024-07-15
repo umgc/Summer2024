@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/widgets/assessment_data_editor.dart';
 import 'package:test_wizard/widgets/column_header.dart';
+import 'package:test_wizard/widgets/question_set.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class ModifyTestView extends StatelessWidget {
   final String screenTitle;
-  const ModifyTestView({super.key, required this.screenTitle});
+  final String assessmentId;
+  const ModifyTestView({
+    super.key,
+    required this.screenTitle,
+    required this.assessmentId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,41 +32,42 @@ class ModifyTestView extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 20),
-                ColumnHeaderRow(),
-                QuestionRow(
-                  questionId: 'question1',
-                  questionText: 'Solve the equation: 3x - 7 = 11',
-                  answerText: 'x = 6',
-                ),
-                QuestionRow(
-                  questionId: 'question2',
-                  questionText:
-                      'Factor the quadratic equation: x^2 - 5x + 6 = 0',
-                  answerText: '(x - 2)(x - 3) = 0',
-                ),
-                QuestionRow(
-                  questionId: 'question3',
-                  questionText:
-                      'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
-                  answerText: 'Slope = 2',
-                ),
-                QuestionRow(
-                  questionId: 'question4',
-                  questionText: 'Evaluate the expression: 2(3x - 4) when x = 5',
-                  answerText: '22',
-                ),
-                QuestionRow(
-                  questionId: 'question5',
-                  questionText: 'Simplify the expression: 5x - 2(x - 3)',
-                  answerText: '3x + 6',
-                ),
-                ButtonContainer(),
-                EditPrompt(),
-                DeletedQuestions(),
+                const SizedBox(height: 20),
+                const ColumnHeaderRow(),
+                QuestionSet(assessmentId: assessmentId),
+                // QuestionRow(
+                //   questionId: 'question1',
+                //   questionText: 'Solve the equation: 3x - 7 = 11',
+                //   answerText: 'x = 6',
+                // ),
+                // QuestionRow(
+                //   questionId: 'question2',
+                //   questionText:
+                //       'Factor the quadratic equation: x^2 - 5x + 6 = 0',
+                //   answerText: '(x - 2)(x - 3) = 0',
+                // ),
+                // QuestionRow(
+                //   questionId: 'question3',
+                //   questionText:
+                //       'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
+                //   answerText: 'Slope = 2',
+                // ),
+                // QuestionRow(
+                //   questionId: 'question4',
+                //   questionText: 'Evaluate the expression: 2(3x - 4) when x = 5',
+                //   answerText: '22',
+                // ),
+                // QuestionRow(
+                //   questionId: 'question5',
+                //   questionText: 'Simplify the expression: 5x - 2(x - 3)',
+                //   answerText: '3x + 6',
+                // ),
+                const ButtonContainer(),
+                const EditPrompt(),
+                const DeletedQuestions(),
               ],
             ),
           ),
@@ -82,42 +88,6 @@ class ColumnHeaderRow extends StatelessWidget {
         Expanded(child: ColumnHeader(headerText: 'Question')),
         Expanded(child: ColumnHeader(headerText: 'Answer')),
         Expanded(child: ColumnHeader(headerText: 'Previous Question')),
-      ],
-    );
-  }
-}
-
-class QuestionRow extends StatelessWidget {
-  final String questionId;
-  final String questionText;
-  final String answerText;
-
-  const QuestionRow({
-    super.key,
-    required this.questionId,
-    required this.questionText,
-    required this.answerText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: AssessmentDataEditor(
-            editorType: DataEditorType.question,
-            text: questionText,
-          ),
-        ),
-        Expanded(
-          child: AssessmentDataEditor(
-            editorType: DataEditorType.answer,
-            text: answerText,
-          ),
-        ),
-        Expanded(
-          child: Container(),
-        ),
       ],
     );
   }
