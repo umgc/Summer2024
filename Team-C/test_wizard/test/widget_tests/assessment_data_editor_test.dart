@@ -41,5 +41,37 @@ void main() {
       );
       expect(find.byType(IconRow), findsOneWidget);
     });
+
+    group('IconRow component', () {
+      testWidgets('correctly sets properties', (tester) async {
+        IconRow row = const IconRow(
+          type: DataEditorType.question,
+        );
+        expect(row.type, DataEditorType.question);
+        IconRow row2 = const IconRow(type: DataEditorType.answer);
+        expect(row2.type, DataEditorType.answer);
+      });
+
+      testWidgets('correctly renders components', (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: IconRow(type: DataEditorType.question),
+            ),
+          ),
+        );
+
+        expect(find.byType(IconButton), findsNWidgets(3));
+
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: IconRow(type: DataEditorType.answer),
+            ),
+          ),
+        );
+        expect(find.byType(IconButton), findsOneWidget);
+      });
+    });
   });
 }
