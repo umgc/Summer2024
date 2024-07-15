@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:teamb_intelligrade/feedbackpage.dart';
 import 'package:teamb_intelligrade/gradesuggestionpage.dart';
 import 'package:teamb_intelligrade/create_page.dart';
-import 'package:teamb_intelligrade/feedbackpage.dart';
-import 'package:teamb_intelligrade/gradesuggestionpage.dart';
 import 'package:teamb_intelligrade/notifications_page.dart';
 import 'package:teamb_intelligrade/questiondetailpage.dart';
 import 'package:teamb_intelligrade/search_page.dart';
