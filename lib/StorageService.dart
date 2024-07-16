@@ -41,7 +41,8 @@ class StorageService {
         transcript_id INTEGER PRIMARY KEY AUTOINCREMENT,
         transcript_name TEXT NOT NULL,
         transcript_content TEXT NOT NULL,
-        summarizaion TEXT,
+        summarization TEXT,
+        keywords TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
@@ -56,13 +57,27 @@ class StorageService {
     });
   }
 
+  Future updateTranscriptFile(
+      String name, String content, String keywords, String summary, String previousName) async {
+    Database db = await database;   
+     var numchanges = await db.rawUpdate('UPDATE transcripts SET transcript_name = \'' +
+        name +
+        '\', transcript_content = \'' +
+        content +
+        '\', summarization = \'' +
+        summary +
+        '\', keywords = \'' +
+        keywords +
+        '\' WHERE transcript_name = \'' +
+        previousName + '\'');
+        //print(numchanges);
+  }
+
   // Retrieve all text files from the database
   Future<List<Map<String, dynamic>>> getTranscripts() async {
     Database db = await database;
     return await db.rawQuery('SELECT * FROM transcripts');
   }
-
-
 
   // Delete a text file by id
   Future<int> deleteTranscript(int id) async {

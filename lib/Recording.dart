@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_speech/generated/google/cloud/speech/v1p1beta1/cloud_speech.pb.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:mindinsync/StorageService.dart';
+import 'package:mindinsync/TranscriptionProcessor.dart';
 import 'package:mindinsync/main.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sound_stream/sound_stream.dart';
@@ -28,9 +29,9 @@ class _RecordScreenState extends State<RecordScreen> {
   List<String> transcriptArray = [];
   List<int> speakerArray = [];
   var tran_store;
-  ScrollController _scrollController = new ScrollController();
+  var tran_process;
   List<String> speakers = [
-    "'Username': ",
+    "Username: ",
     "Speaker 2: ",
     "Speaker 3: ",
     "Speaker 4: ",
@@ -51,6 +52,7 @@ class _RecordScreenState extends State<RecordScreen> {
   void initState() {
     super.initState();
     tran_store = StorageService();
+    tran_process = TranscriptionProcessor();
     _recorder.initialize();
 
     //streamingRecognize();
@@ -188,13 +190,13 @@ class _RecordScreenState extends State<RecordScreen> {
         dt.minute.toString() +
         dt.second.toString() +
         '.txt';
-    final file = File(directory.path + '/' + file_name);
-    file.writeAsString(transcriptArray.toString());
     tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
-    /*var scripts = await tran_store.getTranscripts();
+    await tran_process.processTranscription(transcriptArray.toString(), file_name);
+    var scripts = await tran_store.getTranscripts();
     for(int i = 0; i < scripts.length; i++){
+    print(scripts[i]['keywords']);
     print(scripts[i]['transcript_content']);
-    }*/
+    }
   }
 
   RecognitionConfigBeta _getConfig() => RecognitionConfigBeta(
