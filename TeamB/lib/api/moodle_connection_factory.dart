@@ -8,7 +8,7 @@ class MoodleConnectionFactory {
   MoodleConnectionFactory({required this.baseUrl, required this.token});
 
   MoodleAccessor createConnection() {
-    final apiClient = ApiClient(baseUrl: baseUrl, headers: {'Authorization': token});
-    return MoodleAccessor(apiClient);
+    final apiClient = ApiClient(baseUrl: baseUrl, token: token);
+    return MoodleAccessor(apiClient: apiClient);
   }
 }

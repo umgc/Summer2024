@@ -22,7 +22,7 @@ class Assessment {
     return {
       'id': id,
       'name': name,
-      'questions': questions?.map((question) => question.toJson()).toList(),
+      'questions': questions.map((question) => question.toJson()).toList(),
     };
   }
 }

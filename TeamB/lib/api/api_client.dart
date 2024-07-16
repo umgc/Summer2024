@@ -1,21 +1,27 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ApiClient {
   final String baseUrl;
-  final Map<String, String> headers;
+  final String token;
 
-  ApiClient({required this.baseUrl, this.headers = const {}});
+  ApiClient({required this.baseUrl, required this.token});
 
   Future<http.Response> get(String endpoint) async {
-    final response = await http.get(Uri.parse('$baseUrl$endpoint'), headers: headers);
+    final response = await http.get(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     return _processResponse(response);
   }
 
   Future<http.Response> post(String endpoint, {required Map<String, dynamic> body}) async {
     final response = await http.post(
       Uri.parse('$baseUrl$endpoint'),
-      headers: headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
       body: jsonEncode(body),
     );
     return _processResponse(response);

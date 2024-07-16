@@ -1,60 +1,42 @@
-import 'package:http/http.dart' as http;
+import 'api_client.dart';
 import 'dart:convert';
-import 'api_response.dart';
 
 class MoodleAccessor {
-  final String baseUrl;
-  final String token;
+  final ApiClient apiClient;
 
-  MoodleAccessor({required this.baseUrl, required this.token});
+  MoodleAccessor({required this.apiClient});
 
-  Future<ApiResponse<Map<String, dynamic>>> createUser(Map<String, dynamic> userData) async {
-    final urlParameters = {
-      'users[0][username]': 'testusername1',
-      'users[0][password]': 'testpassword1',
-      'users[0][firstname]': 'testfirstname1',
-      'users[0][lastname]': 'testlastname1',
-      'users[0][email]': 'testemail1@moodle.com',
-      // Add more parameters as needed
-    };
-
-    final response = await _postRequest(
-      'webservice/rest/server.php',
-      {
-        'wstoken': token,
-        'wsfunction': 'core_user_create_users',
-        'moodlewsrestformat': 'json',
-        ...urlParameters,
-      },
-      (json) => json as Map<String, dynamic>,
-    );
-
-    return response;
+  Future<void> createUser(Map<String, dynamic> userData) async {
+    final endpoint = '/webservice/rest/server.php?wstoken=${apiClient.token}&wsfunction=core_user_create_users&moodlewsrestformat=json';
+    await apiClient.post(endpoint, body: userData);
   }
 
-  Future<ApiResponse<T>> _postRequest<T>(
-    String endpoint,
-    Map<String, dynamic> body,
-    T Function(Object? json) fromJsonT,
-  ) async {
-    final url = Uri.parse('$baseUrl/$endpoint');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: body.entries.map((entry) => '${entry.key}=${Uri.encodeComponent(entry.value)}').join('&'),
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return ApiResponse.fromJson(jsonResponse, fromJsonT);
+  Future<List<dynamic>> getCourses() async {
+    final endpoint = 'webservice/rest/server.php?wstoken=${apiClient.token}&wsfunction=core_course_get_courses&moodlewsrestformat=json';
+    final response = await apiClient.get(endpoint);
+    final jsonResponse = json.decode(response.body);
+    if (jsonResponse is List) {
+      return jsonResponse;
     } else {
-      return ApiResponse<T>(
-        success: false,
-        data: null as T,
-        message: 'Error: ${response.statusCode}',
-      );
+      throw Exception('Failed to load courses');
+    }
+  }
+
+  Future<Map<String, dynamic>> getUser(int userId) async {
+    final endpoint = '/webservice/rest/server.php';
+    final body = {
+      'wstoken': apiClient.token,
+      'wsfunction': 'core_user_get_users_by_field',
+      'moodlewsrestformat': 'json',
+      'field': 'id',
+      'values': [userId.toString()],
+    };
+    final response = await apiClient.post(endpoint, body: body);
+    final jsonResponse = json.decode(response.body);
+    if (jsonResponse is List && jsonResponse.isNotEmpty) {
+      return jsonResponse[0];
+    } else {
+      throw Exception('Failed to load user');
     }
   }
 }
