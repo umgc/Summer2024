@@ -12,12 +12,6 @@ class TempModel {
           'Multiple Choice',
           'Essay'
         ];
-      case 'Graded On':
-        return [
-          'Select Graded On',
-          'Standards Based Grading',
-          'Points Based Grading'
-        ];
       default:
         throw ArgumentError.value(optionName);
     }

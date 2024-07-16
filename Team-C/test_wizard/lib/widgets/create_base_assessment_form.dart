@@ -21,7 +21,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   final TextEditingController courseNameController = TextEditingController();
   final TextEditingController assessmentTypeController =
       TextEditingController();
-  final TextEditingController gradingBasisController = TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
   final TextEditingController subjectDescriptionController =
       TextEditingController();
@@ -92,11 +91,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         controller: assessmentTypeController,
                         dropdownTitle: 'Assessment Type',
                       ),
-                      // ** Grading Basis **
-                      DropdownSelect(
-                        controller: gradingBasisController,
-                        dropdownTitle: 'Graded On',
-                      )
                     ],
                   ),
                 ),
@@ -129,7 +123,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                                     Text(
                                         'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
                                     Text(
-                                      'Grading Basis: ${gradingBasisController.text}, Assessment Type: ${assessmentTypeController.text}',
+                                      'Assessment Type: ${assessmentTypeController.text}',
                                     ),
                                   ],
                                 ),
