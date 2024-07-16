@@ -7,7 +7,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Login to Moodle'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 // Handle forgot password
               },
-              child: const Text('Forgot Password?'),
+              child: const Text('Proceed without Moodle'),
             ),
           ],
         ),
