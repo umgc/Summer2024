@@ -12,7 +12,7 @@ class CreateViewTest extends StatelessWidget {
         context: context,
         screenTitle: 'View Quiz',
       ),
-      body: const CreateViewTestPage(),
+      body: const ViewAssessmentPage(),
     );
   }
 }

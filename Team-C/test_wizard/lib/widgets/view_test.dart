@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 
-class CreateViewTestPage extends StatefulWidget {
-  const CreateViewTestPage({super.key});
+class ViewAssessmentPage extends StatefulWidget {
+  const ViewAssessmentPage({super.key});
 
   @override
-  State<CreateViewTestPage> createState() => ViewTestState();
+  State<ViewAssessmentPage> createState() => ViewTestState();
 }
 
-class ViewTestState extends State<CreateViewTestPage> {
+class ViewTestState extends State<ViewAssessmentPage> {
   final List<Map<String, dynamic>> tests = [
     {'version': 'Version 1', 'studentName': 'John Doe', 'status': 'Completed'},
-    {'version': 'Version 2', 'studentName': 'Jane Doe', 'status': 'In Progress'},
-    {'version': 'Version 3', 'studentName': 'John Smith', 'status': 'Not Started'},
+    {
+      'version': 'Version 2',
+      'studentName': 'Jane Doe',
+      'status': 'In Progress'
+    },
+    {
+      'version': 'Version 3',
+      'studentName': 'John Smith',
+      'status': 'Not Started'
+    },
   ];
 
   @override
@@ -47,7 +55,8 @@ class ViewTestState extends State<CreateViewTestPage> {
                       padding: const EdgeInsets.all(5),
                       decoration: const BoxDecoration(
                         color: Color(0xffff6600),
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(8)),
                       ),
                       child: const Text(
                         'TestWizard',
@@ -59,7 +68,8 @@ class ViewTestState extends State<CreateViewTestPage> {
                       padding: const EdgeInsets.all(20),
                       decoration: const BoxDecoration(
                         color: Color(0xff0072bb),
-                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                        borderRadius:
+                            BorderRadius.vertical(bottom: Radius.circular(8)),
                       ),
                       child: const Align(
                         alignment: Alignment.center,
@@ -73,7 +83,7 @@ class ViewTestState extends State<CreateViewTestPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Search',
                         ),
@@ -102,7 +112,7 @@ class ViewTestState extends State<CreateViewTestPage> {
                                     },
                                     child: Text(
                                       test['version'],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.blue,
                                         decoration: TextDecoration.underline,
                                       ),
@@ -114,17 +124,18 @@ class ViewTestState extends State<CreateViewTestPage> {
                                 DataCell(
                                   test['status'] == 'Completed'
                                       ? GestureDetector(
-                                    onTap: () {
-                                      // Handle view results click
-                                    },
-                                    child: Text(
-                                      'View Results',
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  )
+                                          onTap: () {
+                                            // Handle view results click
+                                          },
+                                          child: const Text(
+                                            'View Results',
+                                            style: TextStyle(
+                                              color: Colors.blue,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          ),
+                                        )
                                       : const Text(''),
                                 ),
                               ],
