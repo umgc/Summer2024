@@ -1,3 +1,10 @@
+import 'assessment.dart';
+
+class AssessmentGenerator {
+  Assessment generateAssessment() {
+    return Assessment();
+  }
+}
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'assessment.dart';
