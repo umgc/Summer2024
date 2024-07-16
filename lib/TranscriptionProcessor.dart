@@ -25,7 +25,7 @@ Future<String> processTranscription(String Transcription, String name) async {
   await dotenv.load(fileName: ".env");
   const openai_var = "OPEN_AI_API_KEY";
   var openai_key = dotenv.env[openai_var];
-  print(openai_key);
+  //print(openai_key);
   String prompt = promptStart + Transcription.toString() + promptEnd;
   OpenAI.apiKey = openai_key!;
 
