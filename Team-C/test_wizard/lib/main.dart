@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/views/modify_test_view.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
@@ -23,10 +22,6 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const TeacherDashboard(),
         '/createAssessment': (context) => const CreateBaseAssessmentView(),
-        '/dashboard': (context) => const ModifyTestView(
-              screenTitle: 'Math Quiz',
-              assessmentId: 'MQ1V1',
-            ),
       },
     );
   }
@@ -121,6 +116,17 @@ class MyApp extends StatelessWidget {
 //                 );
 //               },
 //               child: const Text('Navigate to Assessment Generation workflow'),
+//             ),
+//             ElevatedButton(
+//               onPressed: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => const TeacherDashboard(),
+//                   ),
+//                 );
+//               },
+//               child: const Text('Navigate to Teacher Dashboard'),
 //             )
 //           ],
 //         ),
