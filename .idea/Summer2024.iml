@@ -57,6 +57,9 @@
       <excludeFolder url="file://$MODULE_DIR$/TeamB/windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/TeamB/windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/TeamB/windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/TeamB/BusinessLayer/server/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/TeamB/BusinessLayer/server/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/TeamB/BusinessLayer/server/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
