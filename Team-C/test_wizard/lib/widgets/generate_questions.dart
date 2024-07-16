@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/services/llm_service.dart';
 
 class QuestionGenerateForm extends StatefulWidget{
@@ -7,7 +8,7 @@ class QuestionGenerateForm extends StatefulWidget{
   // by the parent and used by the build  method of the
   // State. Fields in a Widget subclass are always marked
   // "final"
-  QuestionGenerateForm({super.key});
+  const QuestionGenerateForm({super.key});
 
   @override
   State<StatefulWidget> createState() => QuestionGenerateFormState();
@@ -21,74 +22,46 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   final LLMService llmService = LLMService();
+  final textEditingController = TextEditingController(); 
 
-  //academic subject
-  String subject = "";
-
-  //Specific information on the a sub-section of the subject
-  String topic = "";
-
-  //Number of Assessments for the LLM to generate
-  int numberOfAssessments = 0;
-
-  //Type of Assessment to generate: Quiz, Test, Exam
-  String assessmentType = "";
-
-  //this is to subjective and not helpful to the prompt.
-  String gradeLevel = "";
-
-  //Changes the sources. 
-  bool isMathQuiz = false;
-
-  //identify how to set focus
-  //limits the sources the questions are generated from.
-  String sourceCriteria = "all";
-
-  //Id of the Json object containing the quiz. 
-  int exampleQuiz = 0;
-
-  //No plan to implement for this MVP
-  //Additional Text to add to the prompt.
-  String additionalDetail = "";
+  QuestionGenerationDetail questionGenerationDetail = QuestionGenerationDetail();
 
   String prompt = "";
 
   void setTopic(String topic) {
     setState(() {
-      topic = topic;
+      questionGenerationDetail.topic = topic;
     });
   }
 
   void setSubject(String subject) {
     setState(() {
-      subject = subject;
+      questionGenerationDetail.subject = subject;
     });
   }
 
   void setNumberOfAssessment(int numberOfAssessments) {
     setState(() {
-      numberOfAssessments = numberOfAssessments;
+      questionGenerationDetail.numberOfAssessments = numberOfAssessments;
     });
   }
 
   void setAdditionalDetail(String additionalDetail) {
     setState(() {
-      additionalDetail = additionalDetail;
+      questionGenerationDetail.additionalDetail = additionalDetail;
     });
   }
 
   void setAssessmentType(String assessmentType) {
     setState(() {
-      assessmentType = assessmentType;
+      questionGenerationDetail.assessmentType = assessmentType;
     });
   }
 
-  bool setIsMathQuiz(bool value) {
+  void setIsMathQuiz() {
     setState(() {
-      isMathQuiz = value;
+      questionGenerationDetail.isMathQuiz = false;
     });
-    sourceCriteria = "math";
-    return isMathQuiz;
   }
   
   @override
@@ -141,14 +114,22 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
               return null;
             },
           ),
-          Checkbox(value: isMathQuiz, onChanged: (value) {setIsMathQuiz(value!);}),
+          Checkbox(value: questionGenerationDetail.isMathQuiz, onChanged: (value) {setIsMathQuiz();}),
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()){
-                llmService.buildPompt(numberOfAssessments,assessmentType, subject, topic);
+                questionGenerationDetail.prompt = llmService.buildPompt(questionGenerationDetail.numberOfAssessments,questionGenerationDetail.assessmentType, questionGenerationDetail.subject, questionGenerationDetail.topic);
+                textEditingController.text = questionGenerationDetail.prompt;
               }
             },
             child: const Text('Generate'),
+          ),
+          TextFormField(
+            initialValue: 'Generated Prompt will show here',
+            onChanged: (value){
+              questionGenerationDetail.prompt = value;
+            },
+            controller: textEditingController
           ),
       ]))],
       )
