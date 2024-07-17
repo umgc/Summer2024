@@ -45,7 +45,12 @@ class Home extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 hintText: 'Search',
+                
               ),
+              onSubmitted: (String value) async {
+                print(value);
+                Navigator.pushNamed(context, '/Search');
+                }
             ),
             const SizedBox(height: 20),
             // Grid Layout for Icons
@@ -94,7 +99,7 @@ class Home extends StatelessWidget {
               // Navigate to Home screen (optional)
               break;
             case 1:
-              Navigator.pushNamed(context, '/search');
+              Navigator.pushNamed(context, '/Search');
               break;
             case 2:
               Navigator.pushNamed(context, '/knowledge_base');

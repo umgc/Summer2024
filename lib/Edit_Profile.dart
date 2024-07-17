@@ -110,7 +110,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Navigator.pushNamed(context, '/home');
               break;
             case 1:
-              Navigator.pushNamed(context, '/search');
+              Navigator.pushNamed(context, '/Search');
               break;
             case 2:
               Navigator.pushNamed(context, '/knowledge_base');

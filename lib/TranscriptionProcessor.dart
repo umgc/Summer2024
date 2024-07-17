@@ -47,7 +47,7 @@ Future<String> processTranscription(String Transcription, String name) async {
   print(jsonresults);
   var decoded = json.decode(jsonresults!);
   //await tran_store.updateTranscriptFile(decoded["title"], decoded["transcript"].toString(), decoded["keywords"].toString(), decoded["summary"], name);
-   await tran_store.updateTranscriptFile(decoded["title"].replaceAll('\'', '\'\''), decoded["transcript"].toString().replaceAll('\'', '\'\''), decoded["keywords"].toString().replaceAll('\'', '\'\''), decoded["summary"].replaceAll('\'', '\'\''), name);
+   await tran_store.updateTranscriptFile(decoded["title"].replaceAll('\'', '\'\''), decoded["transcript"].toString().replaceAll('\'', '\'\''), decoded["keywords"].toString().replaceAll('\'', '\'\'').replaceAll("\"","").replaceAll("[","").replaceAll("]",""), decoded["summary"].replaceAll('\'', '\'\''), name);
   return "";
 }
 

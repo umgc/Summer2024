@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mindinsync/HomeScreen.dart';
+import 'package:mindinsync/Search.dart';
 import 'package:mindinsync/document_upload.dart';
 import 'package:mindinsync/navigation.dart';
 import 'login_page.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/knowledge_base': (context) => const KnowledgeBase(),
         '/document_upload': (context) => const DocumentUpload(),
+        '/Search': (context) => const Search(),
       },
     );
   }

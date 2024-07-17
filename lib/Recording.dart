@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_speech/generated/google/cloud/speech/v1p1beta1/cloud_speech.pb.dart';
 import 'package:google_speech/google_speech.dart';
+import 'package:mindinsync/BottomNavigation.dart';
 import 'package:mindinsync/StorageService.dart';
 import 'package:mindinsync/TranscriptionProcessor.dart';
 import 'package:mindinsync/main.dart';
@@ -63,12 +64,15 @@ class _RecordScreenState extends State<RecordScreen> {
 
     Widget okButton = TextButton(
       child: Text("OK"),
-      onPressed: () {Navigator.of(context).pop();},
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
     );
 
     AlertDialog alert = AlertDialog(
       title: Text("Transcription Overflow"),
-      content: Text("Your Transcription has hit the 5 minute limit and stopped recording, please start a new transcription"),
+      content: Text(
+          "Your Transcription has hit the 5 minute limit and stopped recording, please start a new transcription"),
       actions: [
         okButton,
       ],
@@ -180,22 +184,25 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   void saveAndExit() async {
-    final directory = await getApplicationDocumentsDirectory();
-    var dt = DateTime.now();
-    var file_name = 'transcription' +
-        dt.year.toString() +
-        dt.month.toString() +
-        dt.day.toString() +
-        dt.hour.toString() +
-        dt.minute.toString() +
-        dt.second.toString() +
-        '.txt';
-    tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
-    await tran_process.processTranscription(transcriptArray.toString(), file_name);
-    var scripts = await tran_store.getTranscripts();
-    for(int i = 0; i < scripts.length; i++){
-    print(scripts[i]['keywords']);
-    print(scripts[i]['transcript_content']);
+    if (transcriptArray.length > 0) {
+      final directory = await getApplicationDocumentsDirectory();
+      var dt = DateTime.now();
+      var file_name = 'transcription' +
+          dt.year.toString() +
+          dt.month.toString() +
+          dt.day.toString() +
+          dt.hour.toString() +
+          dt.minute.toString() +
+          dt.second.toString() +
+          '.txt';
+      tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
+      await tran_process.processTranscription(
+          transcriptArray.toString(), file_name);
+      var scripts = await tran_store.getTranscripts();
+      for (int i = 0; i < scripts.length; i++) {
+        print(scripts[i]['keywords']);
+        print(scripts[i]['transcript_content']);
+      }
     }
   }
 
@@ -215,8 +222,8 @@ class _RecordScreenState extends State<RecordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Recording"),
-        backgroundColor: Colors.green,
+        title: const Text('Edit Profile'),
+        backgroundColor: Colors.blue[300],
       ),
       body: ListView(
         padding: const EdgeInsets.all(8),
@@ -250,6 +257,27 @@ class _RecordScreenState extends State<RecordScreen> {
                   }),
             )
         ],
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 0, // Set the current index for the Home screen
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              stopRecording();
+              Navigator.pushNamed(context, '/home');
+              break;
+            case 1:
+              stopRecording();
+              Navigator.pushNamed(context, '/Search');
+              break;
+            case 2:
+              stopRecording();
+              Navigator.pushNamed(context, '/knowledge_base');
+              break;
+            default:
+              break;
+          }
+        },
       ),
     );
   }
