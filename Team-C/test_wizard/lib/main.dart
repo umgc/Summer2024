@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
@@ -23,10 +24,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const TeacherDashboard(),
         '/createAssessment': (context) => const CreateBaseAssessmentView(),
-        '/dashboard': (context) => const ModifyTestView(
+        '/modifyTest': (context) => const ModifyTestView(
               screenTitle: 'Math Quiz',
               assessmentId: 'MQ1V1',
             ),
+        '/login': (context) => const LoginPage(),
       },
     );
   }
