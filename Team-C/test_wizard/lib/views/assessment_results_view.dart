@@ -12,7 +12,7 @@ class CreateViewAssessmentResults extends StatelessWidget {
         context: context,
         screenTitle: 'View Assessment Results',
       ),
-      body: const CreateViewAssessmentResultsForm(),
+      body: const ViewAssessmentResultsForm(),
     );
   }
 }
