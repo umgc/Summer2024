@@ -62,30 +62,30 @@ class BaseViewAssessmentResultsFormState extends State<CreateViewAssessmentResul
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                        color: Color(0xffff6600),
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-                      ),
-                      child: const Text(
-                        'TestWizard',
-                        style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        color: Color(0xff0072bb),
-                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                      ),
-                      child: const Text(  
-                        'View Assessment Results',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    //Container(
+                     // padding: const EdgeInsets.all(5),
+                      //decoration: const BoxDecoration(
+                        //color: Color(0xffff6600),
+                       // borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                      //),
+                      //child: const Text(
+                        //'TestWizard',
+                       // style: TextStyle(color: Colors.white),
+                       // textAlign: TextAlign.right,
+                     // ),
+                    //),
+                    //Container(
+                     // padding: const EdgeInsets.all(20),
+                     // decoration: const BoxDecoration(
+                       // color: Color(0xff0072bb),
+                      //  borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                      //),
+                      //child: const Text(  
+                       // 'View Assessment Results',
+                        //style: TextStyle(color: Colors.white, fontSize: 24),
+                       // textAlign: TextAlign.center,
+                     // ),
+                   // ),
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
