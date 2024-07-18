@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/column_header.dart';
 import 'package:test_wizard/widgets/question_set.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
@@ -124,10 +125,7 @@ class ButtonContainer extends StatelessWidget {
             child: const Text('Save'),
           ),
           const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Cancel'),
-          ),
+          const CancelButton(),
         ],
       ),
     );

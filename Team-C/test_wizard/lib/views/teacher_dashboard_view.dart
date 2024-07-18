@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/views/assessment_results_view.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
+import 'package:test_wizard/views/view_test_view.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class TeacherDashboard extends StatelessWidget {
@@ -200,7 +200,7 @@ class AssessmentTable extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CreateViewAssessmentResults(
+                        builder: (context) => CreateViewTest(
                           assessmentName: assessment['name']!,
                           courseName: assessment['course']!,
                         ),
