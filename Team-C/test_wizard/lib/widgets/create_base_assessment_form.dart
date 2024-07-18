@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_wizard/utils/validators.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
@@ -126,17 +127,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                       const SizedBox(
                         width: 16,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0072BB),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
-                      ),
+                      const CancelButton(),
                     ],
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_wizard/views/view_test_view.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
 
 class ViewAssessmentResultsForm extends StatefulWidget {
   const ViewAssessmentResultsForm({super.key});
@@ -147,16 +148,7 @@ class AssessmentResultsFormState extends State<ViewAssessmentResultsForm> {
                       child: const Text('Save'),
                     ),
                     const SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle cancel action
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Cancel'),
-                    ),
+                    const CancelButton(),
                   ],
                 ),
               ],

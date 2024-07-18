@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
 
 class ViewAssessmentPage extends StatefulWidget {
   const ViewAssessmentPage({super.key});
@@ -129,16 +130,7 @@ class ViewTestState extends State<ViewAssessmentPage> {
                         child: const Text('Assign'),
                       ),
                       const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text('Cancel'),
-                      ),
+                      const CancelButton(),
                       const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
