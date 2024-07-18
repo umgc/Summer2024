@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/assessment_results_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
               assessmentId: 'MQ1V1',
             ),
         '/login': (context) => const LoginPage(),
+        '/viewAssessment': (context) => const CreateViewAssessmentResults(),
       },
     );
   }
