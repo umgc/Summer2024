@@ -29,13 +29,6 @@ void main() {
       expect(find.widgetWithText(TextFormField, 'Subject Description'),
           findsOneWidget);
     });
-    testWidgets('has assessment type dropdown', (tester) async {
-      await tester.pumpWidget(
-          const MaterialApp(home: Scaffold(body: CreateBaseAssessmentForm())));
-      await tester.pump(Duration.zero);
-      expect(find.widgetWithText(DropdownSelect, 'Assessment Type'),
-          findsOneWidget);
-    });
     testWidgets('has two buttons', (tester) async {
       await tester.pumpWidget(
           const MaterialApp(home: Scaffold(body: CreateBaseAssessmentForm())));

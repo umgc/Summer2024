@@ -16,9 +16,21 @@ void main() {
       expect(find.byType(ElevatedButton), findsAtLeastNWidgets(2));
       expect(find.widgetWithText(ElevatedButton, 'Create Assessment'),
           findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Login'), findsOneWidget);
+      expect(find.widgetWithText(ElevatedButton, 'Login with Moodle'),
+          findsOneWidget);
       expect(find.byType(SearchFilter), findsOneWidget);
       expect(find.byType(DataTable), findsOneWidget);
+    });
+
+    testWidgets('correctly renders login button as logged in', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: TeacherDashboard(
+            status: 'logged in',
+          ),
+        ),
+      );
+      expect(find.widgetWithText(ElevatedButton, 'Logout'), findsOneWidget);
     });
 
     testWidgets('Search Filter correctly searches', (tester) async {

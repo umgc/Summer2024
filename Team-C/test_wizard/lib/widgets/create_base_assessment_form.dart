@@ -19,8 +19,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController assessmentController = TextEditingController();
   final TextEditingController courseNameController = TextEditingController();
-  final TextEditingController assessmentTypeController =
-      TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
   final TextEditingController subjectDescriptionController =
       TextEditingController();
@@ -86,11 +84,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         validator: Validators.checkIsEmpty,
                         controller: subjectDescriptionController,
                       ),
-                      // ** Assessment Type **
-                      DropdownSelect(
-                        controller: assessmentTypeController,
-                        dropdownTitle: 'Assessment Type',
-                      ),
                     ],
                   ),
                 ),
@@ -122,9 +115,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                                   children: [
                                     Text(
                                         'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
-                                    Text(
-                                      'Assessment Type: ${assessmentTypeController.text}',
-                                    ),
                                   ],
                                 ),
                               ),

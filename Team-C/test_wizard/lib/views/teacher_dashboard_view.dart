@@ -24,87 +24,84 @@ class TeacherDashboard extends StatelessWidget {
             constraints: BoxConstraints(
               minHeight: screenSize.height,
             ),
-            child: IntrinsicHeight(
-              child: Container(
-                width: 1200,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
+            child: Container(
+              width: 1200,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  Center(
+                    child: SizedBox(
+                      width: 300,
+                      child: Image.asset('lib/assets/wizard2.png'),
                     ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    Center(
-                      child: SizedBox(
-                        width: 300,
-                        child: Image.asset('lib/assets/wizard2.png'),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff0072bb),
-                            foregroundColor:
-                                Colors.white, // Ensure text color is white
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateBaseAssessmentView(),
-                              ),
-                            );
-                          },
-                          child: const Text('Create Assessment'),
+                  ),
+                  const SizedBox(height: 20),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff0072bb),
+                          foregroundColor:
+                              Colors.white, // Ensure text color is white
                         ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xffff6600),
-                            foregroundColor:
-                                Colors.white, // Ensure text color is white
-                          ),
-                          onPressed: () {
-                            // put in logic for checking if logged in and then logging out if necessary
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          },
-                          child: Text(status == 'guest'
-                              ? 'Login with Moodle'
-                              : 'Logout'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    status == 'guest'
-                        ? const Center(
-                            child: Text(
-                              'For full access, login is required.',
-                              style: TextStyle(
-                                  fontSize: 16, color: Color(0xff0072bb)),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const CreateBaseAssessmentView(),
                             ),
-                          )
-                        : const SizedBox(
-                            height: 0,
+                          );
+                        },
+                        child: const Text('Create Assessment'),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xffff6600),
+                          foregroundColor:
+                              Colors.white, // Ensure text color is white
+                        ),
+                        onPressed: () {
+                          // put in logic for checking if logged in and then logging out if necessary
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                            status == 'guest' ? 'Login with Moodle' : 'Logout'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  status == 'guest'
+                      ? const Center(
+                          child: Text(
+                            'For full access, login is required.',
+                            style: TextStyle(
+                                fontSize: 16, color: Color(0xff0072bb)),
                           ),
-                    const SizedBox(height: 20),
-                    const SearchFilter(),
-                  ],
-                ),
+                        )
+                      : const SizedBox(
+                          height: 0,
+                        ),
+                  const SizedBox(height: 20),
+                  const SearchFilter(),
+                ],
               ),
             ),
           ),
@@ -190,7 +187,7 @@ class AssessmentTable extends StatelessWidget {
           DataColumn(label: Text('Assessment Name')),
           DataColumn(label: Text('Course')),
           DataColumn(label: Text('Percentage Complete')),
-          DataColumn(label: Text('Action')),
+          DataColumn(label: Text('')),
         ],
         rows: filteredAssessments.map((assessment) {
           return DataRow(
