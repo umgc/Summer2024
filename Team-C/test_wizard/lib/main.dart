@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/views/assessment_results_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
-import 'package:test_wizard/views/modify_test_view.dart';
-import 'package:test_wizard/views/create_base_assessment_view.dart';
-import 'package:test_wizard/views/teacher_dashboard_view.dart';
+// import 'package:test_wizard/views/assessment_results_view.dart';
+// import 'package:test_wizard/views/modify_test_view.dart';
+// import 'package:test_wizard/views/create_base_assessment_view.dart';
+// import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,17 +21,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const TeacherDashboard(),
-        '/createAssessment': (context) => const CreateBaseAssessmentView(),
-        '/modifyTest': (context) => const ModifyTestView(
-              screenTitle: 'Math Quiz',
-              assessmentId: 'MQ1V1',
-            ),
-        '/login': (context) => const LoginPage(),
-        '/viewAssessment': (context) => const CreateViewAssessmentResults(),
-      },
+      // *** The named route method is discouraged by the flutter team ***
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => const TeacherDashboard(),
+      //   '/createAssessment': (context) => const CreateBaseAssessmentView(),
+      //   '/modifyTest': (context) => const ModifyTestView(
+      //         screenTitle: 'Math Quiz',
+      //         assessmentId: 'MQ1V1',
+      //       ),
+      //   '/login': (context) => const LoginPage(),
+      //   '/viewAssessment': (context) => const CreateViewAssessmentResults(),
+      // },
+      home: const LoginPage(),
     );
   }
 }
