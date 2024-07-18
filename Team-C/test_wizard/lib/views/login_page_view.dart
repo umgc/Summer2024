@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -55,6 +56,14 @@ class LoginPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Your OAuth login logic here
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      // to Teacher Dashboard with 'logged in' status for now
+                      builder: (context) => const TeacherDashboard(
+                        status: 'logged in',
+                      ),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff0072bb),
@@ -69,6 +78,12 @@ class LoginPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   //Guest Login here
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      // to Teacher Dashboard with no info for now
+                      builder: (context) => const TeacherDashboard(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xffff6600),
