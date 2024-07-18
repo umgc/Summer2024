@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/create_base_assessment_view.dart';
+import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class TeacherDashboard extends StatelessWidget {
-  const TeacherDashboard({super.key});
+  final String status;
+  const TeacherDashboard({
+    super.key,
+    this.status = 'guest',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +58,12 @@ class TeacherDashboard extends StatelessWidget {
                                 Colors.white, // Ensure text color is white
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/createAssessment');
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const CreateBaseAssessmentView(),
+                              ),
+                            );
                           },
                           child: const Text('Create Assessment'),
                         ),
@@ -63,19 +74,32 @@ class TeacherDashboard extends StatelessWidget {
                             foregroundColor:
                                 Colors.white, // Ensure text color is white
                           ),
-                          onPressed: () {},
-                          child: const Text('Login'),
+                          onPressed: () {
+                            // put in logic for checking if logged in and then logging out if necessary
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
+                          },
+                          child: Text(status == 'guest'
+                              ? 'Login with Moodle'
+                              : 'Logout'),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const Center(
-                      child: Text(
-                        'For full access, login is required.',
-                        style:
-                            TextStyle(fontSize: 16, color: Color(0xff0072bb)),
-                      ),
-                    ),
+                    status == 'guest'
+                        ? const Center(
+                            child: Text(
+                              'For full access, login is required.',
+                              style: TextStyle(
+                                  fontSize: 16, color: Color(0xff0072bb)),
+                            ),
+                          )
+                        : const SizedBox(
+                            height: 0,
+                          ),
                     const SizedBox(height: 20),
                     const SearchFilter(),
                   ],
