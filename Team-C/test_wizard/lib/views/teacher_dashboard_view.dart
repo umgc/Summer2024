@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/assessment_results_view.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
@@ -199,7 +200,16 @@ class AssessmentTable extends StatelessWidget {
               DataCell(Text(assessment['percentage']!)),
               DataCell(
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateViewAssessmentResults(
+                          assessmentName: assessment['name']!,
+                          courseName: assessment['course']!,
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff0072bb),
                     foregroundColor: Colors.white,
