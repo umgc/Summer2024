@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/column_header.dart';
 import 'package:test_wizard/widgets/question_set.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class ModifyTestView extends StatelessWidget {
@@ -18,60 +19,44 @@ class ModifyTestView extends StatelessWidget {
     return Scaffold(
       appBar: TWAppBar(context: context, screenTitle: screenTitle),
       backgroundColor: const Color(0xffe6f2ff),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            width: 1200,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                const ColumnHeaderRow(),
-                QuestionSet(assessmentId: assessmentId),
-                // QuestionRow(
-                //   questionId: 'question1',
-                //   questionText: 'Solve the equation: 3x - 7 = 11',
-                //   answerText: 'x = 6',
-                // ),
-                // QuestionRow(
-                //   questionId: 'question2',
-                //   questionText:
-                //       'Factor the quadratic equation: x^2 - 5x + 6 = 0',
-                //   answerText: '(x - 2)(x - 3) = 0',
-                // ),
-                // QuestionRow(
-                //   questionId: 'question3',
-                //   questionText:
-                //       'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
-                //   answerText: 'Slope = 2',
-                // ),
-                // QuestionRow(
-                //   questionId: 'question4',
-                //   questionText: 'Evaluate the expression: 2(3x - 4) when x = 5',
-                //   answerText: '22',
-                // ),
-                // QuestionRow(
-                //   questionId: 'question5',
-                //   questionText: 'Simplify the expression: 5x - 2(x - 3)',
-                //   answerText: '3x + 6',
-                // ),
-                const ButtonContainer(),
-                const EditPrompt(),
-                const DeletedQuestions(),
-              ],
-            ),
-          ),
+      body: ScrollContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            const ColumnHeaderRow(),
+            QuestionSet(assessmentId: assessmentId),
+            // QuestionRow(
+            //   questionId: 'question1',
+            //   questionText: 'Solve the equation: 3x - 7 = 11',
+            //   answerText: 'x = 6',
+            // ),
+            // QuestionRow(
+            //   questionId: 'question2',
+            //   questionText:
+            //       'Factor the quadratic equation: x^2 - 5x + 6 = 0',
+            //   answerText: '(x - 2)(x - 3) = 0',
+            // ),
+            // QuestionRow(
+            //   questionId: 'question3',
+            //   questionText:
+            //       'What is the slope of the line that passes through the points (2, 3) and (4, 7)?',
+            //   answerText: 'Slope = 2',
+            // ),
+            // QuestionRow(
+            //   questionId: 'question4',
+            //   questionText: 'Evaluate the expression: 2(3x - 4) when x = 5',
+            //   answerText: '22',
+            // ),
+            // QuestionRow(
+            //   questionId: 'question5',
+            //   questionText: 'Simplify the expression: 5x - 2(x - 3)',
+            //   answerText: '3x + 6',
+            // ),
+            const ButtonContainer(),
+            const EditPrompt(),
+            const DeletedQuestions(),
+          ],
         ),
       ),
     );
