@@ -18,14 +18,14 @@ class ConcreteMoodleConnection extends MoodleConnection {
   }
 
   @override
-  Future<ApiResponse<dynamic>> processRequest(Map<String, dynamic> requestData) async {
-    requestData['wstoken'] = _token;
-    requestData['moodlewsrestformat'] = 'json';
+  Future<ApiResponse<dynamic>> processRequest(Map<String, dynamic> requestParams) async {
+    requestParams['wstoken'] = _token;
+    requestParams['moodlewsrestformat'] = 'json';
 
     final response = await http.post(
       Uri.parse(_moodleUrl),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: requestData,
+      body: requestParams,
     );
 
     if (response.statusCode == 200) {
