@@ -118,6 +118,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()){
+                //TODO add Addtional Details and Question Type Count
                 questionGenerationDetail.prompt = llmService.buildPompt(questionGenerationDetail.numberOfAssessments,questionGenerationDetail.assessmentType, questionGenerationDetail.subject, questionGenerationDetail.topic);
                 textEditingController.text = questionGenerationDetail.prompt;
               }

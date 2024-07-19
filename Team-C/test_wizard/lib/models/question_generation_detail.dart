@@ -1,22 +1,28 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonSerializable()
 class QuestionGenerationDetail {
 
   //academic subject
   String subject = "";
 
   //Specific information on the a sub-section of the subject
-  String topic = "";
+  String topic ="";
 
   //Number of Assessments for the LLM to generate
-  int numberOfAssessments = 0;
+  int numberOfAssessments = 1;
 
   //Number of Assessments generated
   int numberOfAssessmentsGenerated = 0;
 
   //Type of Assessment to generate: Quiz, Test, Exam
-  String assessmentType = "";
+  String assessmentType = "Quiz";
+
+  //Question Type - Multiple Choice, Essay, Extended Response: Question Type Count
+  var questionType = {'multipleChoice': 0, 'Essay': 0, 'extendedResponse': 0};
 
   //this is to subjective and not helpful to the prompt.
-  String gradeLevel = "";
+  String? gradeLevel;
 
   //Changes the sources. 
   bool _isMathQuiz = false;
@@ -30,7 +36,7 @@ class QuestionGenerationDetail {
 
   //No plan to implement for this MVP
   //Additional Text to add to the prompt.
-  String additionalDetail = "";
+  String? additionalDetail;
 
   String prompt = "";
 
