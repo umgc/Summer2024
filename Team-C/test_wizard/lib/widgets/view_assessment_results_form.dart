@@ -12,13 +12,33 @@ class ViewAssessmentResultsForm extends StatefulWidget {
 }
 
 class AssessmentResultsFormState extends State<ViewAssessmentResultsForm> {
+  List<Map<String, dynamic>> students = [
+    {'id': 1, 'name': 'John Doe', 'generatedGrade': 85, 'overrideGrade': 85},
+    {'id': 2, 'name': 'Jane Doe', 'generatedGrade': 90, 'overrideGrade': 90},
+    {'id': 3, 'name': 'John Smith', 'generatedGrade': 75, 'overrideGrade': 75},
+  ];
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> students = [
-      {'name': 'John Doe', 'generatedGrade': 85, 'overrideGrade': 85},
-      {'name': 'Jane Doe', 'generatedGrade': 90, 'overrideGrade': 90},
-      {'name': 'John Smith', 'generatedGrade': 75, 'overrideGrade': 75},
-    ];
+    void setOverrideGrade(Map<String, dynamic> student, String value) {
+      print(student);
+      print(value);
+      setState(() {
+        students = students.map((currentStudent) {
+          if (currentStudent['id'] == student['id']) {
+            print('changing the student grade');
+            return {
+              // 'id': student['id'],
+              // 'name': student['name'],
+              // 'generatedGrade': student['generatedGrade'],
+              ...student,
+              'overrideGrade': int.tryParse(value) ?? 0,
+            };
+          } else {
+            return currentStudent;
+          }
+        }).toList();
+      });
+    }
 
     return ScrollContainer(
       child: Column(
@@ -52,19 +72,14 @@ class AssessmentResultsFormState extends State<ViewAssessmentResultsForm> {
                     DataCell(Text(student['name'])),
                     DataCell(Text(student['generatedGrade'].toString())),
                     DataCell(
-                      TextField(
-                        controller: TextEditingController(
-                          text: student['overrideGrade'].toString(),
-                        ),
+                      TextFormField(
+                        initialValue: student['overrideGrade'].toString(),
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
                         onChanged: (value) {
-                          setState(() {
-                            student['overrideGrade'] =
-                                int.tryParse(value) ?? student['overrideGrade'];
-                          });
+                          setOverrideGrade(student, value);
                         },
                       ),
                     ),
