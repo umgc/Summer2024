@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
+import 'package:provider/provider.dart';
+
+import 'providers/user_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AssessmentProvider()),
+        Provider(create: (context) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

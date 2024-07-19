@@ -24,8 +24,8 @@ class DocumentDirectoryService{
     return File('$path/$model.txt');
   }
 
-  Future<Map<String, dynamic>> readFile() async {
-    
+  Future<Map<String, dynamic>> readJsonFromFile() async {
+
     Map<String, dynamic> json = <String, dynamic>{};
 
     try {
@@ -41,7 +41,7 @@ class DocumentDirectoryService{
     }
   }
 
-  Future<File> writeFile(Map<String, dynamic> json) async {
+  Future<File> writeJsonToFile(Map<String, dynamic> json) async {
     final file = await _localFile;
 
     // Write the file

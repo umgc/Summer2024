@@ -45,7 +45,7 @@ class QuestionGenerationDetail {
 //IsMathQuiz
   bool get isMathQuiz => _isMathQuiz;
 
-  set isMathQuiz(bool isMathQuiz){
+  set isMathQuiz(bool? isMathQuiz){
     _isMathQuiz = !_isMathQuiz;
     if(_isMathQuiz = true){
       _sourceCriteria = "math";

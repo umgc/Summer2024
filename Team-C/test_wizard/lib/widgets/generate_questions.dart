@@ -60,7 +60,8 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 
   void setIsMathQuiz() {
     setState(() {
-      questionGenerationDetail.isMathQuiz = false;
+      //the value assigned here is not used in setting the state. Inverse is used. Dart Set methods require a param
+      questionGenerationDetail.isMathQuiz = null;
     });
   }
   
