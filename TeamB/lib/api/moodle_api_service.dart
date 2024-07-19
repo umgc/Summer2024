@@ -1,79 +1,24 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
+import 'moodle_connection.dart';
 import 'api_response.dart';
 
-class MoodleApiService {
-  final String baseUrl;
-  final String token;
+class MoodleAPIService {
+  final MoodleConnection _moodleConnection;
 
-  MoodleApiService({required this.baseUrl, required this.token});
+  MoodleAPIService(this._moodleConnection);
 
-  Future<ApiResponse<T>> _postRequest<T>(
-      String endpoint, Map<String, dynamic> body, T Function(Object? json) fromJsonT) async {
-    final url = Uri.parse('$baseUrl/$endpoint');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode(body),
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return ApiResponse.fromJson(jsonResponse, fromJsonT);
-    } else {
-      return ApiResponse<T>(
-        success: false,
-        data: null as T,
-        message: 'Error: ${response.statusCode}',
-      );
-    }
+  Future<ApiResponse<dynamic>> getCourses() async {
+    final requestData = {
+      'wsfunction': 'core_course_get_courses',
+    };
+    return _moodleConnection.processRequest(requestData);
   }
 
-  Future<ApiResponse<T>> _getRequest<T>(
-      String endpoint, T Function(Object? json) fromJsonT) async {
-    final url = Uri.parse('$baseUrl/$endpoint');
-    final response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return ApiResponse.fromJson(jsonResponse, fromJsonT);
-    } else {
-      return ApiResponse<T>(
-        success: false,
-        data: null as T,
-        message: 'Error: ${response.statusCode}',
-      );
-    }
+  Future<ApiResponse<void>> importQuestions(Map<String, dynamic> questionData) async {
+    final requestData = {
+      'wsfunction': 'mod_quiz_import_questions',
+      'questions': questionData,
+    };
+    return _moodleConnection.processRequest(requestData);
   }
 
-  Future<ApiResponse<List<dynamic>>> getCourses() async {
-    return _getRequest<List<dynamic>>(
-      'webservice/rest/server.php?wstoken=$token&wsfunction=core_course_get_courses&moodlewsrestformat=json',
-      (json) => json as List<dynamic>,
-    );
-  }
-
-  Future<ApiResponse<Map<String, dynamic>>> getUser(int userId) async {
-    return _postRequest<Map<String, dynamic>>(
-      'webservice/rest/server.php',
-      {
-        'wstoken': token,
-        'wsfunction': 'core_user_get_users_by_field',
-        'moodlewsrestformat': 'json',
-        'field': 'id',
-        'values': [userId.toString()],
-      },
-      (json) => json as Map<String, dynamic>,
-    );
-  }
 }

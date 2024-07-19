@@ -9,8 +9,7 @@ class ApiResponse<T> {
     required this.message,
   });
 
-  factory ApiResponse.fromJson(
-      Map<String, dynamic> json, T Function(Object? json) fromJsonT) {
+  factory ApiResponse.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) {
     return ApiResponse<T>(
       success: json['success'] ?? false,
       data: fromJsonT(json['data']),
@@ -24,5 +23,21 @@ class ApiResponse<T> {
       'data': toJsonT(data),
       'message': message,
     };
+  }
+
+  factory ApiResponse.success(T data) {
+    return ApiResponse<T>(
+      success: true,
+      data: data,
+      message: '',
+    );
+  }
+
+  factory ApiResponse.error(String message) {
+    return ApiResponse<T>(
+      success: false,
+      data: null as T,
+      message: message,
+    );
   }
 }

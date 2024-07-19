@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'homepage.dart';
-import 'api/moodle_connection_factory.dart';
+import 'api/moodle_connection_impl.dart';
+import 'api/moodle_api_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,51 +45,39 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
 
-    final moodleConnectionFactory = MoodleConnectionFactory(
-      baseUrl: 'http://100.25.213.47/',
-      token: '4e825999a41297ea35dbddc465d92296',
+    final moodleConnection = MoodleConnectionImpl();
+    moodleConnection.setMoodleUrl(
+      'http://100.25.213.47/webservice/rest/server.php',
+      '4e825999a41297ea35dbddc465d92296',
+      'http://100.25.213.47',
     );
 
-    final moodleAccessor = moodleConnectionFactory.createConnection();
+    final moodleAPIService = MoodleAPIService(moodleConnection);
 
     // Example: Get Courses
     try {
-      final courses = await moodleAccessor.getCourses();
+      final courses = await moodleAPIService.getCourses();
       print('Courses: $courses');
     } catch (e) {
       print('Error fetching courses: $e');
     }
 
-    // Example: Create User
+    // Example: Import Questions
     try {
-      final userData = {
-        'users': [
+      final questionData = {
+        'questions': [
           {
-            'username': 'testusername1',
-            'password': 'testpassword1',
-            'firstname': 'testfirstname1',
-            'lastname': 'testlastname1',
-            'email': 'testemail1@moodle.com',
-            'auth': 'manual',
-            'idnumber': 'testidnumber1',
-            'lang': 'en',
-            'theme': 'standard',
-            'timezone': '-12.5',
-            'mailformat': '0',
-            'description': 'Hello World!',
-            'city': 'testcity1',
-            'country': 'au',
-            'preferences': [
-              {'type': 'preference1', 'value': 'preferencevalue1'},
-              {'type': 'preference2', 'value': 'preferencevalue2'}
-            ]
+            'category': 'testcategory',
+            'questiontext': 'What is the capital of France?',
+            'qtype': 'shortanswer',
+            'answer': 'Paris'
           }
         ]
       };
-      await moodleAccessor.createUser(userData);
-      print('User created successfully');
+      await moodleAPIService.importQuestions(questionData);
+      print('Questions imported successfully');
     } catch (e) {
-      print('Error creating user: $e');
+      print('Error importing questions: $e');
     }
   }
 
