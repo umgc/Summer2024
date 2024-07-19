@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/views/view_test_view.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class TeacherDashboard extends StatelessWidget {
@@ -13,98 +14,71 @@ class TeacherDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: const Color(0xffe6f2ff),
       appBar: TWAppBar(context: context, screenTitle: "Teacher's Dashboard"),
-      body: Center(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: screenSize.height,
-            ),
-            child: Container(
-              width: 1200,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                  ),
-                ],
+      body: ScrollContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: 300,
+                child: Image.asset('lib/assets/wizard2.png'),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 20),
-                  Center(
-                    child: SizedBox(
-                      width: 300,
-                      child: Image.asset('lib/assets/wizard2.png'),
+            ),
+            const SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff0072bb),
+                    foregroundColor: Colors.white, // Ensure text color is white
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateBaseAssessmentView(),
+                      ),
+                    );
+                  },
+                  child: const Text('Create Assessment'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffff6600),
+                    foregroundColor: Colors.white, // Ensure text color is white
+                  ),
+                  onPressed: () {
+                    // put in logic for checking if logged in and then logging out if necessary
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child:
+                      Text(status == 'guest' ? 'Login with Moodle' : 'Logout'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            status == 'guest'
+                ? const Center(
+                    child: Text(
+                      'For full access, login is required.',
+                      style: TextStyle(fontSize: 16, color: Color(0xff0072bb)),
                     ),
+                  )
+                : const SizedBox(
+                    height: 0,
                   ),
-                  const SizedBox(height: 20),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff0072bb),
-                          foregroundColor:
-                              Colors.white, // Ensure text color is white
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CreateBaseAssessmentView(),
-                            ),
-                          );
-                        },
-                        child: const Text('Create Assessment'),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xffff6600),
-                          foregroundColor:
-                              Colors.white, // Ensure text color is white
-                        ),
-                        onPressed: () {
-                          // put in logic for checking if logged in and then logging out if necessary
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                            status == 'guest' ? 'Login with Moodle' : 'Logout'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  status == 'guest'
-                      ? const Center(
-                          child: Text(
-                            'For full access, login is required.',
-                            style: TextStyle(
-                                fontSize: 16, color: Color(0xff0072bb)),
-                          ),
-                        )
-                      : const SizedBox(
-                          height: 0,
-                        ),
-                  const SizedBox(height: 20),
-                  const SearchFilter(),
-                ],
-              ),
-            ),
-          ),
+            const SizedBox(height: 20),
+            const SearchFilter(),
+          ],
         ),
       ),
     );
@@ -142,10 +116,7 @@ class SearchFilterState extends State<SearchFilter> {
           },
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 300, // Set an appropriate height for the filtered table
-          child: AssessmentTable(filter: _filter),
-        ),
+        AssessmentTable(filter: _filter),
       ],
     );
   }

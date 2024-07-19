@@ -6,15 +6,11 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffe6f2ff),
       body: Center(
         child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: screenSize.height - kToolbarHeight * 2,
-            ),
+          child: FittedBox(
             child: Container(
               width: 400,
               padding: const EdgeInsets.all(20),
