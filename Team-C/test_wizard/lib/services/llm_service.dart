@@ -34,10 +34,12 @@ class LLMService {
         'messages': [
           {
             'role': 'system',
-            'content': '${prompt}',
+            'content': // the system prompt is something that gives the AI context into the type of job it will perform.
+                'You are an assessment generator that generates assessments based on given criteria. You only return the format specified in the prompt.',
           },
           {
-            'role': 'user',
+            'role':
+                'user', // the user prompt is something that gives the AI context into what specific job it will perform.
             'content': prompt,
           }
         ]
