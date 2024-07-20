@@ -29,16 +29,16 @@ class DocumentDirectoryService{
     Map<String, dynamic> json = <String, dynamic>{};
 
     try {
-      final file = await _localFile;
+        final file = await _localFile;
 
-      // Read the file
-      final contents = await file.readAsString();
-      json = decoder.convert(contents);
-      return json;
-    } catch (e) {
-      // If encountering an error, return empty map.
-      return json;
-    }
+        // Read the file
+        final contents = await file.readAsString();
+        json = decoder.convert(contents);
+        return json;
+      } catch (e) {
+        // If encountering an error, return empty map.
+        return json;
+      }
   }
 
   Future<File> writeJsonToFile(Map<String, dynamic> json) async {

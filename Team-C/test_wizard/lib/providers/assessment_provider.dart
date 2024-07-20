@@ -5,11 +5,8 @@ import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/models/saved_assessments.dart';
 
 class AssessmentProvider extends ChangeNotifier {
-
-  
   /// Internal, private state of assessments in local storage.
   final SavedAssessments _savedAssessments = SavedAssessments();
-
   /// An unmodifiable view of the assessments.
   UnmodifiableListView<Assessment> get assessments => UnmodifiableListView(_savedAssessments.assessments);
 
