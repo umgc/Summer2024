@@ -7,7 +7,8 @@ class LLMService {
 
   LLMService();
 
-  String buildPompt(int numberOfAssessments, String assessmentType, String subject, String topic){
+  String buildPrompt(int numberOfAssessments, String assessmentType,
+      String subject, String topic) {
     /*Example Prompt
     Please generate <number of assessments> <assessment types> based on the following <assessment type>. This quiz is about <description>. Provide the answers in a json and in the following format:
     QUESTION:
