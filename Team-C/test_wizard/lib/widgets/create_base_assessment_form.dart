@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
+import 'package:test_wizard/widgets/generate_questions.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
   const CreateBaseAssessmentForm({super.key});
@@ -110,23 +111,29 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            String assessmentName = assessmentController.text;
-                            String course = courseNameController.text;
-                            String numOfStudents = numOfStudentsController.text;
-                            String subjectDescription =
-                                subjectDescriptionController.text;
+                            // String assessmentName = assessmentController.text;
+                            // String course = courseNameController.text;
+                            // String numOfStudents = numOfStudentsController.text;
+                            // String subjectDescription =
+                            //     subjectDescriptionController.text;
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Column(
-                                  children: [
-                                    Text(
-                                        'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
-                                    Text(
-                                      'Assessment Type: ${assessmentTypeController.text}',
-                                    ),
-                                  ],
-                                ),
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(
+                            //     content: Column(
+                            //       children: [
+                            //         Text(
+                            //             'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                            //         Text(
+                            //           'Assessment Type: ${assessmentTypeController.text}',
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const QuestionGenerateForm(),
                               ),
                             );
                           }
