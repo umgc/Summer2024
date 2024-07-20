@@ -151,7 +151,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                 questionGenerationDetail.assessmentType,
                                 questionGenerationDetail.subject,
                                 questionGenerationDetail.topic);
-                        print(questionGenerationDetail.prompt);
                         textEditingController.text =
                             questionGenerationDetail.prompt;
                       }
