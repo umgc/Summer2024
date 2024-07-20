@@ -69,4 +69,48 @@ class DBHelper {
     );
     await conn.close();
   }
+
+  Future<int> getUserId(String email) async {
+    final conn = await getConnection();
+
+    // Execute the query
+    var results = await conn.query(
+      'SELECT userid FROM User WHERE email = ?',
+      [email],
+    );
+
+    // Extract the userid from the results
+    int userid;
+    if (results.isNotEmpty) {
+      var row = results.first;
+      userid = row[0]; // Assuming userid is the first column in the result
+    } else {
+      throw Exception('User not found');
+    }
+
+    await conn.close();
+    return userid;
+  }
+
+  Future<String> getUserName(String email) async {
+    final conn = await getConnection();
+
+    // Execute the query
+    var results = await conn.query(
+      'SELECT firstname FROM User WHERE email = ?',
+      [email],
+    );
+
+    // Extract the userid from the results
+    String username;
+    if (results.isNotEmpty) {
+      var row = results.first;
+      username = row[0]; // Assuming userid is the first column in the result
+    } else {
+      throw Exception('User not found');
+    }
+
+    await conn.close();
+    return username;
+  }
 }

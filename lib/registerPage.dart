@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mindinsync/db_helper.dart';
+import 'package:mindinsync/LoginPage.dart';
+import 'package:mindinsync/Disclaimer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-TextEditingController _firstNameController = TextEditingController();
-TextEditingController _lastNameController = TextEditingController();
-TextEditingController _emailController = TextEditingController();
 bool _isButtonActive = false;
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   late final LocalAuthentication auth;
   bool _supportState = false;
   final _formKey = GlobalKey<FormState>(); // Add a global key for the Form
@@ -54,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Text(
-                'Login',
+                'Create Account',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -99,26 +102,35 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      // Call your function here
-                      _authenticate();
-                    },
-                    child: Text("Use Biometric Authentication"),
-                  )
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     InkWell(
+              //       onTap: () {
+              //         // Call your function here
+              //         _authenticate();
+              //       },
+              //       child: Text("Use Biometric Authentication"),
+              //     )
+              //   ],
+              // ),
               const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     // primary: Colors.green,
                     ),
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    _submitForm();
-                    Navigator.pushReplacementNamed(context, '/home');
+                    SharedPreferences sp =
+                        await SharedPreferences.getInstance();
+                    sp.setString('userEmail', _emailController.text);
+                    print(sp.getString('userEmail'));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            DisclaimerPage(submitForm: _submitForm),
+                      ),
+                    );
                   }
                 },
                 child: const Text('Create Account'),
@@ -131,7 +143,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                 icon: const Icon(Icons.login),
                 label: const Text('Login'),
-                onPressed: _authenticate,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
               ),
             ],
           ),
@@ -140,29 +157,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _authenticate() async {
-    try {
-      bool authenticated = await auth.authenticate(
-        localizedReason: 'Please authenticate to access your account',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
-      );
-      print("Authenticated: $authenticated");
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-    } on PlatformException catch (e) {
-      print(e);
-    }
-  }
-
   Future<void> _submitForm() async {
     String firstname = _firstNameController.text;
     String lastname = _lastNameController.text;
     String email = _emailController.text;
-    //String biometrics =
+
+    // Save the user's email using SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', email);
 
     DBHelper db = new DBHelper();
     await db.insertUser(firstname, lastname, email);

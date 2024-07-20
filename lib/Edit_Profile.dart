@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'BottomNavigation.dart';
 import 'Drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -16,10 +17,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   File? _profileImage;
+  String? userEmail;
 
   @override
   void initState() {
     super.initState();
+    _loadUserEmail;
     // Load existing profile data here if available
   }
 
@@ -39,6 +42,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       // Optionally, save the image path to the user's profile data
     }
+  }
+
+  Future<void> _loadUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userEmail = prefs.getString('userEmail');
+      _emailController.text = userEmail ?? '';
+    });
   }
 
   Future<void> _saveProfile() async {
