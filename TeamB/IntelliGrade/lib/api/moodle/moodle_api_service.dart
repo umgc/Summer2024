@@ -1,79 +1,110 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 import 'api_response.dart';
+import 'moodle_accessor.dart';
 
-class MoodleApiService {
-  final String baseUrl;
-  final String token;
+class MoodleAPIService {
+  final MoodleAccessor moodleAccessor;
 
-  MoodleApiService({required this.baseUrl, required this.token});
-
-  Future<ApiResponse<T>> _postRequest<T>(
-      String endpoint, Map<String, dynamic> body, T Function(Object? json) fromJsonT) async {
-    final url = Uri.parse('$baseUrl/$endpoint');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode(body),
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return ApiResponse.fromJson(jsonResponse, fromJsonT);
-    } else {
-      return ApiResponse<T>(
-        success: false,
-        data: null as T,
-        message: 'Error: ${response.statusCode}',
-      );
-    }
-  }
-
-  Future<ApiResponse<T>> _getRequest<T>(
-      String endpoint, T Function(Object? json) fromJsonT) async {
-    final url = Uri.parse('$baseUrl/$endpoint');
-    final response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return ApiResponse.fromJson(jsonResponse, fromJsonT);
-    } else {
-      return ApiResponse<T>(
-        success: false,
-        data: null as T,
-        message: 'Error: ${response.statusCode}',
-      );
-    }
-  }
+  MoodleAPIService(this.moodleAccessor);
 
   Future<ApiResponse<List<dynamic>>> getCourses() async {
-    return _getRequest<List<dynamic>>(
-      'webservice/rest/server.php?wstoken=$token&wsfunction=core_course_get_courses&moodlewsrestformat=json',
-      (json) => json as List<dynamic>,
-    );
+    try {
+      final courses = await moodleAccessor.getCourses();
+      return ApiResponse<List<dynamic>>(
+        success: true,
+        data: courses,
+        message: 'Courses fetched successfully',
+      );
+    } catch (e) {
+      return ApiResponse<List<dynamic>>(
+        success: false,
+        data: [],
+        message: e.toString(),
+      );
+    }
   }
 
   Future<ApiResponse<Map<String, dynamic>>> getUser(int userId) async {
-    return _postRequest<Map<String, dynamic>>(
-      'webservice/rest/server.php',
-      {
-        'wstoken': token,
-        'wsfunction': 'core_user_get_users_by_field',
-        'moodlewsrestformat': 'json',
-        'field': 'id',
-        'values': [userId.toString()],
-      },
-      (json) => json as Map<String, dynamic>,
-    );
+    try {
+      final user = await moodleAccessor.getUser(userId);
+      return ApiResponse<Map<String, dynamic>>(
+        success: true,
+        data: user,
+        message: 'User fetched successfully',
+      );
+    } catch (e) {
+      return ApiResponse<Map<String, dynamic>>(
+        success: false,
+        data: {},
+        message: e.toString(),
+      );
+    }
+  }
+
+  Future<ApiResponse<void>> uploadAssessment(Map<String, dynamic> assessmentData) async {
+    try {
+      await moodleAccessor.uploadAssessment(assessmentData);
+      return ApiResponse<void>(
+        success: true,
+        data: null,
+        message: 'Assessment uploaded successfully',
+      );
+    } catch (e) {
+      return ApiResponse<void>(
+        success: false,
+        data: null,
+        message: e.toString(),
+      );
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> getAssessment(int assessmentId) async {
+    try {
+      final assessment = await moodleAccessor.getAssessment(assessmentId) as Map<String, dynamic>;
+      return ApiResponse<Map<String, dynamic>>(
+        success: true,
+        data: assessment,
+        message: 'Assessment fetched successfully',
+      );
+    } catch (e) {
+      return ApiResponse<Map<String, dynamic>>(
+        success: false,
+        data: {},
+        message: e.toString(),
+      );
+    }
+  }
+
+  Future<ApiResponse<void>> importQuestions(Map<String, dynamic> questionData) async {
+    try {
+      await moodleAccessor.importQuestions(questionData);
+      return ApiResponse<void>(
+        success: true,
+        data: null,
+        message: 'Questions imported successfully',
+      );
+    } catch (e) {
+      return ApiResponse<void>(
+        success: false,
+        data: null,
+        message: e.toString(),
+      );
+    }
+  }
+
+  Future<ApiResponse<List<Map<String, dynamic>>>> exportQuestions(int quizId) async {
+    try {
+      final questions = await moodleAccessor.exportQuestions(quizId);
+      return ApiResponse<List<Map<String, dynamic>>>(
+        success: true,
+        data: questions,
+        message: 'Questions exported successfully',
+      );
+    } catch (e) {
+      return ApiResponse<List<Map<String, dynamic>>>(
+        success: false,
+        data: [],
+        message: e.toString(),
+      );
+    }
   }
 }
