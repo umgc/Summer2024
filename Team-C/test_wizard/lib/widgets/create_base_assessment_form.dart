@@ -82,7 +82,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                   keyboardType: TextInputType.multiline,
                   minLines: null,
                   maxLines: 4,
-                  validator: Validators.checkIsEmpty,
                   controller: subjectDescriptionController,
                 ),
                 const SizedBox(

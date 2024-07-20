@@ -54,6 +54,7 @@ class ModifyTestView extends StatelessWidget {
             //   answerText: '3x + 6',
             // ),
             const ButtonContainer(),
+            const ButtonContainer2(),
             const EditPrompt(),
             const DeletedQuestions(),
           ],
@@ -102,15 +103,42 @@ class ButtonContainer extends StatelessWidget {
           const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {},
-            child: const Text('Add a Question'),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {},
             child: const Text('Save'),
           ),
           const SizedBox(width: 10),
           const CancelButton(),
+        ],
+      ),
+    );
+  }
+}
+
+class ButtonContainer2 extends StatelessWidget {
+  const ButtonContainer2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      child: Wrap(
+        alignment: WrapAlignment.end,
+        runSpacing: 10,
+        children: [
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0072BB),
+                foregroundColor: Colors.white),
+            child: const Text('Previous Version'),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0072BB),
+                foregroundColor: Colors.white),
+            child: const Text('Next Version'),
+          ),
         ],
       ),
     );
