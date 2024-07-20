@@ -16,7 +16,7 @@ class LLMService {
     Check your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet.
     */
 
-    //todo: identify how to add focus to the prompt. 
+    //TODO: identify how to add focus to the prompt.
     return 'Please generate $numberOfAssessments $assessmentType based on the following $assessmentType. This quiz is about the subject $subject, specifically around the topic of $topic. Provide the answers in a json and in the following format: \nQUESTION: \nANSWER: . \nCheck your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet.';
   }
 
