@@ -101,7 +101,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Color.fromARGB(255, 165, 255, 137),
                     child: Text(
-                      "A",
+                      snapshot.data != null && snapshot.data!.isNotEmpty
+                          ? snapshot.data!.substring(0, 1)
+                          : "A",
                       style: TextStyle(fontSize: 30.0, color: Colors.blue),
                     ),
                   ),
@@ -130,13 +132,13 @@ class _DrawerMenuState extends State<DrawerMenu> {
               Navigator.pushNamed(context, '/document_upload');
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text('Edit Profile'),
-            onTap: () {
-              Navigator.pushNamed(context, '/edit_profile');
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.edit),
+          //   title: const Text('Edit Profile'),
+          //   onTap: () {
+          //     Navigator.pushNamed(context, '/edit_profile');
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('LogOut'),
