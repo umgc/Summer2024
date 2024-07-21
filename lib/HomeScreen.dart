@@ -11,7 +11,6 @@ import 'Drawer.dart';
 class Home extends StatelessWidget {
   const Home({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,20 +41,24 @@ class Home extends StatelessWidget {
             const SizedBox(height: 20),
             // Search Field
             TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  hintText: 'Ask a question to MindAI',
                 ),
-                hintText: 'Ask a question to MindAI',
-                
-              ),
-              onSubmitted: (String value) async {
-                //print(value);
-               // Navigator.push(context, PromptScreen());
-                Navigator.pushNamed(context, '/Prompt');
-                }
-            ),
+                onSubmitted: (String value) async {
+                  //print(value);
+                  // Navigator.push(context, PromptScreen());
+                  Navigator.pushNamed(
+                    context,
+                    '/Prompt',
+                    arguments: <String, String>{
+                      'prompt': value,
+                    },
+                  );
+                }),
             const SizedBox(height: 20),
             // Grid Layout for Icons
             Expanded(

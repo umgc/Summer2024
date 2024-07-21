@@ -9,7 +9,6 @@ import 'registerPage.dart';
 import 'LoginPage.dart';
 import 'Disclaimer.dart';
 import 'package:mindinsync/prompt.dart';
-import 'login_page.dart';
 import 'KnowledgeBase.dart';
 import 'document_upload.dart';
 

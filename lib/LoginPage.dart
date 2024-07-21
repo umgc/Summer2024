@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 RegisterPage rp = new RegisterPage();
 bool _isButtonActive = false;
 TextEditingController emailController = TextEditingController();
+var userID;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -37,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userEmail = prefs.getString('userEmail');
+      print(userEmail);
       emailController.text = userEmail ?? '';
     });
   }
@@ -103,6 +105,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       print("Authenticated: $authenticated");
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+       userEmail = prefs.getString('userEmail');
+       if(userEmail == null){
+          prefs.setString('userEmail', emailController.text);
+       }
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/home');
       }

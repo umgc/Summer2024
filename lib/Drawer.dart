@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mindinsync/loginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'registerPage.dart';
 import 'package:mindinsync/db_helper.dart';
