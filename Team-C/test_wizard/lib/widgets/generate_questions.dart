@@ -149,7 +149,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                             llmService.buildPrompt(
                                 questionGenerationDetail.numberOfAssessments,
                                 questionGenerationDetail.assessmentType,
-                                questionGenerationDetail.subject,
                                 questionGenerationDetail.topic);
                         textEditingController.text =
                             questionGenerationDetail.prompt;

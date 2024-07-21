@@ -7,8 +7,11 @@ class LLMService {
 
   LLMService();
 
-  String buildPrompt(int numberOfAssessments, String assessmentType,
-      String subject, String topic) {
+  String buildPrompt(
+    int numberOfAssessments,
+    String assessmentType,
+    String topic,
+  ) {
     /*Example Prompt
     Please generate <number of assessments> <assessment types> based on the following <assessment type>. This quiz is about <description>. Provide the answers in a json and in the following format:
     QUESTION:
@@ -18,7 +21,7 @@ class LLMService {
     */
 
     //TODO: identify how to add focus to the prompt.
-    return 'Please generate $numberOfAssessments $assessmentType based on the following $assessmentType. This quiz is about the subject $subject, specifically around the topic of $topic. Provide the answers in a json and in the following format: \nQUESTION: \nANSWER: . \nCheck your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet.';
+    return 'Please generate $numberOfAssessments assessments based on the following assessment. This assessment is about $topic. Provide the answers in a json and in the following format: \nQUESTION: \nANSWER: . \nCheck your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet.';
   }
 
   Future<http.Response> sendRequest(http.Client httpClient, String prompt) {
