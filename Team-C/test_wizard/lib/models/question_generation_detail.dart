@@ -2,12 +2,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class QuestionGenerationDetail {
-
   //academic subject
   String subject = "";
 
   //Specific information on the a sub-section of the subject
-  String topic ="";
+  String topic = "";
 
   //Number of Assessments for the LLM to generate
   int numberOfAssessments = 1;
@@ -24,14 +23,14 @@ class QuestionGenerationDetail {
   //this is to subjective and not helpful to the prompt.
   String? gradeLevel;
 
-  //Changes the sources. 
+  //Changes the sources.
   bool _isMathQuiz = false;
 
   //identify how to set focus
   //limits the sources the questions are generated from.
   String _sourceCriteria = "all";
 
-  //Id of the Json object containing the quiz. 
+  //Id of the Json object containing the quiz.
   int exampleQuiz = 0;
 
   //No plan to implement for this MVP
@@ -45,16 +44,16 @@ class QuestionGenerationDetail {
 //IsMathQuiz
   bool get isMathQuiz => _isMathQuiz;
 
-  set isMathQuiz(bool? isMathQuiz){
+  set isMathQuiz(bool? isMathQuiz) {
     _isMathQuiz = !_isMathQuiz;
-    if(_isMathQuiz = true){
+    if (_isMathQuiz == true) {
       _sourceCriteria = "math";
     }
-    if(_isMathQuiz = false){
+    if (_isMathQuiz == false) {
       _sourceCriteria = "all";
     }
   }
 
   //SourceCriteria
-  String get sourceCriteria => _sourceCriteria; 
+  String get sourceCriteria => _sourceCriteria;
 }

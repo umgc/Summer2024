@@ -111,11 +111,11 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // String assessmentName = assessmentController.text;
+                            String assessmentName = assessmentController.text;
                             // String course = courseNameController.text;
-                            // String numOfStudents = numOfStudentsController.text;
-                            // String subjectDescription =
-                            //     subjectDescriptionController.text;
+                            String numOfStudents = numOfStudentsController.text;
+                            String subjectDescription =
+                                subjectDescriptionController.text;
 
                             // ScaffoldMessenger.of(context).showSnackBar(
                             //   SnackBar(
@@ -132,13 +132,17 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                             // );
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const QuestionGenerateForm(),
+                                builder: (context) => QuestionGenerateForm(
+                                  assessmentName: assessmentName,
+                                  numberOfAssessments:
+                                      int.tryParse(numOfStudents)!,
+                                  topic: subjectDescription,
+                                ),
                               ),
                             );
                           }
                         },
-                        child: const Text('Generate Assessment'),
+                        child: const Text('Add Questions'),
                       ),
                       const SizedBox(
                         width: 16,

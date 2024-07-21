@@ -9,7 +9,6 @@ class LLMService {
 
   String buildPrompt(
     int numberOfAssessments,
-    String assessmentType,
     String topic,
   ) {
     /*Example Prompt
