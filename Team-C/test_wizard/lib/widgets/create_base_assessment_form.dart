@@ -82,6 +82,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.multiline,
+                  validator: Validators.checkIsEmpty,
                   minLines: null,
                   maxLines: 4,
                   controller: subjectDescriptionController,
