@@ -34,7 +34,9 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
   String prompt = "";
   bool isMathQuiz = false;
   List questions = [
-    {'questionType': 'multipleChoice', 'questionText': 'What is 2 + 2'}
+    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 2'},
+    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 4'},
+    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 5'}
   ];
 
   // [multiple choice] - [What is 2 + 2?] [x]
@@ -80,7 +82,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                       return SizedBox(
                         child: Row(
                           children: [
-                            const Expanded(child: AddedQuestion(
+                            Expanded(child: AddedQuestion(questionText: question['questionText'], questionType: question['questionType']
 
                             )),
                             // Expanded(
@@ -157,12 +159,15 @@ class AddedQuestion extends StatefulWidget {
 class AddedQuestionState extends State<AddedQuestion> {
   String? questionType = 'Multiple Choice';
   String? questionText;
+  TextEditingController? controller;
 
-  // @override
-  // void initState() {
-  //   questionType = 
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    questionType = widget.questionType;
+    questionText = widget.questionText;
+    controller = TextEditingController(text: widget.questionText);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +210,8 @@ class AddedQuestionState extends State<AddedQuestion> {
             // ),
             Expanded(
               child: TextFormField(
-                decoration: const InputDecoration(
+                 controller: controller,
+                 decoration: const InputDecoration(
                   hintText: 'What is 2 + 2?',
                   border: OutlineInputBorder(),
                 ),
