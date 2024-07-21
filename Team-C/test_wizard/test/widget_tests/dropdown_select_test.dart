@@ -60,8 +60,8 @@ void main() {
       );
       await tester.pumpWidget(app);
       await tester.pump();
-      expect(find.byType(DropdownMenuItem<String>), findsOneWidget);
-      await tester.tap(find.byType(DropdownMenuItem<String>));
+      expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
       expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'),
           findsOneWidget);

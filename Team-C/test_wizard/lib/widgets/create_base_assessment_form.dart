@@ -77,6 +77,8 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Subject Description',
+                    hintText:
+                        'Gravitational Forces or The Rise and Fall of Rome',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.multiline,
