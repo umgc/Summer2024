@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_wizard/utils/validators.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
   const CreateBaseAssessmentForm({super.key});
@@ -19,8 +21,6 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController assessmentController = TextEditingController();
   final TextEditingController courseNameController = TextEditingController();
-  final TextEditingController assessmentTypeController =
-      TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
   final TextEditingController subjectDescriptionController =
       TextEditingController();
@@ -28,133 +28,112 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double contextWidth = constraints.maxWidth;
-        double contextHeight = constraints.maxHeight;
-        double formWidth = contextWidth * 0.8;
-        double formHeight = contextHeight * 0.8;
-        double buttonHeight = contextHeight * 0.2;
-        return SizedBox(
-          width: contextWidth,
-          height: contextHeight,
+    Size screenSize = MediaQuery.of(context).size;
+    return ScrollContainer(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          width: screenSize.width * 0.8,
           child: Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  width: formWidth,
-                  height: formHeight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Assessment Name',
-                          border: OutlineInputBorder(),
-                        ),
-                        controller: assessmentController,
-                        validator: Validators.checkIsEmpty,
-                      ),
-                      // ** Select Course Dropdown
-                      DropdownSelect(
-                        controller: courseNameController,
-                        dropdownTitle: 'Course',
-                      ),
-                      // ** Number of Tests **
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Number of Tests',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        controller: numOfStudentsController,
-                        validator: Validators.checkIsOneOrTwoDigits,
-                      ),
-                      // ** Subject Description **
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Subject Description',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.multiline,
-                        minLines: null,
-                        maxLines: 4,
-                        validator: Validators.checkIsEmpty,
-                        controller: subjectDescriptionController,
-                      ),
-                      // ** Assessment Type **
-                      DropdownSelect(
-                        controller: assessmentTypeController,
-                        dropdownTitle: 'Assessment Type',
-                      ),
-                    ],
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Assessment Name',
+                    border: OutlineInputBorder(),
                   ),
+                  controller: assessmentController,
+                  validator: Validators.checkIsEmpty,
                 ),
-                SizedBox(
-                  height: buttonHeight,
-                  width: formWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0072BB),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            String assessmentName = assessmentController.text;
-                            String course = courseNameController.text;
-                            String numOfStudents = numOfStudentsController.text;
-                            String subjectDescription =
-                                subjectDescriptionController.text;
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Column(
-                                  children: [
-                                    Text(
-                                        'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
-                                    Text(
-                                      'Assessment Type: ${assessmentTypeController.text}',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        child: const Text('Generate Assessment'),
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0072BB),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
-                      ),
-                    ],
+                const SizedBox(
+                  height: 20,
+                ),
+                // ** Select Course Dropdown
+                DropdownSelect(
+                  controller: courseNameController,
+                  dropdownTitle: 'Course',
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // ** Number of Tests **
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Number of Tests',
+                    border: OutlineInputBorder(),
                   ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: numOfStudentsController,
+                  validator: Validators.checkIsOneOrTwoDigits,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // ** Subject Description **
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Subject Description',
+                    hintText:
+                        'Gravitational Forces or The Rise and Fall of Rome',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  validator: Validators.checkIsEmpty,
+                  minLines: null,
+                  maxLines: 4,
+                  controller: subjectDescriptionController,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0072BB),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          String assessmentName = assessmentController.text;
+                          String course = courseNameController.text;
+                          String numOfStudents = numOfStudentsController.text;
+                          String subjectDescription =
+                              subjectDescriptionController.text;
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Column(
+                                children: [
+                                  Text(
+                                      'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Generate Assessment'),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    const CancelButton(),
+                  ],
                 ),
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

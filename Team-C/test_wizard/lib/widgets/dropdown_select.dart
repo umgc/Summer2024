@@ -18,8 +18,7 @@ class DropdownSelect extends StatefulWidget {
 }
 
 class DropdownSelectState extends State<DropdownSelect> {
-  late String selectedValue = 'Select ${widget.dropdownTitle}';
-
+  String? selectedValue;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
@@ -35,8 +34,8 @@ class DropdownSelectState extends State<DropdownSelect> {
             onChanged: (String? newValue) {
               setState(() {
                 if (newValue != null) {
-                  selectedValue = newValue;
                   widget.controller.text = newValue;
+                  selectedValue = newValue;
                 }
               });
             },

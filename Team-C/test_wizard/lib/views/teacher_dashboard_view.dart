@@ -1,88 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:test_wizard/views/create_base_assessment_view.dart';
+import 'package:test_wizard/views/login_page_view.dart';
+import 'package:test_wizard/views/view_test_view.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class TeacherDashboard extends StatelessWidget {
-  const TeacherDashboard({super.key});
+  final String status;
+  const TeacherDashboard({
+    super.key,
+    this.status = 'guest',
+  });
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: const Color(0xffe6f2ff),
       appBar: TWAppBar(context: context, screenTitle: "Teacher's Dashboard"),
-      body: Center(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: screenSize.height,
-            ),
-            child: IntrinsicHeight(
-              child: Container(
-                width: 1200,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    Center(
-                      child: SizedBox(
-                        width: 300,
-                        child: Image.asset('lib/assets/wizard2.png'),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff0072bb),
-                            foregroundColor:
-                                Colors.white, // Ensure text color is white
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/createAssessment');
-                          },
-                          child: const Text('Create Assessment'),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xffff6600),
-                            foregroundColor:
-                                Colors.white, // Ensure text color is white
-                          ),
-                          onPressed: () {},
-                          child: const Text('Login'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    const Center(
-                      child: Text(
-                        'For full access, login is required.',
-                        style:
-                            TextStyle(fontSize: 16, color: Color(0xff0072bb)),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const SearchFilter(),
-                  ],
-                ),
+      body: ScrollContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: 300,
+                child: Image.asset('lib/assets/wizard2.png'),
               ),
             ),
-          ),
+            const SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff0072bb),
+                    foregroundColor: Colors.white, // Ensure text color is white
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateBaseAssessmentView(),
+                      ),
+                    );
+                  },
+                  child: const Text('Create Assessment'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffff6600),
+                    foregroundColor: Colors.white, // Ensure text color is white
+                  ),
+                  onPressed: () {
+                    // put in logic for checking if logged in and then logging out if necessary
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child:
+                      Text(status == 'guest' ? 'Login with Moodle' : 'Logout'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            status == 'guest'
+                ? const Center(
+                    child: Text(
+                      'For full access, login is required.',
+                      style: TextStyle(fontSize: 16, color: Color(0xff0072bb)),
+                    ),
+                  )
+                : const SizedBox(
+                    height: 0,
+                  ),
+            const SizedBox(height: 20),
+            const SearchFilter(),
+          ],
         ),
       ),
     );
@@ -120,10 +116,7 @@ class SearchFilterState extends State<SearchFilter> {
           },
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          height: 300, // Set an appropriate height for the filtered table
-          child: AssessmentTable(filter: _filter),
-        ),
+        AssessmentTable(filter: _filter),
       ],
     );
   }
@@ -165,7 +158,7 @@ class AssessmentTable extends StatelessWidget {
           DataColumn(label: Text('Assessment Name')),
           DataColumn(label: Text('Course')),
           DataColumn(label: Text('Percentage Complete')),
-          DataColumn(label: Text('Action')),
+          DataColumn(label: Text('')),
         ],
         rows: filteredAssessments.map((assessment) {
           return DataRow(
@@ -175,7 +168,16 @@ class AssessmentTable extends StatelessWidget {
               DataCell(Text(assessment['percentage']!)),
               DataCell(
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateViewTest(
+                          assessmentName: assessment['name']!,
+                          courseName: assessment['course']!,
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff0072bb),
                     foregroundColor: Colors.white,

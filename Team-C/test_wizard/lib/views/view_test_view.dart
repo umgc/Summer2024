@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
-import 'package:test_wizard/widgets/view_test.dart';
+import 'package:test_wizard/widgets/view_assessment_page.dart';
 
 class CreateViewTest extends StatelessWidget {
-  const CreateViewTest({super.key});
+  final String assessmentName;
+  final String courseName;
+  const CreateViewTest({
+    super.key,
+    required this.assessmentName,
+    required this.courseName,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TWAppBar(
         context: context,
-        screenTitle: 'View Quiz',
+        screenTitle: 'View $assessmentName Versions',
+        implyLeading: true,
+        assessment: assessmentName,
+        className: courseName,
       ),
-      body: const ViewAssessmentPage(),
+      body: ViewAssessmentPage(
+        assessmentName: assessmentName,
+        course: courseName,
+        assessmentId: 'MQ1V1',
+      ),
     );
   }
 }
