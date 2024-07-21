@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'assessment.dart';
-import 'question.dart';
+import 'package:intelligrade/controller/model/beans.dart';
 
 class AssessmentGenerator {
   final String serverUrl;
 
   AssessmentGenerator({required this.serverUrl});
 
-  Future<Assessment> generateAssessment(String queryPrompt) async {
+  Future<Quiz> generateAssessment(String queryPrompt) async {
     final response = await http.post(
       Uri.parse('$serverUrl/generateAssessment'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -18,7 +17,7 @@ class AssessmentGenerator {
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
       final aiResponse = responseBody['assessment'];
-      return Assessment.fromAIResponse(aiResponse);
+      return Quiz.fromXmlString(aiResponse);
     } else {
       throw Exception('Failed to generate assessment');
     }

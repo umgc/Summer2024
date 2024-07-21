@@ -6,13 +6,12 @@ import 'moodle_connection.dart';
 class MoodleConnectionImpl extends MoodleConnection {
   String _moodleUrl = '';
   String _token = '';
-  String _siteUrl = '';
 
   @override
   void setMoodleUrl(String url, String token, String siteUrl) {
     _moodleUrl = url;
     _token = token;
-    _siteUrl = siteUrl;
+   
   }
 
   @override

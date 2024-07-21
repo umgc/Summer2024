@@ -1,8 +1,8 @@
-import 'assessment.dart';
+import 'package:intelligrade/controller/model/beans.dart';
 
 class AssessmentGrader {
-  Assessment gradeAssessment(Assessment assessment) {
+  Quiz gradeAssessment(Quiz quiz) {
     // Grading logic here
-    return assessment;
+    return quiz;
   }
 }
