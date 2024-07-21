@@ -59,6 +59,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: TWAppBar(
         context: context,
@@ -70,58 +71,71 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        const Expanded(child: AddedQuestion()),
-                        Expanded(
-                          child: SizedBox(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Icon(Icons.delete),
-                            ),
-                          ),
+            Align(alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: screenSize.width * 0.8,
+                child: Column(                  
+                  children: <Widget>[
+                    ...questions.map((question) {
+                      return SizedBox(
+                        child: Row(
+                          children: [
+                            const Expanded(child: AddedQuestion(
+
+                            )),
+                            // Expanded(
+                              // child: SizedBox(
+                              // SizedBox(
+                                // width: 50,
+                                // child: ElevatedButton(
+                                // child: IconButton(
+                                IconButton(
+                                  style: IconButton.styleFrom(backgroundColor: Colors.amber),
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.delete),
+                                ),
+                              // ),
+                            // ),
+                          ],
                         ),
-                      ],
+                      );
+                    }),
+
+                    Checkbox(
+                        value: isMathQuiz,
+                        onChanged: (value) {
+                          setIsMathQuiz();
+                        }),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Add Question'),
                     ),
-                  ),
-                  Checkbox(
-                      value: isMathQuiz,
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          //TODO add Addtional Details and Question Type Count
+                          questionGenerationDetail.prompt =
+                              llmService.buildPrompt(
+                                  questionGenerationDetail.numberOfAssessments,
+                                  questionGenerationDetail.topic);
+                          textEditingController.text =
+                              questionGenerationDetail.prompt;
+                        }
+                      },
+                      child: const Text('Generate Assessment'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          hintText: 'Generated Prompt will go here'),
+                      controller: textEditingController,
                       onChanged: (value) {
-                        setIsMathQuiz();
-                      }),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Add Question'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        //TODO add Addtional Details and Question Type Count
-                        questionGenerationDetail.prompt =
-                            llmService.buildPrompt(
-                                questionGenerationDetail.numberOfAssessments,
-                                questionGenerationDetail.topic);
-                        textEditingController.text =
-                            questionGenerationDetail.prompt;
-                      }
-                    },
-                    child: const Text('Generate Assessment'),
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        hintText: 'Generated Prompt will go here'),
-                    controller: textEditingController,
-                    onChanged: (value) {
-                      questionGenerationDetail.prompt = value;
-                    },
-                    minLines: 4,
-                    maxLines: 10,
-                  ),
-                ],
+                        questionGenerationDetail.prompt = value;
+                      },
+                      minLines: 4,
+                      maxLines: 10,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -132,7 +146,9 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 }
 
 class AddedQuestion extends StatefulWidget {
-  const AddedQuestion({super.key});
+  final String? questionType;
+  final String? questionText;
+  const AddedQuestion({super.key, this.questionText, this.questionType = 'Multiple Choice'});
 
   @override
   State<AddedQuestion> createState() => AddedQuestionState();
@@ -141,15 +157,27 @@ class AddedQuestion extends StatefulWidget {
 class AddedQuestionState extends State<AddedQuestion> {
   String? questionType = 'Multiple Choice';
   String? questionText;
+
+  // @override
+  // void initState() {
+  //   questionType = 
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // Size screenSize = MediaQuery.of(context).size;
     return SizedBox(
       height: 50,
       child: Form(
         child: Row(
           children: [
-            Expanded(
-              child: SizedBox(
+            // Expanded(
+              // child: SizedBox(
+              SizedBox(
+                // width: 50,
+                // width: screenSize.width * 0.25,
+                width: 150,
                 child: DropdownButtonFormField(
                   value: questionType,
                   items: const [
@@ -173,7 +201,8 @@ class AddedQuestionState extends State<AddedQuestion> {
                   },
                 ),
               ),
-            ),
+              const SizedBox(width: 10),
+            // ),
             Expanded(
               child: TextFormField(
                 decoration: const InputDecoration(
@@ -182,6 +211,7 @@ class AddedQuestionState extends State<AddedQuestion> {
                 ),
               ),
             ),
+            const SizedBox(width: 10),
           ],
         ),
       ),

@@ -110,16 +110,18 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           String subjectDescription =
                               subjectDescriptionController.text;
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Column(
-                                children: [
-                                  Text(
-                                      'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
-                                ],
-                              ),
-                            ),
-                          );
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QuestionGenerateForm(assessmentName: assessmentName, numberOfAssessments: int.parse(numOfStudents), topic: subjectDescription)));
+
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Column(
+                          //       children: [
+                          //         Text(
+                          //             'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // );
                         }
                       },
                       child: const Text('Generate Assessment'),
