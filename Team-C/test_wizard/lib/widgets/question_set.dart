@@ -3,7 +3,7 @@ import 'package:test_wizard/models/temp.dart';
 import 'package:test_wizard/utils/question.dart';
 import 'package:test_wizard/widgets/question_row.dart';
 
-class QuestionSet extends StatefulWidget {
+class QuestionSet extends StatelessWidget {
   final Future<List<Question>> Function(String) future;
   final String assessmentId;
   const QuestionSet({
@@ -13,14 +13,9 @@ class QuestionSet extends StatefulWidget {
   });
 
   @override
-  State<QuestionSet> createState() => QuestionSetState();
-}
-
-class QuestionSetState extends State<QuestionSet> {
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Question>>(
-      future: widget.future(widget.assessmentId),
+      future: future(assessmentId),
       builder: (BuildContext context, AsyncSnapshot<List<Question>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();

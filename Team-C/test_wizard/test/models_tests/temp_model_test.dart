@@ -7,7 +7,7 @@ void main() {
     test('fetchDropdownOptions', () async {
       expect(
         await TempModel.fetchDropdownOptions('Course'),
-        ['Select Course', 'Course 1', 'Course 2'],
+        ['Course 1', 'Course 2'],
       );
       expect(
         await TempModel.fetchDropdownOptions('Assessment Type'),
