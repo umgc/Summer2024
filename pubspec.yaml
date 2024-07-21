@@ -48,6 +48,9 @@ dependencies:
   dart_openai: ^5.1.0
   flutter_dotenv: ^5.1.0
   search_page: ^2.3.0
+  flutter_tts: ^3.8.3
+  permission_handler: ^11.3.1
+  flutter_sound: ^9.6.0
 
 dev_dependencies:
   flutter_test:

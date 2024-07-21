@@ -3,11 +3,14 @@ import 'package:mindinsync/Recording.dart';
 import 'package:mindinsync/Search.dart';
 import 'package:mindinsync/document_upload.dart';
 import 'package:mindinsync/Edit_Profile.dart';
+import 'package:mindinsync/prompt.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'BottomNavigation.dart';
 import 'Drawer.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +47,13 @@ class Home extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                hintText: 'Search',
+                hintText: 'Ask a question to MindAI',
                 
               ),
               onSubmitted: (String value) async {
-                print(value);
-                Navigator.pushNamed(context, '/Search');
+                //print(value);
+               // Navigator.push(context, PromptScreen());
+                Navigator.pushNamed(context, '/Prompt');
                 }
             ),
             const SizedBox(height: 20),

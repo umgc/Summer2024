@@ -222,7 +222,7 @@ class _RecordScreenState extends State<RecordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Record a Conversation'),
         backgroundColor: Colors.blue[300],
       ),
       body: ListView(

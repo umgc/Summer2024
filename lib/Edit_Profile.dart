@@ -109,6 +109,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               onPressed: _saveProfile,
               child: const Text('Save Profile'),
             ),
+            ElevatedButton(
+            onPressed: () {Navigator.pushNamed(context, '/Register');},
+            child: const Text('Reregister your voice with the Transcriber'),
+          ),
           ],
         ),
       ),
