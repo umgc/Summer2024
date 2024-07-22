@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:intelligrade/api/llm/llm_api.dart';
 import 'package:intelligrade/controller/model/beans.dart';
 import 'package:intelligrade/controller/model/xml_converter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
 import 'assessment_generator.dart';
@@ -10,22 +12,24 @@ import 'dart:html' as html;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart' as pdfWidgets;
-import 'create_page.dart';
+
 
 class MainController {
-  final AssessmentGenerator assessmentGenerator =
-      AssessmentGenerator(serverUrl: ''); //TODO
-  final AssessmentGrader assessmentGrader = AssessmentGrader();
+  final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
 
-  Quiz createAssessment(_AssignmentFormState quiz) {
-    //will use LLM
-    return quiz;
+  Future<List<Quiz>> createAssessments(String queryPrompt) async {
+    final String llmResp = await llm.postToLlm(queryPrompt); 
+    final List<Map<String, dynamic>> parsedXmlList  = llm.parseQueryResponse(llmResp);
+    var quizList = <Quiz>[];
+    for (var xml in parsedXmlList) {
+      quizList.add(Quiz.fromXmlString(xml.toString()));
+    }
+    return quizList;    
   }
 
   void gradeAssessment() {
+    //TODO:
     //will use LLM
-    // Assessment assessment = assessmentGenerator.generateAssessment();
-    // Assessment gradedAssessment = assessmentGrader.gradeAssessment(assessment);
     // Handle grading logic
   }
 
