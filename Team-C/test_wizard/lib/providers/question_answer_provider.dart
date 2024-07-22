@@ -3,32 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:test_wizard/models/question_answer_model.dart';
 
 class QuestionAnswerProvider extends ChangeNotifier {
-  List<QuestionAnswer> _questions = [
-    QuestionAnswer(
-      questionText: '1. What is the value of x in the equation 2x + 3 = 7?',
-      answerText: 'x = 2',
-    ),
-    QuestionAnswer(
-      questionText: '2. Solve the quadratic equation: x^2 - 4x - 5 = 0.',
-      answerText: 'x = 5 or x = -1',
-    ),
-    QuestionAnswer(
-      questionText: '3. What is the derivative of the function f(x) = 3x^2 + 2x + 1?',
-      answerText: 'f\'(x) = 6x + 2',
-    ),
-    QuestionAnswer(
-      questionText: '4. What is the integral of the function f(x) = 4x?',
-      answerText: 'F(x) = 2x^2 + C',
-    ),
-    QuestionAnswer(
-      questionText: '5. What is the slope of the line passing through the points (1,2) and (3,8)?',
-      answerText: 'Slope = 3',
-    ),
-  ];
-  List<QuestionAnswer> _deletedQuestions = [];
+  final List<QuestionAnswer> _questions = [];  // Add final
+  final List<QuestionAnswer> _deletedQuestions = [];  // Add final
 
   List<QuestionAnswer> get questions => _questions;
   List<QuestionAnswer> get deletedQuestions => _deletedQuestions;
+
+  // Add some sample data
+  QuestionAnswerProvider() {
+    _questions.addAll([
+      QuestionAnswer(questionText: 'What is the slope of the line that passes through the points (2, 3) and (4, 7)?', answerText: 'Slope = 2'),
+      QuestionAnswer(questionText: 'Solve for x: 2x + 3 = 7', answerText: 'x = 2'),
+      QuestionAnswer(questionText: 'What is the derivative of f(x) = x^2?', answerText: 'f\'(x) = 2x'),
+      QuestionAnswer(questionText: 'Integrate the function f(x) = 3x^2.', answerText: 'F(x) = x^3 + C'),
+      QuestionAnswer(questionText: 'What is the value of pi to 2 decimal places?', answerText: '3.14'),
+    ]);
+  }
 
   void addQuestion(QuestionAnswer question) {
     _questions.add(question);

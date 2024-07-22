@@ -1,4 +1,3 @@
-// lib/widgets/qset.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/question_answer_model.dart';
@@ -39,8 +38,7 @@ class QSet extends StatelessWidget {
     );
   }
 
-  void _showEditDialog(BuildContext context, QuestionAnswer qa,
-      {bool isQuestion = true, bool isRegenerate = false}) {
+  void _showEditDialog(BuildContext context, QuestionAnswer qa, {bool isQuestion = true, bool isRegenerate = false}) {
     final TextEditingController controller = TextEditingController(
       text: isQuestion ? qa.questionText : qa.answerText,
     );

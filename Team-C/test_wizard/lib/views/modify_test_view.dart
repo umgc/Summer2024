@@ -4,10 +4,11 @@ import 'package:test_wizard/widgets/qset.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/providers/question_answer_provider.dart';
 import 'package:test_wizard/widgets/column_header.dart';
+import 'package:test_wizard/widgets/deleted_questions.dart';
+import 'package:test_wizard/widgets/edit_prompt.dart'; // Add this import
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:test_wizard/widgets/deleted_questions.dart';
 
 class ModifyTestView extends StatelessWidget {
   final String screenTitle;
@@ -49,7 +50,7 @@ class ModifyTestView extends StatelessWidget {
                   QSet(assessmentId: assessmentId),
                   const ButtonContainer(),
                   const EditPrompt(),
-                  const DeletedQuestions(), // Use this widget
+                  const DeletedQuestions(),
                 ],
               ),
             ),
@@ -65,17 +66,21 @@ class ColumnHeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(child: ColumnHeader(headerText: 'Question')),
-        SizedBox(width: 280), // Adjust the width as needed
-        Expanded(child: ColumnHeader(headerText: 'Answer')),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 24.0), // Adjust the padding as needed
+            child: ColumnHeader(headerText: 'Answer'),
+          ),
+        ),
         Expanded(child: ColumnHeader(headerText: 'Previous Question')),
       ],
     );
   }
 }
-
 
 class ButtonContainer extends StatelessWidget {
   const ButtonContainer({super.key});
@@ -169,61 +174,3 @@ class ButtonContainer extends StatelessWidget {
     );
   }
 }
-
-
-
-class EditPrompt extends StatelessWidget {
-  const EditPrompt({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      alignment: Alignment.centerLeft, // Align the button to the left
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: const Color(0xff0072bb),
-        ),
-        onPressed: () {},
-        child: const Text('Edit Prompt (Advanced)'),
-      ),
-    );
-  }
-}
-
-class DeletedQuestions extends StatelessWidget {
-  const DeletedQuestions({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Recently Deleted Questions:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const SingleChildScrollView(
-              child: Column(
-                children: [                  Text('Deleted question will be shown here...'),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-                 
