@@ -33,7 +33,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 
   String prompt = "";
   bool isMathQuiz = false;
-  List questions = [
+  List<Map<String, String>> questions = [
     {'questionType': 'Multiple Choice', 'questionText': ''},
   ];
 
@@ -57,6 +57,12 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
     });
   }
 
+  void _removeQuestion(int index) {
+    setState(() {
+      questions.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -77,14 +83,17 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                 width: screenSize.width * 0.9,
                 child: Column(
                   children: <Widget>[
-                    ...questions.map((question) {
+                    ...questions.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Map<String, String> question = entry.value;
                       return SizedBox(
                         child: AddedQuestion(
                           questionText: question['questionText'],
                           questionType: question['questionType'],
+                          onRemove: () => _removeQuestion(index),
                         ),
                       );
-                    }),
+                    }).toList(),
                     Checkbox(
                         value: isMathQuiz,
                         onChanged: (value) {
@@ -142,10 +151,13 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 class AddedQuestion extends StatefulWidget {
   final String? questionType;
   final String? questionText;
+  final VoidCallback onRemove;
+
   const AddedQuestion({
     super.key,
     this.questionText,
     this.questionType = 'Multiple Choice',
+    required this.onRemove,
   });
 
   @override
@@ -201,7 +213,6 @@ class AddedQuestionState extends State<AddedQuestion> {
               ),
             ),
             const SizedBox(width: 10),
-            // ),
             Expanded(
               child: TextFormField(
                 controller: controller,
@@ -214,7 +225,7 @@ class AddedQuestionState extends State<AddedQuestion> {
             const SizedBox(width: 10),
             IconButton(
               style: IconButton.styleFrom(backgroundColor: Colors.amber),
-              onPressed: () {},
+              onPressed: widget.onRemove,
               icon: const Icon(Icons.delete),
             ),
           ],
