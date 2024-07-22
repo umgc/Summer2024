@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligrade/controller/main_controller.dart';
 
 class Dashboard extends StatelessWidget
 {

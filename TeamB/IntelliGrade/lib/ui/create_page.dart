@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../controller/main_controller.dart';
+
 
 class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
@@ -9,6 +11,7 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
+  final MainController controller = MainController();
   String _selectedForm = '';
 
   void _selectForm(String formType) {
@@ -182,6 +185,7 @@ class RubricForm extends StatefulWidget {
 }
 
 class _RubricFormState extends State<RubricForm> {
+  final MainController controller = MainController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final List<TextEditingController> _criteriaControllers = [];
@@ -207,7 +211,7 @@ class _RubricFormState extends State<RubricForm> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Handle save logic
+                //controller.saveFileLocally(quiz)
               },
               child: const Text('Save'),
             ),

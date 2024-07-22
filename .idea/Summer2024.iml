@@ -60,6 +60,9 @@
       <excludeFolder url="file://$MODULE_DIR$/TeamB/BusinessLayer/server/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/TeamB/BusinessLayer/server/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/TeamB/BusinessLayer/server/build" />
+      <excludeFolder url="file://$MODULE_DIR$/TeamB/IntelliGrade/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/TeamB/IntelliGrade/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/TeamB/IntelliGrade/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
