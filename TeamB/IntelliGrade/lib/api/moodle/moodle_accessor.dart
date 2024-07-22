@@ -1,40 +1,6 @@
-import 'package:http/http.dart' as http;
+import 'api_client.dart';
 import 'dart:convert';
-
-class ApiClient {
-  final String baseUrl;
-  final String token;
-
-  ApiClient({required this.baseUrl, required this.token});
-
-  Future<http.Response> get(String endpoint) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl$endpoint'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    return _processResponse(response);
-  }
-
-  Future<http.Response> post(String endpoint, {required Map<String, dynamic> body}) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl$endpoint'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(body),
-    );
-    return _processResponse(response);
-  }
-
-  http.Response _processResponse(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return response;
-    } else {
-      throw Exception('Failed to load data: ${response.statusCode}');
-    }
-  }
-}
+import 'package:http/http.dart' as http;
 
 class MoodleAccessor {
   final ApiClient apiClient;
@@ -106,9 +72,9 @@ class MoodleAccessor {
   }
 
   Future<List<Map<String, dynamic>>> exportQuestions(int quizId) async {
-    final endpoint = '/webservice/rest/server.php?wstoken=${apiClient.token}&wsfunction=mod_quiz_export_questions&moodlewsrestformat=json';
+    final endpoint = '/webservice/rest/server.php?wstoken=${apiClient.token}&wsfunction=mod_quiz_get_questions_by_quiz_id&moodlewsrestformat=json';
     final body = {
-      'quizid': quizId,
+      'quizid': quizId.toString()
     };
     final response = await apiClient.post(endpoint, body: body);
     final jsonResponse = json.decode(response.body);
@@ -116,6 +82,22 @@ class MoodleAccessor {
       return List<Map<String, dynamic>>.from(jsonResponse);
     } else {
       throw Exception('Failed to export questions');
+    }
+  }
+
+  Future<String> login(String username, String password) async {
+    final response = await http.get(
+      Uri.parse('${apiClient.baseUrl}/login/token.php?username=$username&password=$password&service=moodle_mobile_app')
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse['token'] != null) {
+        return jsonResponse['token'];
+      } else {
+        throw Exception('Failed to retrieve token');
+      }
+    } else {
+      throw Exception('Failed to login: ${response.statusCode}');
     }
   }
 }
