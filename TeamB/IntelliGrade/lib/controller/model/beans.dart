@@ -124,6 +124,16 @@ class Answer {
   }
 }
 
+// Object to pass user-specified parameters to LLM API.
+class AssignmentForm {
+  String? subject;
+  String? gradeLevel;
+  String? assignmentType;
+  String? codingLanguage;
+  Map<String, int> assignmentTypeCount = {};
+  Map<String, int> codingLanguageCount = {};
+}
+
 // // Multiple choice question.
 // class MultiChoiceQuestion extends Question {
 //   List<QuestionChoice> choiceList = <QuestionChoice>[]; // list of multiple choice options
