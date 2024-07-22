@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/course.dart';
+import 'package:test_wizard/models/question.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
 class LoginPage extends StatelessWidget {
@@ -55,28 +60,67 @@ class LoginPage extends StatelessWidget {
                     width: 200,
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Your OAuth login logic here
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          // to Teacher Dashboard with 'logged in' status for now
-                          builder: (context) => const TeacherDashboard(
-                            status: 'logged in',
+                  Consumer<AssessmentProvider>(
+                    builder: (context, savedAssessments, child) {
+                      return ElevatedButton(
+                        // for now this button populates the state with some sample data
+                        // if the Moodle login button is pressed
+                        onPressed: () {
+                          Assessment a = Assessment(1, 'Math Test');
+                          a.course = Course(1, 'Geometry 101');
+                          a.questions = [
+                            Question(
+                              questionId: 1,
+                              questionText:
+                                  'How many sides does a square have?',
+                              questionType: 'Short Answer',
+                              answer: '4',
+                              points: 10,
+                            ),
+                            Question(
+                              questionId: 2,
+                              questionText:
+                                  'How many sides does a triangle have?',
+                              questionType: 'Short Answer',
+                              answer: '3',
+                              points: 10,
+                            ),
+                            Question(
+                              questionId: 3,
+                              questionText:
+                                  'How many sides does a rectangle have?',
+                              questionType: 'Short Answer',
+                              answer: '4',
+                              points: 10,
+                            ),
+                          ];
+                          savedAssessments.add(a);
+                          savedAssessments.saveAssessmentsToFile();
+                          // Your OAuth login logic goes here
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              // to Teacher Dashboard with 'logged in' status for now
+                              builder: (context) => const TeacherDashboard(
+                                status: 'logged in',
+                              ),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff0072bb),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
                           ),
+                          textStyle: const TextStyle(fontSize: 16),
                         ),
+                        child: const Text('Login with Moodle'),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff0072bb),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                    child: const Text('Login with Moodle'),
                   ),
                   const SizedBox(height: 10),
+                  // Login as Guest button still only grabs saved user data from previous time.
                   ElevatedButton(
                     onPressed: () {
                       //Guest Login here

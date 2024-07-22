@@ -34,9 +34,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
   String prompt = "";
   bool isMathQuiz = false;
   List questions = [
-    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 2'},
-    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 4'},
-    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 5'},
+    {'questionType': 'Multiple Choice', 'questionText': ''},
   ];
 
   // [multiple choice] - [What is 2 + 2?] [x]
@@ -76,34 +74,14 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: screenSize.width * 0.8,
+                width: screenSize.width * 0.9,
                 child: Column(
                   children: <Widget>[
                     ...questions.map((question) {
                       return SizedBox(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: AddedQuestion(
-                                questionText: question['questionText'],
-                                questionType: question['questionType'],
-                              ),
-                            ),
-                            // Expanded(
-                            // child: SizedBox(
-                            // SizedBox(
-                            // width: 50,
-                            // child: ElevatedButton(
-                            // child: IconButton(
-                            IconButton(
-                              style: IconButton.styleFrom(
-                                  backgroundColor: Colors.amber),
-                              onPressed: () {},
-                              icon: const Icon(Icons.delete),
-                            ),
-                            // ),
-                            // ),
-                          ],
+                        child: AddedQuestion(
+                          questionText: question['questionText'],
+                          questionType: question['questionType'],
                         ),
                       );
                     }),
@@ -113,7 +91,16 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                           setIsMathQuiz();
                         }),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          questions.add(
+                            {
+                              'questionType': 'Multiple Choice',
+                              'questionText': ''
+                            },
+                          );
+                        });
+                      },
                       child: const Text('Add Question'),
                     ),
                     ElevatedButton(
@@ -126,6 +113,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                   questionGenerationDetail.topic);
                           textEditingController.text =
                               questionGenerationDetail.prompt;
+                          print(questions);
                         }
                       },
                       child: const Text('Generate Assessment'),
@@ -179,19 +167,17 @@ class AddedQuestionState extends State<AddedQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    // Size screenSize = MediaQuery.of(context).size;
     return SizedBox(
       height: 50,
       child: Form(
         child: Row(
           children: [
-            // Expanded(
-            // child: SizedBox(
             SizedBox(
-              // width: 50,
-              // width: screenSize.width * 0.25,
-              width: 150,
+              width: 175,
               child: DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
                 value: questionType,
                 items: const [
                   DropdownMenuItem(
@@ -226,6 +212,11 @@ class AddedQuestionState extends State<AddedQuestion> {
               ),
             ),
             const SizedBox(width: 10),
+            IconButton(
+              style: IconButton.styleFrom(backgroundColor: Colors.amber),
+              onPressed: () {},
+              icon: const Icon(Icons.delete),
+            ),
           ],
         ),
       ),

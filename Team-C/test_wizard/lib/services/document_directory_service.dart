@@ -4,9 +4,9 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
-class DocumentDirectoryService{
-
+class DocumentDirectoryService {
   static const JsonDecoder decoder = JsonDecoder();
+  static const JsonEncoder encoder = JsonEncoder();
 
   //type of file to get
   String model;
@@ -25,26 +25,25 @@ class DocumentDirectoryService{
   }
 
   Future<Map<String, dynamic>> readJsonFromFile() async {
-
     Map<String, dynamic> json = <String, dynamic>{};
 
     try {
-        final file = await _localFile;
+      final file = await _localFile;
 
-        // Read the file
-        final contents = await file.readAsString();
-        json = decoder.convert(contents);
-        return json;
-      } catch (e) {
-        // If encountering an error, return empty map.
-        return json;
-      }
+      // Read the file
+      final contents = await file.readAsString();
+      json = decoder.convert(contents);
+      return json;
+    } catch (e) {
+      // If encountering an error, return empty map.
+      return json;
+    }
   }
 
   Future<File> writeJsonToFile(Map<String, dynamic> json) async {
     final file = await _localFile;
 
     // Write the file
-    return file.writeAsString('$json');
+    return file.writeAsString(encoder.convert(json));
   }
 }

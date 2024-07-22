@@ -7,8 +7,10 @@ import 'package:test_wizard/models/saved_assessments.dart';
 class AssessmentProvider extends ChangeNotifier {
   /// Internal, private state of assessments in local storage.
   final SavedAssessments _savedAssessments = SavedAssessments();
+
   /// An unmodifiable view of the assessments.
-  UnmodifiableListView<Assessment> get assessments => UnmodifiableListView(_savedAssessments.assessments);
+  UnmodifiableListView<Assessment> get assessments =>
+      UnmodifiableListView(_savedAssessments.assessments);
 
   AssessmentProvider();
 
@@ -27,12 +29,12 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveAssessmentsToFile(){
-    _savedAssessments.saveAssessmentsToFile();
+  Future<void> saveAssessmentsToFile() async {
+    await _savedAssessments.saveAssessmentsToFile();
   }
 
-  void loadAssessmentsToFile(){
-    _savedAssessments.loadAssessmentsFromFile();
+  Future<void> loadAssessmentsFromFile() async {
+    await _savedAssessments.loadAssessmentsFromFile();
     notifyListeners();
   }
 }

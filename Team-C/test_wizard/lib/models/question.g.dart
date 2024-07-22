@@ -7,13 +7,13 @@ part of 'question.dart';
 // **************************************************************************
 
 Question _$QuestionFromJson(Map<String, dynamic> json) => Question(
-      (json['questionId'] as num).toInt(),
-      json['questionText'] as String,
-      json['questionType'] as String,
-      json['answer'] as String?,
-      json['rubric'] as String?,
-      (json['points'] as num).toInt(),
-      (json['answerOptions'] as List<dynamic>?)
+      questionId: (json['questionId'] as num).toInt(),
+      questionText: json['questionText'] as String,
+      questionType: json['questionType'] as String,
+      answer: json['answer'] as String?,
+      rubric: json['rubric'] as String?,
+      points: (json['points'] as num).toInt(),
+      answerOptions: (json['answerOptions'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
     );

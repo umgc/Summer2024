@@ -9,7 +9,6 @@ part of 'assessment.dart';
 Assessment _$AssessmentFromJson(Map<String, dynamic> json) => Assessment(
       (json['assessmentId'] as num).toInt(),
       json['assessmentName'] as String,
-      json['gradedOn'] as String,
     )
       ..course = json['course'] == null
           ? null
@@ -22,7 +21,6 @@ Map<String, dynamic> _$AssessmentToJson(Assessment instance) =>
     <String, dynamic>{
       'assessmentId': instance.assessmentId,
       'assessmentName': instance.assessmentName,
-      'gradedOn': instance.gradedOn,
       'course': instance.course?.toJson(),
       'questions': instance.questions.map((e) => e.toJson()).toList(),
     };

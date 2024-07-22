@@ -10,16 +10,14 @@ class Assessment {
   int assessmentId;
   //name of the assessment
   String assessmentName;
-  //what system the assessment is graded on. 
-  String gradedOn;
   //Course information related to the assessment
   Course? course;
   //List of questions related to the assessment
   List<Question> questions = [];
 
-  Assessment(this.assessmentId, this.assessmentName, this.gradedOn);
+  Assessment(this.assessmentId, this.assessmentName);
 
-  factory Assessment.fromJson(Map<String, dynamic> json) => _$AssessmentFromJson(json);
+  factory Assessment.fromJson(Map<String, dynamic> json) =>
+      _$AssessmentFromJson(json);
   Map<String, dynamic> toJson() => _$AssessmentToJson(this);
 }
-
