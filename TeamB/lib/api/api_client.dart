@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class ApiClient {
   final String baseUrl;
-  final String token;
+  String token;
 
   ApiClient({required this.baseUrl, required this.token});
 
