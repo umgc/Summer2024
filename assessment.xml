@@ -1,0 +1,18 @@
+<assessment>
+<question>
+<type>multipleChoice</type>
+<text>What is the capital of France?</text>
+<options>
+<option>Paris</option>
+<option>London</option>
+<option>Berlin</option>
+<option>Madrid</option>
+</options>
+<answer>Paris</answer>
+</question>
+<question>
+<type>trueFalse</type>
+<text>The earth is flat.</text>
+<answer>false</answer>
+</question>
+</assessment>
