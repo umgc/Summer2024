@@ -10,13 +10,14 @@ import 'dart:html' as html;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart' as pdfWidgets;
+import 'create_page.dart';
 
 class MainController {
   final AssessmentGenerator assessmentGenerator =
       AssessmentGenerator(serverUrl: ''); //TODO
   final AssessmentGrader assessmentGrader = AssessmentGrader();
 
-  Quiz createAssessment(Quiz quiz) {
+  Quiz createAssessment(_AssignmentFormState quiz) {
     //will use LLM
     return quiz;
   }
@@ -153,7 +154,7 @@ class MainController {
     html.document.cookie = '$cookieName=; expires=$pastDate; path=/';
   }
 
-  void postAssessmentToMoodle() {
+  void postAssessmentToMoodle(Quiz quiz) {
     // Handle posting logic
   }
 
