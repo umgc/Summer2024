@@ -17,7 +17,8 @@ import 'package:pdf/widgets.dart' as pdfWidgets;
 class MainController {
   final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
 
-  Future<List<Quiz>> createAssessments(String queryPrompt) async {
+  Future<List<Quiz>> createAssessments(AssignmentForm userForm) async {
+    var queryPrompt = getQueryPrompt(userForm);
     final String llmResp = await llm.postToLlm(queryPrompt); 
     final List<Map<String, dynamic>> parsedXmlList  = llm.parseQueryResponse(llmResp);
     var quizList = <Quiz>[];
@@ -25,6 +26,11 @@ class MainController {
       quizList.add(Quiz.fromXmlString(xml.toString()));
     }
     return quizList;    
+  }
+
+  String getQueryPrompt(AssignmentForm userForm) {
+    //waiting for Marsha's consts
+    return '';
   }
 
   void gradeAssessment() {
