@@ -341,54 +341,24 @@ class _AssignmentFormState extends State<AssignmentForm> {
   String? _selectedAssignmentType;
   String? _selectedCodingLanguage;
   bool _showRequiredResourcesTextBox = false;
-  bool _showAddAssignmentTypeTextBox = false;
-  bool _showAddCodingLanguageTextBox = false;
   bool _plagiarismCheck = false;
-  final TextEditingController _assignmentTypeController = TextEditingController();
-  final TextEditingController _codingLanguageController = TextEditingController();
-  final Map<String, int> _assignmentTypeCount = {};
-  final Map<String, int> _codingLanguageCount = {};
+  int _assignmentTypeCount = 0;
 
   List<String> subjects = [' ', 'Math', 'Science', 'History', 'Language Arts'];
   List<String> gradeLevels = [' ', 'Freshman', 'Sophomore', 'Junior', 'Senior'];
   List<String> assignmentTypes = ['Coding', 'Essay', 'Short Answers', 'Multiple Choice'];
   List<String> codingLanguages = ['Python', 'Java', 'C++'];
 
-  @override
-  void initState() {
-    super.initState();
-    for (var type in assignmentTypes) {
-      _assignmentTypeCount[type] = 0;
-    }
-    for (var language in codingLanguages) {
-      _codingLanguageCount[language] = 0;
-    }
-  }
-
-  void _incrementAssignmentType(String type) {
+  void _incrementAssignmentType() {
     setState(() {
-      _assignmentTypeCount[type] = (_assignmentTypeCount[type] ?? 0) + 1;
+      _assignmentTypeCount++;
     });
   }
 
-  void _decrementAssignmentType(String type) {
+  void _decrementAssignmentType() {
     setState(() {
-      if ((_assignmentTypeCount[type] ?? 0) > 0) {
-        _assignmentTypeCount[type] = (_assignmentTypeCount[type] ?? 0) - 1;
-      }
-    });
-  }
-
-  void _incrementCodingLanguage(String language) {
-    setState(() {
-      _codingLanguageCount[language] = (_codingLanguageCount[language] ?? 0) + 1;
-    });
-  }
-
-  void _decrementCodingLanguage(String language) {
-    setState(() {
-      if ((_codingLanguageCount[language] ?? 0) > 0) {
-        _codingLanguageCount[language] = (_codingLanguageCount[language] ?? 0) - 1;
+      if (_assignmentTypeCount > 0) {
+        _assignmentTypeCount--;
       }
     });
   }
@@ -451,7 +421,7 @@ class _AssignmentFormState extends State<AssignmentForm> {
   }
 
   bool _isDownloadWithAnswersAllowed() {
-    return _assignmentTypeCount['Short Answers']! > 0 || _assignmentTypeCount['Multiple Choice']! > 0;
+    return _selectedAssignmentType == 'Short Answers' || _selectedAssignmentType == 'Multiple Choice';
   }
 
   @override
@@ -497,76 +467,53 @@ class _AssignmentFormState extends State<AssignmentForm> {
               },
             ),
             const SizedBox(height: 10),
-            const Text('Assignment Types:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Column(
-              children: assignmentTypes.map((type) {
-                return Row(
-                  children: [
-                    Text(type),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        _decrementAssignmentType(type);
-                      },
-                    ),
-                    Text('${_assignmentTypeCount[type]}'),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        _incrementAssignmentType(type);
-                      },
-                    ),
-                  ],
+            const Text('Assignment Type:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            DropdownButtonFormField<String>(
+              value: _selectedAssignmentType,
+              decoration: const InputDecoration(labelText: 'Assignment Type'),
+              items: assignmentTypes.map((type) {
+                return DropdownMenuItem(
+                  value: type,
+                  child: Text(type),
                 );
               }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedAssignmentType = value;
+                  _assignmentTypeCount = 0;
+                });
+              },
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedAssignmentType,
-                    decoration: const InputDecoration(labelText: 'Assignment Type'),
-                    items: assignmentTypes.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedAssignmentType = value;
-                      });
-                    },
+            if (_selectedAssignmentType != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: _decrementAssignmentType,
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      _showAddAssignmentTypeTextBox = !_showAddAssignmentTypeTextBox;
-                    });
-                  },
-                ),
-              ],
-            ),
-            if (_showAddAssignmentTypeTextBox)
-              TextField(
-                controller: _assignmentTypeController,
-                decoration: InputDecoration(
-                  labelText: 'Add Assignment Type',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.check),
-                    onPressed: () {
-                      setState(() {
-                        assignmentTypes.add(_assignmentTypeController.text);
-                        _selectedAssignmentType = _assignmentTypeController.text;
-                        _assignmentTypeCount[_assignmentTypeController.text] = 0;
-                        _showAddAssignmentTypeTextBox = false;
-                        _assignmentTypeController.clear();
-                      });
-                    },
+                  Text('$_assignmentTypeCount'),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: _incrementAssignmentType,
                   ),
-                ),
+                ],
+              ),
+            if (_selectedAssignmentType == 'Coding')
+              DropdownButtonFormField<String>(
+                value: _selectedCodingLanguage,
+                decoration: const InputDecoration(labelText: 'Coding Language'),
+                items: codingLanguages.map((language) {
+                  return DropdownMenuItem(
+                    value: language,
+                    child: Text(language),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCodingLanguage = value;
+                  });
+                },
               ),
             const TextField(
               decoration: InputDecoration(labelText: 'Duration/Deadline'),
@@ -578,78 +525,6 @@ class _AssignmentFormState extends State<AssignmentForm> {
               decoration: InputDecoration(labelText: 'Instructions/Description'),
               maxLines: 3,
             ),
-            const SizedBox(height: 10),
-            const Text('Coding Languages:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Column(
-              children: codingLanguages.map((language) {
-                return Row(
-                  children: [
-                    Text(language),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        _decrementCodingLanguage(language);
-                      },
-                    ),
-                    Text('${_codingLanguageCount[language]}'),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        _incrementCodingLanguage(language);
-                      },
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedCodingLanguage,
-                    decoration: const InputDecoration(labelText: 'Coding Language'),
-                    items: codingLanguages.map((language) {
-                      return DropdownMenuItem(
-                        value: language,
-                        child: Text(language),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCodingLanguage = value;
-                      });
-                    },
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      _showAddCodingLanguageTextBox = !_showAddCodingLanguageTextBox;
-                    });
-                  },
-                ),
-              ],
-            ),
-            if (_showAddCodingLanguageTextBox)
-              TextField(
-                controller: _codingLanguageController,
-                decoration: InputDecoration(
-                  labelText: 'Add Coding Language',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.check),
-                    onPressed: () {
-                      setState(() {
-                        codingLanguages.add(_codingLanguageController.text);
-                        _selectedCodingLanguage = _codingLanguageController.text;
-                        _codingLanguageCount[_codingLanguageController.text] = 0;
-                        _showAddCodingLanguageTextBox = false;
-                        _codingLanguageController.clear();
-                      });
-                    },
-                  ),
-                ),
-              ),
             const TextField(
               decoration: InputDecoration(labelText: 'Key Topics'),
             ),
