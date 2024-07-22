@@ -1,10 +1,9 @@
-// lib/widgets/deleted_questions.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/providers/question_answer_provider.dart';
 
 class DeletedQuestions extends StatelessWidget {
-  const DeletedQuestions({super.key});
+  const DeletedQuestions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

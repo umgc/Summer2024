@@ -8,9 +8,9 @@ class QSet extends StatelessWidget {
   final String assessmentId;
 
   const QSet({
-    Key? key,
+    super.key,
     required this.assessmentId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,8 @@ class QSet extends StatelessWidget {
     );
   }
 
-  void _showEditDialog(BuildContext context, QuestionAnswer qa, {bool isQuestion = true, bool isRegenerate = false}) {
+    void _showEditDialog(BuildContext context, QuestionAnswer qa,
+      {bool isQuestion = true, bool isRegenerate = false}) {
     final TextEditingController controller = TextEditingController(
       text: isQuestion ? qa.questionText : qa.answerText,
     );
