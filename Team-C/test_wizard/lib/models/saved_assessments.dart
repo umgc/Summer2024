@@ -9,7 +9,7 @@ class SavedAssessments {
   final DocumentDirectoryService _documentDirectoryService =
       DocumentDirectoryService("assessments");
 
-  late List<Assessment> assessments;
+  late List<Assessment> assessments = [];
 
   SavedAssessments() {
     loadAssessmentsFromFile();
