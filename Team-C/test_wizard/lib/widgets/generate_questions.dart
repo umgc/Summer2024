@@ -36,7 +36,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
   List questions = [
     {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 2'},
     {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 4'},
-    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 5'}
+    {'questionType': 'Multiple Choice', 'questionText': 'What is 2 + 5'},
   ];
 
   // [multiple choice] - [What is 2 + 2?] [x]
@@ -73,36 +73,40 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Align(alignment: Alignment.topCenter,
+            Align(
+              alignment: Alignment.topCenter,
               child: SizedBox(
                 width: screenSize.width * 0.8,
-                child: Column(                  
+                child: Column(
                   children: <Widget>[
                     ...questions.map((question) {
                       return SizedBox(
                         child: Row(
                           children: [
-                            Expanded(child: AddedQuestion(questionText: question['questionText'], questionType: question['questionType']
-
-                            )),
+                            Expanded(
+                              child: AddedQuestion(
+                                questionText: question['questionText'],
+                                questionType: question['questionType'],
+                              ),
+                            ),
                             // Expanded(
-                              // child: SizedBox(
-                              // SizedBox(
-                                // width: 50,
-                                // child: ElevatedButton(
-                                // child: IconButton(
-                                IconButton(
-                                  style: IconButton.styleFrom(backgroundColor: Colors.amber),
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.delete),
-                                ),
-                              // ),
+                            // child: SizedBox(
+                            // SizedBox(
+                            // width: 50,
+                            // child: ElevatedButton(
+                            // child: IconButton(
+                            IconButton(
+                              style: IconButton.styleFrom(
+                                  backgroundColor: Colors.amber),
+                              onPressed: () {},
+                              icon: const Icon(Icons.delete),
+                            ),
+                            // ),
                             // ),
                           ],
                         ),
                       );
                     }),
-
                     Checkbox(
                         value: isMathQuiz,
                         onChanged: (value) {
@@ -150,7 +154,11 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 class AddedQuestion extends StatefulWidget {
   final String? questionType;
   final String? questionText;
-  const AddedQuestion({super.key, this.questionText, this.questionType = 'Multiple Choice'});
+  const AddedQuestion({
+    super.key,
+    this.questionText,
+    this.questionType = 'Multiple Choice',
+  });
 
   @override
   State<AddedQuestion> createState() => AddedQuestionState();
@@ -178,40 +186,40 @@ class AddedQuestionState extends State<AddedQuestion> {
         child: Row(
           children: [
             // Expanded(
-              // child: SizedBox(
-              SizedBox(
-                // width: 50,
-                // width: screenSize.width * 0.25,
-                width: 150,
-                child: DropdownButtonFormField(
-                  value: questionType,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'Multiple Choice',
-                      child: Text('Multiple Choice'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Short Answer',
-                      child: Text('Short Answer'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Essay',
-                      child: Text('Essay'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      questionType = value;
-                    });
-                  },
-                ),
+            // child: SizedBox(
+            SizedBox(
+              // width: 50,
+              // width: screenSize.width * 0.25,
+              width: 150,
+              child: DropdownButtonFormField(
+                value: questionType,
+                items: const [
+                  DropdownMenuItem(
+                    value: 'Multiple Choice',
+                    child: Text('Multiple Choice'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'Short Answer',
+                    child: Text('Short Answer'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'Essay',
+                    child: Text('Essay'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    questionType = value;
+                  });
+                },
               ),
-              const SizedBox(width: 10),
+            ),
+            const SizedBox(width: 10),
             // ),
             Expanded(
               child: TextFormField(
-                 controller: controller,
-                 decoration: const InputDecoration(
+                controller: controller,
+                decoration: const InputDecoration(
                   hintText: 'What is 2 + 2?',
                   border: OutlineInputBorder(),
                 ),
