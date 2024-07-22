@@ -124,6 +124,28 @@ class Answer {
   }
 }
 
+// Represents a course in Moodle.
+class Course {
+  int id;
+  String shortName;
+  String fullName;
+
+  // Barebones constructor.
+  Course(this.id, this.shortName, this.fullName);
+
+  // Json factory constructor.
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'id': int id,
+        'shortname': String shortName,
+        'fullname': String fullName,
+      } => Course(id, shortName, fullName),
+      _ => throw const FormatException('Failed to load course from json.'),
+    };
+  }
+}
+
 // Object to pass user-specified parameters to LLM API.
 class AssignmentForm {
   String? subject;
@@ -132,98 +154,6 @@ class AssignmentForm {
   String? codingLanguage;
   Map<String, int> assignmentTypeCount = {};
   Map<String, int> codingLanguageCount = {};
-}
 
-// // Multiple choice question.
-// class MultiChoiceQuestion extends Question {
-//   List<QuestionChoice> choiceList = <QuestionChoice>[]; // list of multiple choice options
-//
-//   // Constructor
-//   MultiChoiceQuestion(super.name, super.questionText, this.choiceList);
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     sb.write('$name\n$questionText');
-//     int charcode = 'A'.codeUnitAt(0);
-//     for (QuestionChoice choice in choiceList) {
-//       String letter = String.fromCharCode(charcode);
-//       String choiceStr = choice.toString();
-//       sb.write('\n  $letter. $choiceStr');
-//       charcode++;
-//     }
-//     return sb.toString();
-//   }
-// }
-//
-// // True/false question.
-// class TrueFalseQuestion extends Question {
-//   bool answer;  // the correct True/False answer.
-//
-//   // Constructor
-//   TrueFalseQuestion(super.name, super.questionText, this.answer);
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     sb.write('$name\n$questionText\n  True\n  False\n  Correct response: $answer');
-//     return sb.toString();
-//   }
-// }
-//
-// // Short answer question.
-// class ShortAnswerQuestion extends Question {
-//   List<String> correctAnswers = <String>[]; // list of acceptable short answers
-//
-//   // Constructor
-//   ShortAnswerQuestion(super.name, super.questionText, this.correctAnswers);
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     sb.write('$name\n$questionText\n');
-//     String answers = correctAnswers.join(', ');
-//     sb.write('  Accepted answers: $answers');
-//     return sb.toString();
-//   }
-// }
-//
-// // Essay question.
-// class EssayQuestion extends Question {
-//   // No additional fields.
-//   EssayQuestion(super.name, super.questionText);
-//
-//   @override
-//   String toString() {
-//     return '$name\n$questionText';
-//   }
-// }
-//
-// // Coding question.
-// class CodingQuestion extends Question {
-//   // No additional fields.
-//   CodingQuestion(super.name, super.questionText);
-//
-//   @override
-//   String toString() {
-//     return '$name\n$questionText';
-//   }
-// }
-//
-// // A choice for multiple choice questions.
-// class QuestionChoice {
-//   String choiceText;  // Multiple choice text - required
-//   int fraction;     // Point value from 0 (incorrect) to 100 (correct) - required
-//   String? feedbackText; // Feedback for the choice - optional
-//
-//   // Constructor
-//   QuestionChoice(this.choiceText, this.fraction, this.feedbackText);
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     sb.write(choiceText);
-//     sb.write(' <= $fraction%');
-//     return sb.toString();
-//   }
-// }
+  AssignmentForm(this.subject, this.gradeLevel, this.assignmentType, this.codingLanguage, this.assignmentTypeCount, this.codingLanguageCount);
+}
