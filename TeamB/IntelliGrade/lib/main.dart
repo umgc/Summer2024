@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intelligrade/ui/create_page.dart';
+import 'package:intelligrade/ui/feedbackpage.dart';
+import 'package:intelligrade/ui/gradesuggestionpage.dart';
 import 'package:intelligrade/ui/question_details_Page.dart';
 import 'package:intelligrade/ui/notifications_page.dart';
 import 'package:intelligrade/ui/search_page.dart';
@@ -39,6 +41,9 @@ class MyApp extends StatelessWidget
           routes:
           {
             '/dashboard': (context) => const Dashboard(),
+            '/gradesuggestion': (context) => const GradeSuggestionPage(),
+            '/feedback': (context) => FeedbackPage(),
+            '/login': (context) => LoginPage(),
             '/search': (context) => const Search(),
             '/testing': (context) => const Testing(),
             '/help': (context) => const Help(),

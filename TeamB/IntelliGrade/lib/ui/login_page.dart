@@ -1,56 +1,44 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget
-{
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Login"),
+        title: const Text('Login to Moodle'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: ()
-              {
-                Navigator.pushNamed(context, '/dashboard');
-              },
-              child: const Text('Go to the dashboard Page'),
+          children: <Widget>[
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Username',
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: ()
-              {
-                Navigator.pushNamed(context, '/search');
-              },
-              child: const Text('Go to the Search Page'),
+            const SizedBox(height: 16.0),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 32.0),
             ElevatedButton(
-              onPressed: ()
-              {
-                Navigator.pushNamed(context, '/Testsettings');
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/dashboard');
               },
-              child: const Text('Go to the Test Page'),
+              child: const Text('Login'),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: ()
-              {
-                Navigator.pushNamed(context, '/questiondetails');
+            const SizedBox(height: 16.0),
+            TextButton(
+              onPressed: () {
+                // Handle forgot password
               },
-              child: const Text('Go to the Detail Page'),
+              child: const Text('Proceed without Moodle'),
             ),
           ],
         ),
