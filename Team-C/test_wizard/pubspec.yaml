@@ -31,7 +31,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.2
   printing: ^5.5.0
   pdf: ^3.6.1
   xml: ^6.1.0
