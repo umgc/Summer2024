@@ -31,16 +31,21 @@ class MainController {
   final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
   static bool isLoggedIn = false;
 
-  Future<List<Quiz>> createAssessments(AssignmentForm userForm) async {
+  Future<bool> createAssessments(AssignmentForm userForm) async {
+    try {
     var queryPrompt = PromptEngine.generatePrompt(userForm);
     final String llmResp = await llm.postToLlm(queryPrompt);
     final List<Map<String, dynamic>> parsedXmlList =
         llm.parseQueryResponse(llmResp);
-    var quizList = <Quiz>[];
     for (var xml in parsedXmlList) {
-      quizList.add(Quiz.fromXmlString(xml.toString()));
+      saveFileLocally(Quiz.fromXmlString(xml.toString()));
     }
-    return quizList;
+    return true;
+    } catch (e) {
+    // Handle any errors
+    print('Error creating assessments: $e');
+    return false;
+  }
   }
 
   void gradeAssessment() {

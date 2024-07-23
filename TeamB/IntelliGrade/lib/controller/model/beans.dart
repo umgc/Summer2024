@@ -168,6 +168,7 @@ class AssignmentForm {
   String gradeLevel;
   int questionCount;
   String? codingLanguage;
+  String title;
 
   AssignmentForm({
     required this.questionType,
@@ -175,5 +176,6 @@ class AssignmentForm {
     required this.topic,
     required this.gradeLevel,
     required this.questionCount,
+    required this.title,
     this.codingLanguage});
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intelligrade/controller/main_controller.dart';
+import 'package:intelligrade/controller/model/beans.dart' show AssignmentForm;
 import 'package:intelligrade/ui/drawer.dart';
 import 'package:intelligrade/ui/header.dart';
 
 class CreatePage extends StatefulWidget
 {
   const CreatePage({super.key});
+  static MainController controller = MainController();
 
   @override
   _CreatePageState createState() => _CreatePageState();
@@ -88,7 +91,7 @@ class _CreatePageState extends State<CreatePage>
                           if (_selectedForm == 'Rubric')
                             RubricForm(onCancel: _clearForm)
                           else if (_selectedForm == 'Assignment')
-                            AssignmentForm(onCancel: _clearForm)
+                            UiAssignmentForm(onCancel: _clearForm)
                           else if (_selectedForm == 'Edit')
                               EditForm(onCancel: _clearForm),
                         ],
@@ -227,15 +230,15 @@ class _RubricFormState extends State<RubricForm> {
   }
 }
 
-class AssignmentForm extends StatefulWidget {
+class UiAssignmentForm extends StatefulWidget {
   final VoidCallback onCancel;
-  const AssignmentForm({super.key, required this.onCancel});
+  const UiAssignmentForm({super.key, required this.onCancel});
 
   @override
-  _AssignmentFormState createState() => _AssignmentFormState();
+  _UiAssignmentFormState createState() => _UiAssignmentFormState();
 }
 
-class _AssignmentFormState extends State<AssignmentForm> {
+class _UiAssignmentFormState extends State<UiAssignmentForm> {
   String? _selectedSubject;
   String? _selectedGradeLevel;
   String? _selectedAssignmentType;
@@ -505,7 +508,33 @@ class _AssignmentFormState extends State<AssignmentForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    //build a new AssignmentForm object based on the form data
+                    AssignmentForm form = AssignmentForm(
+                      title: _titleController
+                      subject: _selectedSubject ?? '',
+                      gradeLevel: _selectedGradeLevel ?? '',
+                      assignmentType: _selectedAssignmentType ?? '',
+                      codingLanguages: _codingLanguageCount.keys.toList(),
+                      keyTopics: ['Key Topics'],
+                      length: 'Length/Word Count',
+                      formatRequirements: 'Format Requirements',
+                      submissionMethods: ['Email', 'School Portal'],
+                      questionType: null,
+                      topic: '',
+                      questionCount: null,
+                    );
+                    
+                    bool success = await CreatePage.controller.createAssessments(form);
+                    if (success) {
+                      Navigator.pushReplacementNamed(context, '/viewExams');
+                    } else {
+                      // Handle failure
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Failed to create assessments')),
+                      );
+                    }
+                  },
                   child: const Text('Submit'),
                 ),
                 const SizedBox(width: 20),
