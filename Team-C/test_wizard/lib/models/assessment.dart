@@ -1,6 +1,5 @@
-import 'package:test_wizard/models/course.dart';
-import 'package:test_wizard/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:test_wizard/models/question.dart';
 
 part 'assessment.g.dart';
 
@@ -8,14 +7,12 @@ part 'assessment.g.dart';
 class Assessment {
   //this will not affect question generation. Informational only when integrated with moodle.
   int assessmentId;
-  //name of the assessment
-  String assessmentName;
-  //Course information related to the assessment
-  Course? course;
+  //Unique version of the assessment
+  int assessmentVersion;
   //List of questions related to the assessment
   List<Question> questions = [];
 
-  Assessment(this.assessmentId, this.assessmentName);
+  Assessment(this.assessmentId, this.assessmentVersion);
 
   factory Assessment.fromJson(Map<String, dynamic> json) =>
       _$AssessmentFromJson(json);

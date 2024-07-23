@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
@@ -136,15 +136,15 @@ class AssessmentTable extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Consumer<AssessmentProvider>(
         builder: (context, savedAssessments, child) {
-          List<Assessment> filteredAssessments = savedAssessments.assessments;
+          List<AssessmentSet> filteredAssessments = savedAssessments.assessmentSets;
           if (filter.isNotEmpty) {
-            filteredAssessments = savedAssessments.assessments
+            filteredAssessments = savedAssessments.assessmentSets
                 .where((curr) => [curr.assessmentName, curr.course?.courseName]
                     .any((value) =>
                         value?.toLowerCase().contains(filter) ?? false))
                 .toList();
           }
-          return !savedAssessments.assessments
+          return !savedAssessments.assessmentSets
                   .isNotEmpty // if there aren't any saved assessments
               ? const Text("We couldn't find any saved assessments.")
               // but if there are assessments display the table

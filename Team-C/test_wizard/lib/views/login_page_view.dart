@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
@@ -66,8 +67,8 @@ class LoginPage extends StatelessWidget {
                         // for now this button populates the state with some sample data
                         // if the Moodle login button is pressed
                         onPressed: () {
-                          Assessment a = Assessment(1, 'Math Test');
-                          a.course = Course(1, 'Geometry 101');
+                          AssessmentSet aSet = AssessmentSet([], 'Math Test',  Course(1, 'Geometry 101'));
+                          Assessment a = Assessment(1,1);
                           a.questions = [
                             Question(
                               questionId: 1,
@@ -94,7 +95,8 @@ class LoginPage extends StatelessWidget {
                               points: 10,
                             ),
                           ];
-                          savedAssessments.add(a);
+                          aSet.assessments.add(a);
+                          savedAssessments.add(aSet);
                           savedAssessments.saveAssessmentsToFile();
                           // Your OAuth login logic goes here
                           Navigator.of(context).push(

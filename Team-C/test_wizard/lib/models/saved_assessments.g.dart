@@ -8,11 +8,11 @@ part of 'saved_assessments.dart';
 
 SavedAssessments _$SavedAssessmentsFromJson(Map<String, dynamic> json) =>
     SavedAssessments()
-      ..assessments = (json['assessments'] as List<dynamic>)
-          .map((e) => Assessment.fromJson(e as Map<String, dynamic>))
+      ..assessmentSets = (json['assessmentSets'] as List<dynamic>)
+          .map((e) => AssessmentSet.fromJson(e as Map<String, dynamic>))
           .toList();
 
 Map<String, dynamic> _$SavedAssessmentsToJson(SavedAssessments instance) =>
     <String, dynamic>{
-      'assessments': instance.assessments.map((e) => e.toJson()).toList(),
+      'assessmentSets': instance.assessmentSets.map((e) => e.toJson()).toList(),
     };

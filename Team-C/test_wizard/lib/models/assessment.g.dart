@@ -8,19 +8,14 @@ part of 'assessment.dart';
 
 Assessment _$AssessmentFromJson(Map<String, dynamic> json) => Assessment(
       (json['assessmentId'] as num).toInt(),
-      json['assessmentName'] as String,
-    )
-      ..course = json['course'] == null
-          ? null
-          : Course.fromJson(json['course'] as Map<String, dynamic>)
-      ..questions = (json['questions'] as List<dynamic>)
-          .map((e) => Question.fromJson(e as Map<String, dynamic>))
-          .toList();
+      (json['assessmentVersion'] as num).toInt(),
+    )..questions = (json['questions'] as List<dynamic>)
+        .map((e) => Question.fromJson(e as Map<String, dynamic>))
+        .toList();
 
 Map<String, dynamic> _$AssessmentToJson(Assessment instance) =>
     <String, dynamic>{
       'assessmentId': instance.assessmentId,
-      'assessmentName': instance.assessmentName,
-      'course': instance.course?.toJson(),
+      'assessmentVersion': instance.assessmentVersion,
       'questions': instance.questions.map((e) => e.toJson()).toList(),
     };

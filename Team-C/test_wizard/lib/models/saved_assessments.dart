@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/services/document_directory_service.dart';
 
 part 'saved_assessments.g.dart';
@@ -9,7 +9,7 @@ class SavedAssessments {
   final DocumentDirectoryService _documentDirectoryService =
       DocumentDirectoryService("assessments");
 
-  late List<Assessment> assessments = [];
+  List<AssessmentSet> assessmentSets = [];
 
   SavedAssessments() {
     loadAssessmentsFromFile();
@@ -25,12 +25,8 @@ class SavedAssessments {
   }
 
   Future<void> loadAssessmentsFromFile() async {
-    try {
-      assessments = SavedAssessments.fromJson(
-              await _documentDirectoryService.readJsonFromFile())
-          .assessments;
-    } catch (e) {
-      assessments = [];
-    }
+    assessmentSets = SavedAssessments.fromJson(
+            await _documentDirectoryService.readJsonFromFile())
+        .assessmentSets;
   }
 }
