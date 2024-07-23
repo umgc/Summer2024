@@ -183,7 +183,10 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                     questionGenerationDetail.topic);
                             textEditingController.text =
                                 questionGenerationDetail.prompt;
-                            print(questions);
+                            for (var question in questions) {
+                              print(
+                                  '${question.questionText}: ${question.questionType}');
+                            }
                           }
                         },
                         child: const Text('Generate Assessment'),
