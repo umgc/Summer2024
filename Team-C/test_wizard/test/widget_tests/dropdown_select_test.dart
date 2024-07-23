@@ -22,6 +22,7 @@ void main() {
       Widget app = MaterialApp(
         home: Scaffold(
           body: DropdownSelect(
+            isDisabled: false,
             controller: controller,
             dropdownTitle: "Course",
             future: fakeDropdownFunction,
@@ -36,6 +37,7 @@ void main() {
       Widget app = MaterialApp(
         home: Scaffold(
           body: DropdownSelect(
+            isDisabled: false,
             controller: controller,
             dropdownTitle: "Wrong Value",
             future: fakeDropdownFunction,
@@ -52,6 +54,7 @@ void main() {
       Widget app = MaterialApp(
         home: Scaffold(
           body: DropdownSelect(
+            isDisabled: false,
             controller: controller,
             dropdownTitle: "Course",
             future: fakeDropdownFunction,

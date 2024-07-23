@@ -7,7 +7,7 @@ class Validators {
   }
 
   static String? checkOptionHasBeenSelected(String? value) {
-    if (value!.startsWith('Select')) {
+    if (value == null || value.startsWith('Select')) {
       return 'Please select an option.';
     }
     return null;

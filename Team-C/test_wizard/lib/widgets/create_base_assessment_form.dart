@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
@@ -51,10 +53,13 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                   height: 20,
                 ),
                 // ** Select Course Dropdown
-                DropdownSelect(
-                  controller: courseNameController,
-                  dropdownTitle: 'Course',
-                ),
+                Consumer<UserProvider>(builder: (context, user, child) {
+                  return DropdownSelect(
+                    isDisabled: !user.isLoggedInToMoodle,
+                    controller: courseNameController,
+                    dropdownTitle: 'Course',
+                  );
+                }),
                 const SizedBox(
                   height: 20,
                 ),
