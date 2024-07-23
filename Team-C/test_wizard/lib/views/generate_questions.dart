@@ -104,11 +104,21 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                 ]);
                               },
                             ),
-                            Checkbox(
-                                value: isMathQuiz,
-                                onChanged: (value) {
-                                  setIsMathQuiz();
-                                }),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                width: 400,
+                                child: CheckboxListTile(
+                                    title: const Text(
+                                        'Check if this assessment is about Math'),
+                                    value: isMathQuiz,
+                                    controlAffinity:
+                                        ListTileControlAffinity.platform,
+                                    onChanged: (value) {
+                                      setIsMathQuiz();
+                                    }),
+                              ),
+                            ),
                             ElevatedButton(
                               onPressed: () {
                                 assessment.add(Question(

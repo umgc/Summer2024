@@ -138,7 +138,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           // );
                         }
                       },
-                      child: const Text('Generate Assessment'),
+                      child: const Text('Add Questions'),
                     ),
                     const SizedBox(
                       width: 16,

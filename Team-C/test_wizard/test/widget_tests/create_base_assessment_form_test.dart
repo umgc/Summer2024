@@ -75,8 +75,8 @@ void main() {
         ),
       );
       expect(find.widgetWithText(ElevatedButton, 'Cancel'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Generate Assessment'),
-          findsOneWidget);
+      expect(
+          find.widgetWithText(ElevatedButton, 'Add Questions'), findsOneWidget);
     });
   });
 }
