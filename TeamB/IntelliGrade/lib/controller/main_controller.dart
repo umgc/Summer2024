@@ -110,17 +110,26 @@ class MainController {
     html.Url.revokeObjectUrl(url);
   }
 
-  List<String> listAllAssessments() {
+  List<Quiz> listAllAssessments() {
     // Retrieve all cookies as a single string
     String allCookies = html.document.cookie ?? '';
 
-    // Split the cookie string into individual cookies
+    // Split the string into a list of cookies
     List<String> cookieList = allCookies.split('; ');
-
-    // Extract the cookie names
     return cookieList.map((String cookie) {
-      return cookie.split('=').first;
+      // Split the cookie into a key-value pair
+      List<String> cookieParts = cookie.split('=');
+
+      // Return the key as the quiz name
+      String quizName = cookieParts[0];
+
+      // Return the value as the quiz XML string
+      String quizXml = cookieParts[1];
+
+      // Convert the XML string to a Quiz object
+      return Quiz.fromXmlString(quizXml);
     }).toList();
+    
   }
 
   void updateFileLocally(Quiz quiz) {
