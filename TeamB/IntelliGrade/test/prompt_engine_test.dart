@@ -9,7 +9,8 @@ void main() {
     subject: 'Biology',
     topic: 'cell division',
     gradeLevel: 'Freshman',
-    questionCount: 4
+    questionCount: 4,
+    title: 'Multichoice Test'
   )));
 
   print('\nTrue/False Test');
@@ -19,7 +20,8 @@ void main() {
       subject: 'History',
       topic: 'world war 2',
       gradeLevel: 'Junior',
-      questionCount: 5
+      questionCount: 5,
+      title: 'True/False Test'
   )));
 
   print('\nShort Answer Test');
@@ -29,7 +31,8 @@ void main() {
       subject: 'Math',
       topic: 'combinatorics',
       gradeLevel: 'Senior',
-      questionCount: 2
+      questionCount: 2,
+      title: 'Short Answer Test'
   )));
 
   print('\nEssay Test');
@@ -39,7 +42,8 @@ void main() {
       subject: 'Literature',
       topic: 'American 19th century literature',
       gradeLevel: 'Freshman',
-      questionCount: 1
+      questionCount: 1,
+      title: 'Essay Test'
   )));
 
   print('\nCoding Test');
@@ -50,6 +54,7 @@ void main() {
       topic: 'recursive functions',
       gradeLevel: 'Sophomore',
       questionCount: 1,
-      codingLanguage: 'Dart'
+      codingLanguage: 'Dart',
+      title: 'Coding Test'
   )));
 }

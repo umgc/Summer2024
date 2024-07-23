@@ -32,6 +32,7 @@ Future main() async {
         subject: 'Computer Science',
         topic: 'Java',
         gradeLevel: 'Freshman',
+        title: 'Title',
         questionCount: 3
     ));
     print('Generated prompt: $prompt');

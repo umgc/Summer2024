@@ -38,6 +38,7 @@ class MainController {
     final List<Map<String, dynamic>> parsedXmlList =
         llm.parseQueryResponse(llmResp);
     for (var xml in parsedXmlList) {
+      // TODO var xml is a map entry not the XML string
       saveFileLocally(Quiz.fromXmlString(xml.toString()));
     }
     return true;
@@ -233,6 +234,17 @@ class MainController {
       print(e);
       isLoggedIn = false;
       return false;
+    }
+  }
+
+  Future<List<Course>> getCourses() async {
+    var moodleApi = MoodleApiSingleton();
+    try {
+      List<Course> courses = await moodleApi.getCourses();
+      return courses;
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 }
