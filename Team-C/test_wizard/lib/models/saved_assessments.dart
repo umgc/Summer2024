@@ -25,8 +25,12 @@ class SavedAssessments {
   }
 
   Future<void> loadAssessmentsFromFile() async {
-    assessmentSets = SavedAssessments.fromJson(
-            await _documentDirectoryService.readJsonFromFile())
-        .assessmentSets;
+    try{
+      assessmentSets = SavedAssessments.fromJson(
+              await _documentDirectoryService.readJsonFromFile())
+          .assessmentSets;
+    }catch(e){
+      assessmentSets = [];
+    }
   }
 }
