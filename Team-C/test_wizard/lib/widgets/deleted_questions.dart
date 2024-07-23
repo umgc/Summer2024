@@ -3,11 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:test_wizard/providers/question_answer_provider.dart';
 
 class DeletedQuestions extends StatelessWidget {
-  const DeletedQuestions({Key? key}) : super(key: key);
+  const DeletedQuestions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final deletedQuestions = Provider.of<QuestionAnswerProvider>(context).deletedQuestions;
+    final deletedQuestions =
+        Provider.of<QuestionAnswerProvider>(context).deletedQuestions;
 
     return Container(
       margin: const EdgeInsets.only(top: 20),
@@ -34,7 +35,8 @@ class DeletedQuestions extends StatelessWidget {
                       Text(qa.questionText),
                       ElevatedButton(
                         onPressed: () {
-                          Provider.of<QuestionAnswerProvider>(context, listen: false)
+                          Provider.of<QuestionAnswerProvider>(context,
+                                  listen: false)
                               .restoreQuestion(qa);
                         },
                         child: const Text('Restore'),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/qset.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/providers/question_answer_provider.dart';
 import 'package:test_wizard/widgets/column_header.dart';
@@ -27,33 +29,17 @@ class ModifyTestView extends StatelessWidget {
       child: Scaffold(
         appBar: TWAppBar(context: context, screenTitle: screenTitle),
         backgroundColor: const Color(0xffe6f2ff),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              width: 1200,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 20),
-                  const ColumnHeaderRow(),
-                  QSet(assessmentId: assessmentId),
-                  const ButtonContainer(),
-                  const EditPrompt(),
-                  const DeletedQuestions(),
-                ],
-              ),
-            ),
+        body: ScrollContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+              const ColumnHeaderRow(),
+              QSet(assessmentId: assessmentId),
+              const ButtonContainer(),
+              const EditPrompt(),
+              const DeletedQuestions(),
+            ],
           ),
         ),
       ),
@@ -72,7 +58,8 @@ class ColumnHeaderRow extends StatelessWidget {
         Expanded(child: ColumnHeader(headerText: 'Question')),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.only(left: 24.0), // Adjust the padding as needed
+            padding:
+                EdgeInsets.only(left: 24.0), // Adjust the padding as needed
             child: ColumnHeader(headerText: 'Answer'),
           ),
         ),
@@ -86,7 +73,8 @@ class ButtonContainer extends StatelessWidget {
   const ButtonContainer({super.key});
 
   void _printQuestionsAndAnswers(BuildContext context) {
-    final questions = Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
+    final questions =
+        Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
 
     final doc = pw.Document();
     doc.addPage(
@@ -115,7 +103,8 @@ class ButtonContainer extends StatelessWidget {
   }
 
   void _printQuestionsOnly(BuildContext context) {
-    final questions = Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
+    final questions =
+        Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
 
     final doc = pw.Document();
     doc.addPage(
@@ -165,10 +154,7 @@ class ButtonContainer extends StatelessWidget {
             child: const Text('Save'),
           ),
           const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Cancel'),
-          ),
+          const CancelButton(),
         ],
       ),
     );

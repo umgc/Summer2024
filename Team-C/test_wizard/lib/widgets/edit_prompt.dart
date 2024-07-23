@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditPrompt extends StatelessWidget {
-  const EditPrompt({Key? key}) : super(key: key);
+  const EditPrompt({super.key});
 
   @override
   Widget build(BuildContext context) {
