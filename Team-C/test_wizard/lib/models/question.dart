@@ -29,16 +29,6 @@ class Question {
     this.answerOptions,
   });
 
-  Question.fromQuestion(
-      {required Question existingQ, String? newText, String? newType})
-      : points = existingQ.points,
-        questionId = existingQ.questionId,
-        answer = existingQ.answer,
-        answerOptions = existingQ.answerOptions,
-        rubric = existingQ.rubric,
-        questionText = newText ?? existingQ.questionText,
-        questionType = newType ?? existingQ.questionType;
-
   factory Question.fromJson(Map<String, dynamic> json) =>
       _$QuestionFromJson(json);
   Map<String, dynamic> toJson() => _$QuestionToJson(this);
