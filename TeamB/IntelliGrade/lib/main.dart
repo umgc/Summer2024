@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intelligrade/ui/create_page.dart';
 import 'package:intelligrade/ui/feedbackpage.dart';
 import 'package:intelligrade/ui/gradesuggestionpage.dart';
@@ -13,7 +14,8 @@ import 'package:intelligrade/ui/dashboard_page.dart';
 import 'package:intelligrade/ui/login_page.dart';
 
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(MyApp());
 }
 

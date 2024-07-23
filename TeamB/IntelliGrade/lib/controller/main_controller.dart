@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:intelligrade/api/llm/llm_api.dart';
+import 'package:intelligrade/api/moodle/moodle_api_singleton.dart';
 import 'package:intelligrade/controller/model/beans.dart';
 import 'package:intelligrade/controller/model/xml_converter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,19 +14,20 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart' as pdfWidgets;
 
-
 class MainController {
   final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
+  static bool isLoggedIn = false;
 
   Future<List<Quiz>> createAssessments(AssignmentForm userForm) async {
     var queryPrompt = getQueryPrompt(userForm);
-    final String llmResp = await llm.postToLlm(queryPrompt); 
-    final List<Map<String, dynamic>> parsedXmlList  = llm.parseQueryResponse(llmResp);
+    final String llmResp = await llm.postToLlm(queryPrompt);
+    final List<Map<String, dynamic>> parsedXmlList =
+        llm.parseQueryResponse(llmResp);
     var quizList = <Quiz>[];
     for (var xml in parsedXmlList) {
       quizList.add(Quiz.fromXmlString(xml.toString()));
     }
-    return quizList;    
+    return quizList;
   }
 
   String getQueryPrompt(AssignmentForm userForm) {
@@ -129,7 +131,6 @@ class MainController {
       // Convert the XML string to a Quiz object
       return Quiz.fromXmlString(quizXml);
     }).toList();
-    
   }
 
   void updateFileLocally(Quiz quiz) {
@@ -173,8 +174,18 @@ class MainController {
     html.document.cookie = '$cookieName=; expires=$pastDate; path=/';
   }
 
-  void postAssessmentToMoodle(Quiz quiz) {
-    // Handle posting logic
+  void postAssessmentToMoodle(Quiz quiz, String courseId) async {
+    if (!isLoggedIn) {
+      throw Exception('User is not logged in.');
+    }
+    String xml = XmlConverter.convertQuizToXml(quiz).toString();
+    var moodleApi = MoodleApiSingleton();
+    try {
+      await moodleApi.importQuiz(courseId, xml);
+      print('Questions successfully imported!');
+    } catch (e) {
+      print(e);
+    }
   }
 
   Quiz getAssessmentFromMoodle() {
@@ -185,5 +196,18 @@ class MainController {
   String complieCodeAndGetOutput(String code) {
     // Handle compiling logic
     return '';
+  }
+
+  Future<bool> loginToMoodle(String username, String password) async {
+    var moodleApi = MoodleApiSingleton();
+    try {
+      await moodleApi.login(username, password);
+      isLoggedIn = true;
+      return true;
+    } catch (e) {
+      print(e);
+      isLoggedIn = false;
+      return false;
+    }
   }
 }

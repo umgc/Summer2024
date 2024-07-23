@@ -1,7 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:intelligrade/controller/main_controller.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+  static MainController controller = MainController();
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _showLoginFailedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Login Failed"),
+          content: const Text("Incorrect username or password. Please try again."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,29 +44,39 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
                 labelText: 'Username',
               ),
             ),
             const SizedBox(height: 16.0),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
                 labelText: 'Password',
               ),
               obscureText: true,
             ),
             const SizedBox(height: 32.0),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/dashboard');
+              onPressed: () async {
+                var wasSuccessful = await LoginPage.controller.loginToMoodle(
+                  _usernameController.text,
+                  _passwordController.text,
+                );
+                if (wasSuccessful) {
+                  Navigator.pushReplacementNamed(context, '/dashboard');
+                } else {
+                  _showLoginFailedDialog();
+                }
               },
               child: const Text('Login'),
             ),
             const SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
-                // Handle forgot password
+                Navigator.pushReplacementNamed(context, '/dashboard');
               },
               child: const Text('Proceed without Moodle'),
             ),
@@ -44,5 +84,12 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
