@@ -1,96 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:intelligrade/ui/drawer.dart';
+import 'package:intelligrade/ui/header.dart';
+import 'package:intelligrade/controller/main_controller.dart';
+import 'package:intelligrade/controller/model/beans.dart';
 
-class ViewExamPage extends StatelessWidget
-{
+class ViewExamPage extends StatefulWidget {
   const ViewExamPage({super.key});
+  static MainController controller = MainController();
 
   @override
-  Widget build(BuildContext context)
-  {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('IntelliGrade'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: ()
-            {
-              Navigator.pushNamed(context, '/search');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: ()
-            {
-              Navigator.pushNamed(context, '/notifications');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: ()
-            {
-              Navigator.pushNamed(context, '/help');
-            },
-          ),
-          const CircleAvatar(
-            backgroundImage: AssetImage('assets/avatars/ducky.jpeg'),
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
+  _ViewExamPageState createState() => _ViewExamPageState();
+}
+
+class _ViewExamPageState extends State<ViewExamPage> {
+  List<Quiz?> quizzes = []; // Initialize as an empty list
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch quizzes
+    try {
+      quizzes = ViewExamPage.controller.listAllAssessments();
+    } catch (e) {
+      print('Error fetching quizzes: $e');
+      quizzes = [];
+    }
+  }
+
+  void _showQuizDetails(Quiz quiz) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(quiz.name ?? 'Quiz Details'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: quiz.questionList
+                  .map((question) => Text(question.questionText ?? ''))
+                  .toList(),
             ),
-            ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/dashboard');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.create),
-              title: const Text('Create...'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/create');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.view_list),
-              title: const Text('View Exams'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/viewExams');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/settings');
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],
-        ),
-      ),
-      body: const Center(
-        child: Text('Notifications Page Content'),
-      ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const AppHeader(),
+      drawer: const AppDrawer(),
+      body: quizzes.isEmpty
+          ? const Center(child: Text('No saved exams yet.'))
+          : ListView.builder(
+              itemCount: quizzes.length,
+              itemBuilder: (BuildContext context, int index) {
+                Quiz quiz = quizzes[index] ?? Quiz();
+                return ListTile(
+                  title: Text(quiz.name ?? 'Unnamed Quiz'),
+                  subtitle: Text(quiz.description ?? 'No description'),
+                  onTap: () {
+                    _showQuizDetails(quiz);
+                  },
+                );
+              },
+            ),
     );
   }
 }

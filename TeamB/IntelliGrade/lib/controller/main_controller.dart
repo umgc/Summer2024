@@ -112,26 +112,38 @@ class MainController {
     html.Url.revokeObjectUrl(url);
   }
 
-  List<Quiz> listAllAssessments() {
-    // Retrieve all cookies as a single string
-    String allCookies = html.document.cookie ?? '';
+  List<Quiz?> listAllAssessments() {
+  // Retrieve all cookies as a single string
+  String allCookies = html.document.cookie ?? '';
 
-    // Split the string into a list of cookies
-    List<String> cookieList = allCookies.split('; ');
-    return cookieList.map((String cookie) {
+  // Split the string into a list of cookies
+  List<String> cookieList = allCookies.split('; ');
+
+  // Map the cookies to Quiz objects, with error handling
+  List<Quiz?> allQuizzes = cookieList.map((String cookie) {
+    try {
       // Split the cookie into a key-value pair
       List<String> cookieParts = cookie.split('=');
 
-      // Return the key as the quiz name
-      String quizName = cookieParts[0];
+      // Ensure the cookie has both a key and a value
+      if (cookieParts.length < 2) {
+        throw FormatException('Invalid cookie format');
+      }
 
-      // Return the value as the quiz XML string
+      // Return the key as the quiz name and the value as the quiz XML string
+      String quizName = cookieParts[0];
       String quizXml = cookieParts[1];
 
       // Convert the XML string to a Quiz object
       return Quiz.fromXmlString(quizXml);
-    }).toList();
-  }
+    } catch (e) {
+      print('Error parsing cookie: $e');
+      return null; // Return null for invalid cookies
+    }
+  }).where((quiz) => quiz != null).toList();
+
+  return allQuizzes;
+}
 
   void updateFileLocally(Quiz quiz) {
     if (quiz.name == null) {

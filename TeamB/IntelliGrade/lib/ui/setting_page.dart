@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intelligrade/ui/drawer.dart';
 import 'dart:io';
+
+import 'package:intelligrade/ui/header.dart';
 
 class Setting extends StatefulWidget
 {
@@ -13,7 +16,7 @@ class Setting extends StatefulWidget
 
 class _SettingPageState extends State<Setting>
 {
-  ImageProvider _image = const AssetImage('assets/avatars/ducky.jpeg');
+  ImageProvider _image = const AssetImage('avatars/ducky.jpeg');
   String _name = "User";
   final ImagePicker _picker = ImagePicker();
 
@@ -32,86 +35,8 @@ class _SettingPageState extends State<Setting>
   Widget build(BuildContext context)
   {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('IntelliGrade'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: ()
-            {
-              Navigator.pushNamed(context, '/search');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: ()
-            {
-              Navigator.pushNamed(context, '/notifications');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: ()
-            {
-              Navigator.pushNamed(context, '/help');
-            },
-          ),
-          CircleAvatar(
-            backgroundImage: _image,
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/dashboard');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.create),
-              title: const Text('Create...'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/create');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.view_list),
-              title: const Text('View Exams'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/viewExams');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: ()
-              {
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-          ],
-        ),
-      ),
+      appBar: const AppHeader(),
+      drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
