@@ -127,10 +127,6 @@ class Dashboard extends StatelessWidget
                               const Spacer(),
                               TextButton(
                                 onPressed: () {},
-                                child: const Text('Import'),
-                              ),
-                              TextButton(
-                                onPressed: () {},
                                 child: const Text('Export'),
                               ),
                             ],
