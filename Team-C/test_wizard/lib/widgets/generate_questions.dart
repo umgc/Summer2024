@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/services/llm_service.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 class QuestionGenerateForm extends StatefulWidget {
   final String assessmentName;
   final int numberOfAssessments;
   final String topic;
+  final String courseName;
   const QuestionGenerateForm({
     super.key,
     required this.assessmentName,
     required this.numberOfAssessments,
     required this.topic,
+    required this.courseName,
   });
 
   @override
@@ -33,10 +40,10 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 
   String prompt = "";
   bool isMathQuiz = false;
-  List<Map<String, String>> questions = [
-    {'questionType': 'Multiple Choice', 'questionText': ''},
-  ];
-
+  late List<Question> questions;
+  late Assessment assessment;
+  late AssessmentSet assessmentSet;
+  int id = 0;
   // [multiple choice] - [What is 2 + 2?] [x]
   // short answer - What is 3 + 2? x
   // Essay - Explain why 3 + 3 = 6? x
@@ -46,6 +53,15 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
   void initState() {
     questionGenerationDetail.numberOfAssessments = widget.numberOfAssessments;
     questionGenerationDetail.topic = widget.topic;
+    assessment = Assessment(0, 0);
+    assessment.questions.add(Question(
+      points: 10,
+      questionId: id++,
+      questionText: '',
+      questionType: 'Multiple Choice',
+    ));
+    questions = assessment.questions;
+
     super.initState();
   }
 
@@ -54,6 +70,38 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
       //the value assigned here is not used in setting the state. Inverse is used. Dart Set methods require a param
       questionGenerationDetail.isMathQuiz = null;
       isMathQuiz = !isMathQuiz;
+    });
+  }
+
+  void _onDropdownChange(int index, String option) {
+    setState(() {
+      questions = [
+        ...questions.indexed.map<Question>((questionWithIndex) {
+          var (i, question) = questionWithIndex;
+          return i == index
+              ? Question.fromQuestion(
+                  existingQ: question,
+                  newType: option,
+                )
+              : question;
+        })
+      ];
+    });
+  }
+
+  void _onTextChange(int index, String value) {
+    setState(() {
+      questions = [
+        ...questions.indexed.map<Question>((questionWithIndex) {
+          var (i, question) = questionWithIndex;
+          return i == index
+              ? Question.fromQuestion(
+                  existingQ: question,
+                  newText: value,
+                )
+              : question;
+        })
+      ];
     });
   }
 
@@ -72,76 +120,90 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
         screenTitle: 'Add Questions to ${widget.assessmentName}',
         implyLeading: true,
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: screenSize.width * 0.9,
-                child: Column(
-                  children: <Widget>[
-                    ...questions.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      Map<String, String> question = entry.value;
-                      return SizedBox(
-                        child: AddedQuestion(
-                          questionText: question['questionText'],
-                          questionType: question['questionType'],
-                          onRemove: () => _removeQuestion(index),
+      body: ScrollContainer(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: screenSize.width * 0.9,
+                  child: Column(
+                    children: <Widget>[
+                      // ...questions.asMap().entries.map((entry) {
+                      //   int index = entry.key;
+                      //   Question question = entry.value;
+                      SizedBox(
+                        height: questions.length * 50,
+                        child: ListView.builder(
+                          itemCount: questions.length,
+                          itemBuilder: (context, index) {
+                            Question question = questions.elementAt(index);
+                            return SizedBox(
+                              child: AddedQuestion(
+                                index: index,
+                                questionText: question.questionText,
+                                questionType: question.questionType,
+                                onRemove: _removeQuestion,
+                                onDropdownChange: _onDropdownChange,
+                                onTextChange: _onTextChange,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    }).toList(),
-                    Checkbox(
-                        value: isMathQuiz,
+                      ),
+                      Checkbox(
+                          value: isMathQuiz,
+                          onChanged: (value) {
+                            setIsMathQuiz();
+                          }),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            questions.add(Question(
+                              points: 0,
+                              questionId: id++,
+                              questionText: '',
+                              questionType: 'Multiple Choice',
+                            ));
+                          });
+                        },
+                        child: const Text('Add Question'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            //TODO add Addtional Details and Question Type Count
+                            questionGenerationDetail.prompt =
+                                llmService.buildPrompt(
+                                    questionGenerationDetail
+                                        .numberOfAssessments,
+                                    questionGenerationDetail.topic);
+                            textEditingController.text =
+                                questionGenerationDetail.prompt;
+                            print(questions);
+                          }
+                        },
+                        child: const Text('Generate Assessment'),
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                            hintText: 'Generated Prompt will go here'),
+                        controller: textEditingController,
                         onChanged: (value) {
-                          setIsMathQuiz();
-                        }),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          questions.add(
-                            {
-                              'questionType': 'Multiple Choice',
-                              'questionText': ''
-                            },
-                          );
-                        });
-                      },
-                      child: const Text('Add Question'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          //TODO add Addtional Details and Question Type Count
-                          questionGenerationDetail.prompt =
-                              llmService.buildPrompt(
-                                  questionGenerationDetail.numberOfAssessments,
-                                  questionGenerationDetail.topic);
-                          textEditingController.text =
-                              questionGenerationDetail.prompt;
-                          print(questions);
-                        }
-                      },
-                      child: const Text('Generate Assessment'),
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          hintText: 'Generated Prompt will go here'),
-                      controller: textEditingController,
-                      onChanged: (value) {
-                        questionGenerationDetail.prompt = value;
-                      },
-                      minLines: 4,
-                      maxLines: 10,
-                    ),
-                  ],
+                          questionGenerationDetail.prompt = value;
+                        },
+                        minLines: 4,
+                        maxLines: 10,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -151,13 +213,19 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 class AddedQuestion extends StatefulWidget {
   final String? questionType;
   final String? questionText;
-  final VoidCallback onRemove;
+  final void Function(int) onRemove;
+  final void Function(int, String) onDropdownChange;
+  final void Function(int, String) onTextChange;
+  final int index;
 
   const AddedQuestion({
     super.key,
     this.questionText,
     this.questionType = 'Multiple Choice',
     required this.onRemove,
+    required this.onDropdownChange,
+    required this.onTextChange,
+    required this.index,
   });
 
   @override
@@ -205,17 +273,15 @@ class AddedQuestionState extends State<AddedQuestion> {
                     child: Text('Essay'),
                   ),
                 ],
-                onChanged: (value) {
-                  setState(() {
-                    questionType = value;
-                  });
-                },
+                onChanged: (value) =>
+                    widget.onDropdownChange(widget.index, value!),
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: TextFormField(
                 controller: controller,
+                onChanged: (value) => widget.onTextChange(widget.index, value),
                 decoration: const InputDecoration(
                   hintText: 'What is 2 + 2?',
                   border: OutlineInputBorder(),
@@ -225,7 +291,7 @@ class AddedQuestionState extends State<AddedQuestion> {
             const SizedBox(width: 10),
             IconButton(
               style: IconButton.styleFrom(backgroundColor: Colors.amber),
-              onPressed: widget.onRemove,
+              onPressed: () => widget.onRemove(widget.index),
               icon: const Icon(Icons.delete),
             ),
           ],

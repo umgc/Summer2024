@@ -105,7 +105,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           String assessmentName = assessmentController.text;
-                          // String course = courseNameController.text;
+                          String course = courseNameController.text;
                           String numOfStudents = numOfStudentsController.text;
                           String subjectDescription =
                               subjectDescriptionController.text;
@@ -113,6 +113,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => QuestionGenerateForm(
+                                courseName: course,
                                 assessmentName: assessmentName,
                                 numberOfAssessments: int.parse(numOfStudents),
                                 topic: subjectDescription,
