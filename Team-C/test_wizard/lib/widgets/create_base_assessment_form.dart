@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
-import 'package:test_wizard/widgets/generate_questions.dart';
+import 'package:test_wizard/views/generate_questions.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
