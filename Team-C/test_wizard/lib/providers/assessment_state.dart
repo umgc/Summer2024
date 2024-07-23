@@ -47,4 +47,19 @@ class AssessmentState extends ChangeNotifier {
     ];
     notifyListeners();
   }
+
+  Map<String, int> getQuestionTypeCount() {
+    var questionCount = {
+      "Multiple Choice": 0,
+      "Short Answer": 0,
+      "Essay": 0,
+    };
+
+    for (Question question in _a.questions) {
+      questionCount[question.questionType] =
+          questionCount[question.questionType]! + 1;
+    }
+
+    return questionCount;
+  }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_wizard/models/assessment.dart';
-import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/providers/assessment_state.dart';
@@ -42,9 +40,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 
   String prompt = "";
   bool isMathQuiz = false;
-  late List<Question> questions;
-  late Assessment assessment;
-  late AssessmentSet assessmentSet;
   int id = 0;
 
   @override
@@ -70,7 +65,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
         var state = AssessmentState(assessmentId: 0, version: 0);
         state.add(Question(
           points: 0,
-          questionId: 0,
+          questionId: id++,
           questionText: '',
           questionType: 'Short Answer',
         ));
@@ -128,7 +123,17 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                             ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  //TODO add Addtional Details and Question Type Count
+                                  var typeMap =
+                                      assessment.getQuestionTypeCount();
+                                  int multipleChoiceCount =
+                                      typeMap['Multiple Choice']!;
+                                  int shortAnswerCount =
+                                      typeMap['Short Answer']!;
+                                  int essayCount = typeMap['Essay']!;
+                                  print(multipleChoiceCount);
+                                  print(shortAnswerCount);
+                                  print(essayCount);
+
                                   questionGenerationDetail.prompt =
                                       llmService.buildPrompt(
                                           questionGenerationDetail
