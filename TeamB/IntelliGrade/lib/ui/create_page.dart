@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intelligrade/ui/drawer.dart';
 import 'package:intelligrade/ui/header.dart';
 
-import '../controller/main_controller.dart';
-
-
-class CreatePage extends StatefulWidget {
+class CreatePage extends StatefulWidget
+{
   const CreatePage({super.key});
 
   @override
