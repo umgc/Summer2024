@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/views/view_test_view.dart';
@@ -125,69 +128,64 @@ class SearchFilterState extends State<SearchFilter> {
 class AssessmentTable extends StatelessWidget {
   final String filter;
 
-  AssessmentTable({super.key, required this.filter});
-
-  final List<Map<String, String>> assessments = [
-    {
-      'name': 'Math Quiz 1',
-      'course': 'Mathematics',
-      'percentage': '80%',
-    },
-    {
-      'name': 'Science Test',
-      'course': 'Science',
-      'percentage': '60%',
-    },
-    // Add more rows as needed
-  ];
+  const AssessmentTable({super.key, required this.filter});
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> filteredAssessments = assessments;
-    if (filter.isNotEmpty) {
-      filteredAssessments = assessments
-          .where((assessment) => assessment.values
-              .any((value) => value.toLowerCase().contains(filter)))
-          .toList();
-    }
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: const [
-          DataColumn(label: Text('Assessment Name')),
-          DataColumn(label: Text('Course')),
-          DataColumn(label: Text('Percentage Complete')),
-          DataColumn(label: Text('')),
-        ],
-        rows: filteredAssessments.map((assessment) {
-          return DataRow(
-            cells: [
-              DataCell(Text(assessment['name']!)),
-              DataCell(Text(assessment['course']!)),
-              DataCell(Text(assessment['percentage']!)),
-              DataCell(
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreateViewTest(
-                          assessmentName: assessment['name']!,
-                          courseName: assessment['course']!,
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff0072bb),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Open'),
-                ),
-              ),
-            ],
-          );
-        }).toList(),
+      child: Consumer<AssessmentProvider>(
+        builder: (context, savedAssessments, child) {
+          List<AssessmentSet> filteredAssessments = savedAssessments.assessmentSets;
+          if (filter.isNotEmpty) {
+            filteredAssessments = savedAssessments.assessmentSets
+                .where((curr) => [curr.assessmentName, curr.course?.courseName]
+                    .any((value) =>
+                        value?.toLowerCase().contains(filter) ?? false))
+                .toList();
+          }
+          return !savedAssessments.assessmentSets
+                  .isNotEmpty // if there aren't any saved assessments
+              ? const Text("We couldn't find any saved assessments.")
+              // but if there are assessments display the table
+              : DataTable(
+                  columns: const [
+                    DataColumn(label: Text('Assessment Name')),
+                    DataColumn(label: Text('Course')),
+                    DataColumn(label: Text('')),
+                  ],
+                  rows: filteredAssessments.map(
+                    (assessment) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(assessment.assessmentName)),
+                          DataCell(Text(assessment.course?.courseName ?? '')),
+                          DataCell(
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateViewTest(
+                                      assessmentName: assessment.assessmentName,
+                                      courseName:
+                                          assessment.course?.courseName ?? '',
+                                    ),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff0072bb),
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Open'),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ).toList(),
+                );
+        },
       ),
     );
   }

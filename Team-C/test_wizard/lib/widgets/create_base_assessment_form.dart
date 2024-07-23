@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
+import 'package:test_wizard/views/generate_questions.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
@@ -50,10 +53,13 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                   height: 20,
                 ),
                 // ** Select Course Dropdown
-                DropdownSelect(
-                  controller: courseNameController,
-                  dropdownTitle: 'Course',
-                ),
+                Consumer<UserProvider>(builder: (context, user, child) {
+                  return DropdownSelect(
+                    isDisabled: !user.isLoggedInToMoodle,
+                    controller: courseNameController,
+                    dropdownTitle: 'Course',
+                  );
+                }),
                 const SizedBox(
                   height: 20,
                 ),
@@ -109,19 +115,30 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           String subjectDescription =
                               subjectDescriptionController.text;
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Column(
-                                children: [
-                                  Text(
-                                      'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
-                                ],
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => QuestionGenerateForm(
+                                courseName: course,
+                                assessmentName: assessmentName,
+                                numberOfAssessments: int.parse(numOfStudents),
+                                topic: subjectDescription,
                               ),
                             ),
                           );
+
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Column(
+                          //       children: [
+                          //         Text(
+                          //             'Assessment: $assessmentName, Course: $course, Students: $numOfStudents, Subject: $subjectDescription'),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // );
                         }
                       },
-                      child: const Text('Generate Assessment'),
+                      child: const Text('Add Questions'),
                     ),
                     const SizedBox(
                       width: 16,

@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/views/login_page_view.dart';
-// import 'package:test_wizard/views/assessment_results_view.dart';
-// import 'package:test_wizard/views/modify_test_view.dart';
-// import 'package:test_wizard/views/create_base_assessment_view.dart';
-// import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AssessmentProvider()),
+        Provider(create: (context) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
