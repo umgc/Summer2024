@@ -61,10 +61,12 @@ class LlmApi {
   List<Map<String, dynamic>> parseQueryResponse(String resp) {
     // ignore: prefer_adjacent_string_concatenation
     String quizRegExp =
-        r'(<\?xml.*?\?>\s*<quiz>(\s*.*?<question>\s*.*?<text>\s*(.*?)</text>\s*.*?<options>(\s*.*?<option>\s*(.*?)</option>)+\s*</options>\s*.*?<answer>\s*(.*?)</answer>\s*.*?</question>)+\s*</quiz>)';
+        // r'(<\?xml.*?\?>\s*<quiz>(\s*.*?<question>\s*.*?<text>\s*(.*?)</text>\s*.*?<options>(\s*.*?<option>\s*(.*?)</option>)+\s*</options>\s*.*?<answer>\s*(.*?)</answer>\s*.*?</question>)+\s*</quiz>)';
+        r'(<\?xml.*?\?>\s*<quiz>.*?</quiz>)';
 
     RegExp exp = RegExp(quizRegExp);
-    Iterable<RegExpMatch> matches = exp.allMatches(resp);
+    String respNoNewlines = resp.replaceAll('\n', '');
+    Iterable<RegExpMatch> matches = exp.allMatches(respNoNewlines);
     List<Map<String, dynamic>> parsedResp = [];
     int index = 0;
 

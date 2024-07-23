@@ -12,6 +12,13 @@ class XmlConverter {
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0" encoding="UTF-8"');
     builder.element(XmlConsts.quiz, nest: () {
+      // build category dummy node
+      builder.element(XmlConsts.question, nest: () {
+        builder.attribute(XmlConsts.type, 'category');
+        builder.element('category', nest: () {
+          builder.element(XmlConsts.text, nest: '\$course\$/top/LLM-Generated');
+        });
+      });
       for (Question question in quiz.questionList) {
         builder.element(XmlConsts.question, nest: () {
           builder.attribute(XmlConsts.type, question.type);
