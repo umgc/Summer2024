@@ -70,7 +70,7 @@ class DBHelper {
     await conn.close();
   }
 
-  Future<int> getUserId(String email) async {
+  Future<String> getUserId(String email) async {
     final conn = await getConnection();
 
     // Execute the query
@@ -78,7 +78,7 @@ class DBHelper {
       'SELECT userid FROM User WHERE email = ?',
       [email],
     );
-
+    print(results);
     // Extract the userid from the results
     int userid;
     if (results.isNotEmpty) {
@@ -89,7 +89,7 @@ class DBHelper {
     }
 
     await conn.close();
-    return userid;
+    return userid.toString();
   }
 
   Future<String> getUserName(String email) async {

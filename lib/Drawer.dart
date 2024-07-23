@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'registerPage.dart';
 import 'package:mindinsync/db_helper.dart';
+import 'LoginPage.dart';
+
+var userID; // global variable for userID
 
 class DrawerMenu extends StatefulWidget {
   const DrawerMenu({Key? key}) : super(key: key);
@@ -11,24 +12,26 @@ class DrawerMenu extends StatefulWidget {
 }
 
 class _DrawerMenuState extends State<DrawerMenu> {
-  String email = '';
-  Future<String> _getUserEmail() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userEmail') ?? '';
+  String email = emailController.text;
 
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState(() {
-    //   userEmail = prefs.getString('userEmail');
-    //   emailController.text = userEmail ?? '';
-    // });
-  }
+  late Future<String> _userIdFuture; // Future for fetching userID
 
   @override
   void initState() {
     super.initState();
-    _getUserEmail().then((value) {
+    _userIdFuture = getUserId(email); // Initialize the Future in initState
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reset the Future when dependencies change (e.g., email changes)
+    _userIdFuture = getUserId(email);
+
+    // Update userID when _userIdFuture completes
+    _userIdFuture.then((userId) {
       setState(() {
-        email = value;
+        userID = userId; // Assign the fetched userID to the global variable
       });
     });
   }
@@ -43,70 +46,16 @@ class _DrawerMenuState extends State<DrawerMenu> {
             future: getUserName(email),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  accountName: Text(
-                    'Loading...',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  accountEmail: Text(
-                    email,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 165, 255, 137),
-                    child: Text(
-                      "A",
-                      style: TextStyle(fontSize: 30.0, color: Colors.blue),
-                    ),
-                  ),
-                );
+                return buildDrawerHeader('Loading...', 'A', Colors.green);
               } else if (snapshot.hasError) {
-                return UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  accountName: Text(
-                    'Error',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  accountEmail: Text(
-                    email,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 165, 255, 137),
-                    child: Text(
-                      "A",
-                      style: TextStyle(fontSize: 30.0, color: Colors.blue),
-                    ),
-                  ),
-                );
+                return buildDrawerHeader('Error', 'A', Colors.green);
               } else {
-                return UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  accountName: Text(
-                    snapshot.data ?? "User",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  accountEmail: Text(
-                    email,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 165, 255, 137),
-                    child: Text(
-                      snapshot.data != null && snapshot.data!.isNotEmpty
-                          ? snapshot.data!.substring(0, 1)
-                          : "A",
-                      style: TextStyle(fontSize: 30.0, color: Colors.blue),
-                    ),
-                  ),
-                );
+                return buildDrawerHeader(
+                    snapshot.data ?? 'User',
+                    snapshot.data != null && snapshot.data!.isNotEmpty
+                        ? snapshot.data!.substring(0, 1)
+                        : 'A',
+                    Colors.green);
               }
             },
           ),
@@ -121,6 +70,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
             leading: Icon(Icons.library_books),
             title: Text('Knowledge Base'),
             onTap: () {
+              print(userID);
               Navigator.pop(context);
             },
           ),
@@ -131,13 +81,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
               Navigator.pushNamed(context, '/document_upload');
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.edit),
-          //   title: const Text('Edit Profile'),
-          //   onTap: () {
-          //     Navigator.pushNamed(context, '/edit_profile');
-          //   },
-          // ),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('LogOut'),
@@ -150,9 +93,39 @@ class _DrawerMenuState extends State<DrawerMenu> {
     );
   }
 
+  UserAccountsDrawerHeader buildDrawerHeader(
+      String accountName, String avatarText, Color backgroundColor) {
+    return UserAccountsDrawerHeader(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+      ),
+      accountName: Text(
+        accountName,
+        style: TextStyle(fontSize: 18),
+      ),
+      accountEmail: Text(
+        email,
+        style: TextStyle(fontSize: 18),
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundColor: Color.fromARGB(255, 165, 255, 137),
+        child: Text(
+          avatarText,
+          style: TextStyle(fontSize: 30.0, color: Colors.blue),
+        ),
+      ),
+    );
+  }
+
+  DBHelper db = DBHelper();
+
   Future<String> getUserName(String email) async {
-    DBHelper db = DBHelper();
     String userName = await db.getUserName(email);
     return userName;
+  }
+
+  Future<String> getUserId(String email) async {
+    String userId = await db.getUserId(email);
+    return userId;
   }
 }

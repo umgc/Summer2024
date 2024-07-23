@@ -1,5 +1,8 @@
 // Placeholder file
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:mindinsync/Drawer.dart';
 
 class KnowledgeBase extends StatelessWidget {
   const KnowledgeBase({Key? key}) : super(key: key);
@@ -24,6 +27,7 @@ class KnowledgeBase extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
+            // ignore: avoid_print
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
@@ -38,7 +42,9 @@ class KnowledgeBase extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.help_outline, size: 50),
               onPressed: () {
-                // Handle ask button press
+                // Handle ask button pres
+                print("My userID, ${userID}");
+                print("My userID2, ${userID}");
               },
             ),
             const SizedBox(height: 20),

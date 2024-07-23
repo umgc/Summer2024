@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mindinsync/registerPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-RegisterPage rp = new RegisterPage();
 bool _isButtonActive = false;
 TextEditingController emailController = TextEditingController();
-var userID;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String? userEmail;
+
   late final LocalAuthentication auth;
   bool _supportState = false;
   final _formKey = GlobalKey<FormState>(); // Add a global key for the Form
@@ -105,11 +103,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       print("Authenticated: $authenticated");
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-       userEmail = prefs.getString('userEmail');
-       if(userEmail == null){
-          prefs.setString('userEmail', emailController.text);
-       }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      userEmail = prefs.getString('userEmail');
+      if (userEmail == null) {
+        prefs.setString('userEmail', emailController.text);
+      }
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/home');
       }
