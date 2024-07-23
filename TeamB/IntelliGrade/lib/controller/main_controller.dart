@@ -15,6 +15,18 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart' as pdfWidgets;
 
 class MainController {
+
+  // Singleton instance
+  static final MainController _instance = MainController._internal();
+
+  // Singleton accessor
+  factory MainController() {
+    return _instance;
+  }
+
+  // Internal constructor
+  MainController._internal();
+
   final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
   static bool isLoggedIn = false;
 

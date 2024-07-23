@@ -146,14 +146,34 @@ class Course {
   }
 }
 
+enum QuestionType {
+  multichoice(displayName: 'Multiple Choice', xmlName: 'multichoice'),
+  truefalse(displayName: 'True/False', xmlName: 'truefalse'),
+  shortanswer(displayName: 'Short Answers', xmlName: 'shortanswer'),
+  essay(displayName: 'Essay', xmlName: 'essay'),
+  coding(displayName: 'Coding', xmlName: 'essay');
+
+  final String displayName;
+  final String xmlName;
+
+  const QuestionType({required this.displayName, required this.xmlName});
+}
+
 // Object to pass user-specified parameters to LLM API.
 class AssignmentForm {
-  String? subject;
-  String? gradeLevel;
-  String? assignmentType;
-  String? codingLanguage;
-  Map<String, int> assignmentTypeCount = {};
-  Map<String, int> codingLanguageCount = {};
 
-  AssignmentForm(this.subject, this.gradeLevel, this.assignmentType, this.codingLanguage, this.assignmentTypeCount, this.codingLanguageCount);
+  QuestionType questionType;
+  String subject;
+  String topic;
+  String gradeLevel;
+  int questionCount;
+  String? codingLanguage;
+
+  AssignmentForm({
+    required this.questionType,
+    required this.subject,
+    required this.topic,
+    required this.gradeLevel,
+    required this.questionCount,
+    this.codingLanguage});
 }
