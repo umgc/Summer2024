@@ -1,0 +1,12 @@
+// lib/models/question_answer_model.dart
+class QuestionAnswer {
+  final String questionId;
+  final String questionText;
+  final String answerText;
+
+  QuestionAnswer({
+    required this.questionId,
+    required this.questionText,
+    required this.answerText,
+  });
+}
