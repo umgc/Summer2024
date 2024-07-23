@@ -96,9 +96,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                       builder: (context, assessment, child) {
                         return Column(
                           children: <Widget>[
-                            // ...questions.asMap().entries.map((entry) {
-                            //   int index = entry.key;
-                            //   Question question = entry.value;
                             ...assessment.questions.map(
                               (question) {
                                 return Column(children: [
@@ -139,10 +136,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                           questionGenerationDetail.topic);
                                   textEditingController.text =
                                       questionGenerationDetail.prompt;
-                                  for (var question in questions) {
-                                    print(
-                                        '${question.questionText}: ${question.questionType}');
-                                  }
                                 }
                               },
                               child: const Text('Generate Assessment'),

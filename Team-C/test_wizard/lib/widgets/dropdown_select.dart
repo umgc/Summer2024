@@ -34,8 +34,7 @@ class DropdownSelectState extends State<DropdownSelect> {
           return DropdownButtonFormField<String>(
             value: selectedValue,
             iconDisabledColor: Colors.grey[50],
-            disabledHint:
-                const Text('Disabled: must be logged into Moodle for courses'),
+            disabledHint: const Text('Disabled without Moodle'),
             onChanged: widget.isDisabled
                 ? null
                 : (String? newValue) {
