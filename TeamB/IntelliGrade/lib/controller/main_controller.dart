@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:intelligrade/api/llm/llm_api.dart';
+import 'package:intelligrade/api/llm/prompt_engine.dart';
 import 'package:intelligrade/api/moodle/moodle_api_singleton.dart';
 import 'package:intelligrade/controller/model/beans.dart';
 import 'package:intelligrade/controller/model/xml_converter.dart';
@@ -31,7 +32,7 @@ class MainController {
   static bool isLoggedIn = false;
 
   Future<List<Quiz>> createAssessments(AssignmentForm userForm) async {
-    var queryPrompt = getQueryPrompt(userForm);
+    var queryPrompt = PromptEngine.generatePrompt(userForm);
     final String llmResp = await llm.postToLlm(queryPrompt);
     final List<Map<String, dynamic>> parsedXmlList =
         llm.parseQueryResponse(llmResp);
@@ -40,11 +41,6 @@ class MainController {
       quizList.add(Quiz.fromXmlString(xml.toString()));
     }
     return quizList;
-  }
-
-  String getQueryPrompt(AssignmentForm userForm) {
-    //waiting for Marsha's consts
-    return '';
   }
 
   void gradeAssessment() {
