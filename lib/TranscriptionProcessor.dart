@@ -12,7 +12,7 @@ class TranscriptionProcessor {
     return _instance;
   }
   final String promptStart = "You are a tool for processing a captured transcription. The transcription is enclosed within the following brackets."; 
-  final String promptEnd = ". Please return only a JSON array of keys [\"keywords\", \"summary\", \"title\", \"transcript\"] with transcript and keywords being arrays, and no text outside the JSON array, containing the following 4 values derived from this transcription: 1. A list of 5 relevant keywords extracted from the transcription other than speaker, 2: A brief 2-3 sentence summary of the transcription, 3: A title for the transcription based on the content, 4: A copy of the transcription text autocorrected to remove any obvious errors that occurred during transcription without removing any of the speaker labels";
+  final String promptEnd = ". Please return only a JSON array of keys [\"keywords\", \"summary\", \"title\", \"transcript\"] with transcript and keywords being arrays, and no text outside the JSON array, containing the following 4 values derived from this transcription: 1. A list of 5 relevant keywords extracted from the transcription other than speaker, 2: A brief 2-3 sentence summary of the transcription, 3: A title for the transcription based on the content, 4: A copy of the transcription text autocorrected to remove any obvious errors that occurred during transcription that doesn't modify the format of the transcript data";
 
   TranscriptionProcessor._internal();
 

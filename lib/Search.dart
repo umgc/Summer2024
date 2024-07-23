@@ -43,22 +43,24 @@ class _SearchState extends State<Search> {
   var transcriptValues = [];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     tran_store = StorageService();
     loadTranscripts();
     // Load existing profile data here if available
   }
 
-
   void loadTranscripts() async {
     scripts = await tran_store.getTranscripts();
     var transcript;
     for (int i = 0; i < scripts.length; i++) {
-      transcript = Transcript(scripts[i]['transcript_name'], scripts[i]['keywords'].split(", "), scripts[i]['transcript_id'], scripts[i]['created_at']);
+      transcript = Transcript(
+          scripts[i]['transcript_name'],
+          scripts[i]['keywords'].split(", "),
+          scripts[i]['transcript_id'],
+          scripts[i]['created_at']);
       //transcriptValues.add(transcript);
-      print(transcript.keywords);
-            setState(() {
+      setState(() {
         transcriptValues.add(transcript);
       });
     }
@@ -77,10 +79,16 @@ class _SearchState extends State<Search> {
           final transcript = transcriptValues[index];
 
           return ListTile(
-            title: Text(transcript.name),
-            subtitle: Text(transcript.keywords.toString()),
-            trailing: Text(transcript.date),
-          );
+              title: Text(transcript.name),
+              subtitle: Text(transcript.keywords.toString()),
+              trailing: Text(transcript.date),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/Detail',
+                  arguments: transcript.id,
+                );
+              });
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -100,14 +108,19 @@ class _SearchState extends State<Search> {
             filter: (transcript) => [
               transcript.name,
               transcript.keywords.toString(),
-              transcript.date,
             ],
             sort: (a, b) => a.compareTo(b),
             builder: (transcript) => ListTile(
-              title: Text(transcript.name),
-              subtitle: Text(transcript.keywords.toString()),
-              trailing: Text(transcript.date),
-            ),
+                title: Text(transcript.name),
+                subtitle: Text(transcript.keywords.toString()),
+                trailing: Text(transcript.date),
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/Detail',
+                    arguments: transcript.id,
+                  );
+                }),
           ),
         ),
         child: const Icon(Icons.search),

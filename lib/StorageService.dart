@@ -79,6 +79,12 @@ class StorageService {
     return await db.rawQuery('SELECT * FROM transcripts');
   }
 
+  // Retrieve all text files from the database
+  Future<List<Map<String, dynamic>>> getTranscript(int id) async {
+    Database db = await database;
+    return await db.rawQuery('SELECT * FROM transcripts WHERE transcript_id = ' + id.toString());
+  }
+
   // Delete a text file by id
   Future<int> deleteTranscript(int id) async {
     Database db = await database;

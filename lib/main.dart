@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mindinsync/HomeScreen.dart';
 import 'package:mindinsync/RegisterScreen.dart';
 import 'package:mindinsync/Search.dart';
+import 'package:mindinsync/TranscriptionDetails.dart';
 import 'package:mindinsync/document_upload.dart';
 import 'package:mindinsync/navigation.dart';
 import 'registerPage.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/Search': (context) => const Search(),
         '/Prompt': (context) => const PromptScreen(),
         '/Register': (context) => const RegisterScreen(),
+        '/Detail': (context) => const TranscriptionDetails(),
       },
     );
   }
