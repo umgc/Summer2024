@@ -38,11 +38,10 @@ Future main() async {
     print('Generated prompt: $prompt');
     final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
     final String llmResp = await llm.postToLlm(prompt);
-    List<Map<String, dynamic>> parsedResp = llm.parseQueryResponse(llmResp);
+    List<String> parsedResp = llm.parseQueryResponse(llmResp);
     String xmlStr;
     try {
-      xmlStr = parsedResp[0].entries.first.value;
-      xmlStr = xmlStr.replaceAll(RegExp(r"\\n"), "");
+      xmlStr = parsedResp[0].replaceAll(RegExp(r"\\n"), "");
     } catch (e) {
       print('Unable to parse out XML string: $e');
       exit(1);
