@@ -10,6 +10,7 @@ import 'package:mindinsync/StorageService.dart';
 import 'package:mindinsync/TranscriptionProcessor.dart';
 import 'package:mindinsync/main.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_stream/sound_stream.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -52,6 +53,7 @@ class _RecordScreenState extends State<RecordScreen> {
   @override
   void initState() {
     super.initState();
+    loadUsername();
     tran_store = StorageService();
     tran_process = TranscriptionProcessor();
     _recorder.initialize();
@@ -59,8 +61,16 @@ class _RecordScreenState extends State<RecordScreen> {
     //streamingRecognize();
   }
 
+  void loadUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString("user_name");
+    if(userName != null){
+      speakers[0] = userName+ ": ";
+    }
+  }
+
   void streamingRecognize() async {
-    _copyFileFromAssets('register.wav');
+    //_copyFileFromAssets('register.wav');
 
     Widget okButton = TextButton(
       child: Text("OK"),
@@ -77,8 +87,11 @@ class _RecordScreenState extends State<RecordScreen> {
         okButton,
       ],
     );
-
-    var stream = _getAudioStream('register.wav');
+    final directory = await getApplicationDocumentsDirectory();
+    var path = directory.path;
+    final File file = File(path + "/" + "register.wav");
+    final Uint8List byteList = await file.readAsBytes();
+    //var stream = _getAudioStream('register.wav');
     var data = await rootBundle.load('assets/register.wav');
     var started = false;
 
@@ -86,7 +99,8 @@ class _RecordScreenState extends State<RecordScreen> {
     _audioStreamSubscription = _recorder.audioStream.listen((event) {
       if (started == false) {
         _audioStream!.add(
-            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+            byteList //data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes)
+            );
         started = true;
       } else {
         _audioStream!.add(event);
@@ -161,10 +175,10 @@ class _RecordScreenState extends State<RecordScreen> {
     });
   }
 
-  Future<Stream<List<int>>> _getAudioStream(String name) async {
+  Future<File> _getAudioStream(String name) async {
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path + '/$name';
-    return File(path).openRead();
+    return File(path);
   }
 
   Future<void> _copyFileFromAssets(String name) async {
@@ -229,6 +243,14 @@ class _RecordScreenState extends State<RecordScreen> {
         padding: const EdgeInsets.all(8),
         children: <Widget>[
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[300],
+                foregroundColor: Colors.black87,
+                elevation: 0,
+                side: const BorderSide(
+                    width: 2, // the thickness
+                    color: Colors.grey // the color of the border
+                    )),
             onPressed: recognizing ? stopRecording : streamingRecognize,
             child: recognizing
                 ? const Text('Finish Recording(5 Minute Maximum)')

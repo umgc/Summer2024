@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mindinsync/StorageService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isButtonActive = false;
@@ -106,6 +107,8 @@ class _LoginPageState extends State<LoginPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       userEmail = prefs.getString('userEmail');
       if (userEmail == null) {
+        StorageService tran_store = new StorageService();
+        tran_store.deleteTable();
         prefs.setString('userEmail', emailController.text);
       }
       if (mounted) {

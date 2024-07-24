@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,7 +13,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   //var works = await _recorder.isEncoderSupported(Codec.pcm16AIFF);
-  
+
   bool _isRecording = false;
   late String _filePath;
 
@@ -26,17 +25,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _initializeRecorder() async {
     await Permission.microphone.request();
-    //await _recorder.openAudioSession();
-    await _recorder.openRecorder();
-    
+    await _recorder.openAudioSession();
+    //await _recorder.openRecorder();
   }
 
   Future<void> _startRecording() async {
-    _filePath = 'test_register.wav';
+    var _filename = 'register.wav';
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path + '/$_filename';
     await _recorder.startRecorder(
-      toFile: _filePath,
-      //codec: Codec.pcm16AIFF,
-      bitRate: 16000,
+      toFile: path,
+      //toStream: null,
+      codec: Codec.pcm16WAV,
+      sampleRate: 16000,
+      numChannels: 1,
     );
     setState(() {
       _isRecording = true;
@@ -55,8 +57,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _recorder.closeRecorder();
-    //_recorder.closeAudioSession();
+    //_recorder.closeRecorder();
+    _recorder.closeAudioSession();
     super.dispose();
   }
 
@@ -64,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Audio Recorder'),
+        title: Text('Register voice for transcriber'),
       ),
       body: Center(
         child: Column(
@@ -76,8 +78,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.red, fontSize: 20),
                   )
                 : Text(
-                    'Please speak clearly into the mic in your normal voice, repeating the line:\n \" My Name is {Your First Name}\"\nPress the button to begin recording',
-                    style: TextStyle(fontSize: 20),
+                    'Please speak clearly in your normal voice, repeating the line:\n \" My Name is {Your First Name}\"\nPress the button to begin recording',
+                    style: TextStyle(
+                      color: Colors.blue[600],
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
             SizedBox(height: 20),
             ElevatedButton(

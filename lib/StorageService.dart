@@ -48,6 +48,13 @@ class StorageService {
     ''');
   }
 
+  Future<void> deleteTable() async{
+    Database db = await database;
+    await db.execute('''
+      DROP TABLE transcripts 
+    ''');
+  }
+
   // Insert a text file into the database
   Future<int> insertTranscriptFile(String name, String content) async {
     Database db = await database;
@@ -62,8 +69,6 @@ class StorageService {
     Database db = await database;   
      var numchanges = await db.rawUpdate('UPDATE transcripts SET transcript_name = \'' +
         name +
-        '\', transcript_content = \'' +
-        content +
         '\', summarization = \'' +
         summary +
         '\', keywords = \'' +

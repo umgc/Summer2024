@@ -73,23 +73,38 @@ class _SearchState extends State<Search> {
         title: const Text('Search Past Conversations'),
         backgroundColor: Colors.blue[300],
       ),
-      body: ListView.builder(
-        itemCount: transcriptValues.length,
-        itemBuilder: (context, index) {
-          final transcript = transcriptValues[index];
-
-          return ListTile(
-              title: Text(transcript.name),
-              subtitle: Text(transcript.keywords.toString()),
-              trailing: Text(transcript.date),
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/Detail',
-                  arguments: transcript.id,
-                );
-              });
-        },
+      body: ListTileTheme(
+        contentPadding: const EdgeInsets.all(5),
+        textColor: Colors.black87,
+        tileColor: Colors.green[200],
+        style: ListTileStyle.list,
+        dense: true,
+        child: ListView.builder(
+          itemCount: transcriptValues.length,
+          reverse: true,
+          itemBuilder: (context, index) {
+            final transcript = transcriptValues[index];
+            return Padding(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(7),
+                            topRight: Radius.circular(7),
+                            bottomRight: Radius.circular(7),
+                            bottomLeft: Radius.circular(7))),
+                    title: Text(transcript.name),
+                    subtitle: Text(transcript.keywords.toString()),
+                    trailing: Text(transcript.date),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/Detail',
+                        arguments: transcript.id,
+                      );
+                    }));
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Search transcripts',
@@ -110,17 +125,25 @@ class _SearchState extends State<Search> {
               transcript.keywords.toString(),
             ],
             sort: (a, b) => a.compareTo(b),
-            builder: (transcript) => ListTile(
-                title: Text(transcript.name),
-                subtitle: Text(transcript.keywords.toString()),
-                trailing: Text(transcript.date),
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/Detail',
-                    arguments: transcript.id,
-                  );
-                }),
+            builder: (transcript) => Padding(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(7),
+                            topRight: Radius.circular(7),
+                            bottomRight: Radius.circular(7),
+                            bottomLeft: Radius.circular(7))),
+                    title: Text(transcript.name),
+                    subtitle: Text(transcript.keywords.toString()),
+                    trailing: Text(transcript.date),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/Detail',
+                        arguments: transcript.id,
+                      );
+                    })),
           ),
         ),
         child: const Icon(Icons.search),

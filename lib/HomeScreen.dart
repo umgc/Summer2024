@@ -13,6 +13,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _controller = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
@@ -41,22 +43,30 @@ class Home extends StatelessWidget {
             const SizedBox(height: 20),
             // Search Field
             TextField(
+                controller: _controller,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                   hintText: 'Ask a question to MindAI',
+                  suffixIcon: IconButton(
+                      icon: const Icon(Icons.mic),
+                      onPressed: () {
+                        _controller.clear();
+                        Navigator.pushNamed(
+                          context,
+                          '/Prompt',
+                          arguments: "supersecretaudiostartnobodygoingtofigureout",
+                        );
+                      }),
                 ),
                 onSubmitted: (String value) async {
-                  //print(value);
-                  // Navigator.push(context, PromptScreen());
+                  _controller.clear();
                   Navigator.pushNamed(
                     context,
                     '/Prompt',
-                    arguments: <String, String>{
-                      'prompt': value,
-                    },
+                    arguments: value,
                   );
                 }),
             const SizedBox(height: 20),

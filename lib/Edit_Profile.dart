@@ -111,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             ElevatedButton(
             onPressed: () {Navigator.pushNamed(context, '/Register');},
-            child: const Text('Reregister your voice with the Transcriber'),
+            child: const Text('Register your voice with the Transcriber'),
           ),
           ],
         ),

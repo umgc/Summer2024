@@ -55,7 +55,10 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
         ),
         body: TabBarView(
           children: [
-            Container(
+            Center(
+            child: Container(  
+              height: 100 ,          
+              constraints: BoxConstraints(maxHeight: 100),
               margin: EdgeInsets.all(5),
               padding: EdgeInsets.all(10),
               //color: Colors.amber[600],
@@ -64,7 +67,7 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(summary),
-            ),
+            )),
             Container(
               child: new ListView.builder(
                   physics: ScrollPhysics(),
@@ -121,16 +124,25 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
           .replaceAll("]", "");
       var tempscript;
       var index = 0;
+      var found = false;
       transcript = transcriptbasic.split(":");
       for (int i = 1; i < transcript.length-1; i++) {
         for (int j = 0; j < speakers.length; j++) {
           if (transcript[i].endsWith(speakers[j])) {
+            found = true;
             index = transcript[i].indexOf(speakers[j]);
             tempscript = transcript[i].substring(0, index-2);
             transcript[i - 1] += ": " + tempscript;
             transcript[i] = transcript[i].substring(index);
           }
         }
+        index = transcript[i].lastIndexOf(" ");
+        if(!found && index > 1){         
+          tempscript = transcript[i].substring(0, index-2);
+          transcript[i - 1] += ": " + tempscript;
+          transcript[i] = transcript[i].substring(index);
+        }
+        found = false;
       }
     transcript[transcript.length-2] += ": " + transcript[transcript.length-1];
     transcript.length = transcript.length-1;

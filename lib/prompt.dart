@@ -7,8 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:mindinsync/BottomNavigation.dart';
+import 'package:mindinsync/Drawer.dart';
 import 'package:mindinsync/KnowledgeService.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_stream/sound_stream.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -29,6 +31,7 @@ class _PromptScreenState extends State<PromptScreen> {
   List<String> transcriptArray = [];
   var tran_store;
   var openai_key;
+  var isLoaded = false;
   late FlutterTts tts;
   bool isPlaying = false;
   var _controller = TextEditingController();
@@ -74,8 +77,11 @@ class _PromptScreenState extends State<PromptScreen> {
     });
   }
 
-  void loadKnowledge() {
-    var facts = knowledge.getKnowledge(1);
+  void loadKnowledge() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString("user_id");
+    print(userid);
+    var facts = knowledge.getKnowledge(int.parse(userid!));
     facts.then((value) {
       promptStart += knowledge.knowledgeLoaded + "}";
       //print (promptStart);
@@ -194,7 +200,7 @@ class _PromptScreenState extends State<PromptScreen> {
     );
 
     OpenAIChatCompletionModel results = await OpenAI.instance.chat
-        .create(model: "gpt-3.5-turbo", messages: messages, maxTokens: 60);
+        .create(model: "gpt-4o-mini", messages: messages, maxTokens: 60);
     final mindResponse = results.choices[0].message.content!.first.text;
     messages.add(
       OpenAIChatCompletionChoiceMessageModel(
@@ -207,7 +213,7 @@ class _PromptScreenState extends State<PromptScreen> {
       ),
     );
     transcriptArray.add("MindAI: " + mindResponse!);
-    setState(() {     
+    setState(() {
       //recognizing = false;
       _controller.clear();
       //_controller.clearComposing();
@@ -223,17 +229,48 @@ class _PromptScreenState extends State<PromptScreen> {
         profanityFilter: true,
       );
 
+  void setTranscription() {
+
+    
+      if (!isLoaded) {
+        var args = ModalRoute.of(context)!.settings.arguments as String?;
+        if (args!.length > 0) {
+          if (args! == "supersecretaudiostartnobodygoingtofigureout") {
+            streamingRecognize();
+            setState(() {});
+          } else {
+            Future.delayed(const Duration(seconds: 2)).then((val) {
+            recognizeFinished = true;
+            transcriptArray.add(args);
+            setState(() {});
+            promptLLM(args);
+            });
+          }
+        }
+        isLoaded = true;
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
+    setTranscription();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ask MindAI a question!'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Colors.blue[300],      
       ),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[300],
+                foregroundColor: Colors.black87,
+                elevation: 0,
+                side: const BorderSide(
+                    width: 2, // the thickness
+                    color: Colors.grey // the color of the border
+                    )),
             onPressed: recognizing ? stopRecording : streamingRecognize,
             child: recognizing
                 ? const Text('Listening')
@@ -250,11 +287,13 @@ class _PromptScreenState extends State<PromptScreen> {
               ),
               onSubmitted: (String value) {
                 // Navigator.push(context, PromptScreen());
-                  recognizeFinished = true;
-                  transcriptArray.add(value);
-                  setState(() {});
+                recognizeFinished = true;
+                transcriptArray.add(value);
+                setState(() {});
                 promptLLM(value);
               }),
+          const Text(
+              'MindAI may sometimes provide innacurate information, please exercise caution'),
           if (recognizeFinished)
             Padding(
               padding: const EdgeInsets.all(16.0),

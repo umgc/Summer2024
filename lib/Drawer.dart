@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindinsync/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginPage.dart';
 
 var userID; // global variable for userID
@@ -120,12 +121,20 @@ class _DrawerMenuState extends State<DrawerMenu> {
   DBHelper db = DBHelper();
 
   Future<String> getUserName(String email) async {
-    String userName = await db.getUserName(email);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString("user_name");
+    if(userName == null){
+    userName = await db.getUserName(email);
+    }
+    prefs.setString("user_name",userName);
     return userName;
   }
 
   Future<String> getUserId(String email) async {
     String userId = await db.getUserId(email);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("user_id",userId);
     return userId;
   }
+  
 }

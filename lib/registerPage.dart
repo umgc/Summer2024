@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mindinsync/StorageService.dart';
 import 'package:mindinsync/db_helper.dart';
 import 'package:mindinsync/LoginPage.dart';
 import 'package:mindinsync/Disclaimer.dart';
@@ -161,7 +162,9 @@ class _RegisterPageState extends State<RegisterPage> {
     String firstname = _firstNameController.text;
     String lastname = _lastNameController.text;
     String email = _emailController.text;
-
+    
+    StorageService tran_store = new StorageService();
+    tran_store.deleteTable();
     // Save the user's email using SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userEmail', email);
