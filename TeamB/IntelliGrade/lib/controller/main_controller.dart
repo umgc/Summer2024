@@ -12,6 +12,7 @@ import 'dart:html' as html;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart' as pdfWidgets;
+
 class MainController {
   // Singleton instance
   static final MainController _instance = MainController._internal();
@@ -69,14 +70,18 @@ class MainController {
     String cookieName =
         quiz.name ?? DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
     String cookieValue = XmlConverter.convertQuizToXml(quiz).toString();
+    if (cookieValue.length > 4000) {
+    print('Cookie value exceeds the maximum size limit.');
+  }
     final hundredYearsFromNow = DateTime.now().add(Duration(days: 365 * 100)).toUtc().toIso8601String();
     html.document.cookie = '$cookieName=$cookieValue; expires=$hundredYearsFromNow; path=/';
   }
 
-  Future<bool> downloadAssessmentAsPdf(String filename, bool includeAnswers) async {
+Future<bool> downloadAssessmentAsPdf(String filename, bool includeAnswers) async {
   if (filename.isEmpty) {
     throw Exception('Quiz name is required.');
   }
+
   try {
     String allCookies = html.document.cookie ?? '';
     List<String> cookieList = allCookies.split('; ');
@@ -89,67 +94,103 @@ class MainController {
       throw Exception('No quiz found with the name: $filename');
     }
 
+    cookieValue = Uri.decodeComponent(cookieValue.split('=')[1]);  // decode the cookie value
     var quiz = Quiz.fromXmlString(cookieValue);
 
     // Create PDF document
     final pdf = pw.Document();
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(filename, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-              pw.Text(quiz.description ?? 'No description', style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic)),
-              pw.SizedBox(height: 20),
-              pw.Column(
+    var pageHeight = PdfPageFormat.letter.height;
+    var margin = 40.0;
+    var availableHeight = pageHeight - margin * 2;
+    double currentHeight = 0;
+
+    void addPage(List<pw.Widget> content) {
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Padding(
+              padding: pw.EdgeInsets.all(margin),
+              child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: quiz.questionList.asMap().entries.map((entry) {
-                  final question = entry.value;
-                  final questionNumber = entry.key + 1;
-
-                  
-                  List<pw.Widget> answerWidgets = [];
-                    answerWidgets.addAll(question.answerList.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final answer = entry.value;
-                    final answerText = answer.answerText ?? '';
-                    final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
-                    
-                    final prefix = question.type == QuestionType.multichoice.xmlName
-                      ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
-                      : '-';
-                      return pw.Text(
-                        'prefix $answerText${includeAnswers ? ' $feedbackText' : ''}',
-                        style: pw.TextStyle(fontSize: 14),
-                      );
-                    }).toList());                  
-
-                  return pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('Question $questionNumber: ${question.questionText}', style: pw.TextStyle(fontSize: 16)),
-                      pw.SizedBox(height: 5),
-                      pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: answerWidgets,
-                      ),
-                      pw.SizedBox(height: 10),
-                    ],
-                  );
-                }).toList(),
+                children: content,
               ),
-            ],
-          );
-        },
-      ),
-    );
+            );
+          },
+        ),
+      );
+    }
+
+    List<pw.Widget> pageContent = [
+      pw.Text(filename, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+      pw.SizedBox(height: 10),
+      pw.Text(quiz.description ?? 'No description', style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic)),
+      pw.SizedBox(height: 20),
+    ];
+    currentHeight += 24 + 10 + 18 + 20; // Initial content height
+
+    for (var entry in quiz.questionList.asMap().entries) {
+      final question = entry.value;
+      final questionNumber = entry.key + 1;
+
+      // Estimate height of question text
+      const double questionTextHeight = 16;
+      const double answerTextHeight = 14;
+      double questionHeight = questionTextHeight + 5 + 10;
+
+      List<pw.Widget> answerWidgets = [];
+      for (var answerEntry in question.answerList.asMap().entries) {
+        final index = answerEntry.key;
+        final answer = answerEntry.value;
+        final answerText = answer.answerText ?? '';
+        final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
+        final prefix = question.type == QuestionType.multichoice.xmlName
+            ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
+            : '-';
+        
+        answerWidgets.add(pw.Text(
+          '$prefix $answerText$feedbackText',
+          style: pw.TextStyle(fontSize: answerTextHeight),
+        ));
+        questionHeight += answerTextHeight;
+      }
+
+      if (currentHeight + questionHeight > availableHeight) {
+        // Add current content to a new page
+        addPage(pageContent);
+        pageContent = [];  // clear the content for the new page
+        currentHeight = 0;
+      }
+
+      pageContent.add(
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text('Question $questionNumber: ${question.questionText}', style: pw.TextStyle(fontSize: questionTextHeight)),
+            pw.SizedBox(height: 5),
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: answerWidgets,
+            ),
+            pw.SizedBox(height: 10),
+          ],
+        ),
+      );
+
+      currentHeight += questionHeight;
+    }
+
+    // Add any remaining content
+    if (pageContent.isNotEmpty) {
+      addPage(pageContent);
+    }
 
     // Save the PDF as bytes
     final pdfBytes = await pdf.save();
+
     // Create a Blob from the PDF bytes
     final blob = html.Blob([Uint8List.fromList(pdfBytes)]);
     final url = html.Url.createObjectUrlFromBlob(blob);
+
     // Create an anchor element and trigger the download
     final anchor = html.AnchorElement(href: url)
       ..setAttribute('download', '$filename.pdf')
@@ -275,5 +316,5 @@ class MainController {
       return [];
     }
   }
-  
+
 }

@@ -35,151 +35,166 @@ class _ViewExamPageState extends State<ViewExamPage> {
   }
 
   void _showQuizDetails(Quiz quiz) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            title: Text(quiz.name ?? 'Quiz Details'),
-            content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i < quiz.questionList.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Question ${i + 1}: ${quiz.questionList[i].questionText ?? ''}',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 10),
-                          for (int j = 0; j < quiz.questionList[i].answerList.length; j++)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                '${String.fromCharCode('a'.codeUnitAt(0) + j)}) ${quiz.questionList[i].answerList[j].answerText ?? ''}',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: quiz.questionList[i].answerList[j].fraction == '100'
-                                        ? Colors.green
-                                        : Colors.red),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.edit, color: Colors.white),
-                    label: const Text('Edit'),
-                    onPressed: () {
-                      // Handle editing functionality here
-                      Navigator.of(context).pop();
-                      _editQuiz(quiz);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
-
-  void _editQuiz(Quiz quiz) async {
-  // Create a list of controllers for each question and its answers
-  List<List<TextEditingController>> controllers = quiz.questionList.map((question) {
-    List<TextEditingController> questionControllers = [
-      TextEditingController(text: question.questionText ?? '')
-    ];
-
-    // Add controllers for answers
-    questionControllers.addAll(question.answerList.map((answer) =>
-      TextEditingController(text: answer.answerText ?? '')
-    ).toList());
-
-    return questionControllers;
-  }).toList();
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Edit Quiz'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...controllers.asMap().entries.map((entry) {
-                int questionIndex = entry.key;
-                List<TextEditingController> controllersForQuestion = entry.value;
-
-                return Column(
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(quiz.name ?? 'Quiz Details'),
+              content: SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // TextField for the question
-                    TextField(
-                      controller: controllersForQuestion[0],
-                      decoration: InputDecoration(labelText: 'Edit question ${questionIndex + 1}'),
-                      onChanged: (text) {
-                        quiz.questionList[questionIndex].questionText = text;
+                    for (int i = 0; i < quiz.questionList.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Question ${i + 1}: ${quiz.questionList[i].questionText ?? ''}',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                            for (int j = 0;
+                                j < quiz.questionList[i].answerList.length;
+                                j++)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  '${String.fromCharCode('a'.codeUnitAt(0) + j)}) ${quiz.questionList[i].answerList[j].answerText ?? ''}',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: quiz.questionList[i].answerList[j]
+                                                  .fraction ==
+                                              '100'
+                                          ? Colors.green
+                                          : Colors.red),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.edit, color: Colors.white),
+                      label: const Text('Edit'),
+                      onPressed: () {
+                        // Handle editing functionality here
+                        Navigator.of(context).pop();
+                        _editQuiz(quiz);
                       },
                     ),
-                    ...controllersForQuestion.sublist(1).asMap().entries.map((answerEntry) {
-                      int answerIndex = answerEntry.key;
-                      TextEditingController controller = answerEntry.value;
-
-                      return TextField(
-                        controller: controller,
-                        decoration: InputDecoration(labelText: 'Edit answer ${String.fromCharCode('a'.codeUnitAt(0) + answerIndex)}'),
-                        onChanged: (text) {
-                          quiz.questionList[questionIndex].answerList[answerIndex].answerText = text;
-                        },
-                      );
-                    }).toList(),
-                    SizedBox(height: 20),
                   ],
-                );
-              }).toList(),
-            ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _editQuiz(Quiz quiz) async {
+    // Create a list of controllers for each question and its answers
+    List<List<TextEditingController>> controllers =
+        quiz.questionList.map((question) {
+      List<TextEditingController> questionControllers = [
+        TextEditingController(text: question.questionText ?? '')
+      ];
+
+      // Add controllers for answers
+      questionControllers.addAll(question.answerList
+          .map((answer) => TextEditingController(text: answer.answerText ?? ''))
+          .toList());
+
+      return questionControllers;
+    }).toList();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Quiz'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...controllers.asMap().entries.map((entry) {
+                  int questionIndex = entry.key;
+                  List<TextEditingController> controllersForQuestion =
+                      entry.value;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // TextField for the question
+                      TextField(
+                        controller: controllersForQuestion[0],
+                        decoration: InputDecoration(
+                            labelText: 'Edit question ${questionIndex + 1}'),
+                        onChanged: (text) {
+                          quiz.questionList[questionIndex].questionText = text;
+                        },
+                      ),
+                      ...controllersForQuestion
+                          .sublist(1)
+                          .asMap()
+                          .entries
+                          .map((answerEntry) {
+                        int answerIndex = answerEntry.key;
+                        TextEditingController controller = answerEntry.value;
+
+                        return TextField(
+                          controller: controller,
+                          decoration: InputDecoration(
+                              labelText:
+                                  'Edit answer ${String.fromCharCode('a'.codeUnitAt(0) + answerIndex)}'),
+                          onChanged: (text) {
+                            quiz.questionList[questionIndex]
+                                .answerList[answerIndex].answerText = text;
+                          },
+                        );
+                      }).toList(),
+                      SizedBox(height: 20),
+                    ],
+                  );
+                }).toList(),
+              ],
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Save'),
-            onPressed: () async {
-              try {
-                ViewExamPage.controller.updateFileLocally(quiz);
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () async {
+                try {
+                  ViewExamPage.controller.updateFileLocally(quiz);
+                  Navigator.of(context).pop();
+                  _fetchQuizzes(); // Refresh quiz list
+                } catch (e) {
+                  print('Error updating quiz: $e');
+                }
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
                 Navigator.of(context).pop();
-                _fetchQuizzes(); // Refresh quiz list
-              } catch (e) {
-                print('Error updating quiz: $e');
-              }
-            },
-          ),
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _deleteQuiz(String filename) async {
     final bool? confirmDelete = await showDialog(
@@ -218,7 +233,8 @@ class _ViewExamPageState extends State<ViewExamPage> {
 
   void _downloadQuiz(Quiz quiz, bool includeAnswers) async {
     try {
-      await ViewExamPage.controller.downloadAssessmentAsPdf(quiz.name ?? '', includeAnswers);
+      await ViewExamPage.controller
+          .downloadAssessmentAsPdf(quiz.name ?? '', includeAnswers);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Quiz downloaded successfully')),
       );
@@ -236,7 +252,20 @@ class _ViewExamPageState extends State<ViewExamPage> {
       appBar: const AppHeader(),
       drawer: const AppDrawer(),
       body: quizzes.isEmpty
-          ? const Center(child: Text('No saved exams yet.'))
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('No saved exams yet.'),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/create');
+                    },
+                    child: const Text('Create Exam'),
+                  ),
+                ],
+              ),
+            )
           : ListView.builder(
               itemCount: quizzes.length,
               itemBuilder: (BuildContext context, int index) {
@@ -250,26 +279,27 @@ class _ViewExamPageState extends State<ViewExamPage> {
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          _deleteQuiz(quiz.name ?? ''); // Assumes quiz name is used as filename
+                          _deleteQuiz(quiz.name ??
+                              ''); // Assumes quiz name is used as filename
                         },
                       ),
                       PopupMenuButton(
-  icon: const Icon(Icons.download, color: Colors.blue),
-  onSelected: (bool includeAnswers) {
-    _downloadQuiz(quiz, includeAnswers);
-  },
-  itemBuilder: (BuildContext context) => <PopupMenuEntry<bool>>[
-    const PopupMenuItem<bool>(
-      value: true,
-      child: Text('Download with Answers'),
-    ),
-    const PopupMenuItem<bool>(
-      value: false,
-      child: Text('Download without Answers'),
-    ),
-  ],
-)
-
+                        icon: const Icon(Icons.download, color: Colors.blue),
+                        onSelected: (bool includeAnswers) {
+                          _downloadQuiz(quiz, includeAnswers);
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<bool>>[
+                          const PopupMenuItem<bool>(
+                            value: true,
+                            child: Text('Download with Answers'),
+                          ),
+                          const PopupMenuItem<bool>(
+                            value: false,
+                            child: Text('Download without Answers'),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   onTap: () {

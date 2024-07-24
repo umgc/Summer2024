@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intelligrade/controller/main_controller.dart';
-import 'package:intelligrade/controller/model/beans.dart' show AssignmentForm, Course, QuestionType;
+import 'package:intelligrade/controller/model/beans.dart'
+    show AssignmentForm, Course, QuestionType;
 import 'package:intelligrade/ui/drawer.dart';
 import 'package:intelligrade/ui/header.dart';
 
-class CreatePage extends StatefulWidget
-{
+class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
   static MainController controller = MainController();
 
@@ -13,33 +13,28 @@ class CreatePage extends StatefulWidget
   _CreatePageState createState() => _CreatePageState();
 }
 
-class _CreatePageState extends State<CreatePage>
-{
+class _CreatePageState extends State<CreatePage> {
   String _selectedForm = '';
 
-  void _selectForm(String formType)
-  {
-    setState(()
-    {
+  void _selectForm(String formType) {
+    setState(() {
       _selectedForm = formType;
     });
   }
+
   void _clearForm() {
-    setState(()
-    {
+    setState(() {
       _selectedForm = '';
     });
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppHeader(),
       drawer: const AppDrawer(),
       body: LayoutBuilder(
-        builder: (context, constraints)
-        {
+        builder: (context, constraints) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -59,16 +54,14 @@ class _CreatePageState extends State<CreatePage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           _selectForm('Rubric');
                         },
                         child: const Text('Rubric'),
                       ),
                       const SizedBox(width: 20),
                       ElevatedButton(
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           _selectForm('Assignment');
                         },
                         child: const Text('Assignment'),
@@ -97,6 +90,7 @@ class _CreatePageState extends State<CreatePage>
     );
   }
 }
+
 class RubricForm extends StatefulWidget {
   final VoidCallback onCancel;
   const RubricForm({super.key, required this.onCancel});
@@ -113,6 +107,7 @@ class _RubricFormState extends State<RubricForm> {
   String? _selectedGradeLevel;
   final List<String> subjects = ['Math', 'Science', 'History', 'Language Arts'];
   final List<String> gradeLevels = ['1000', '2000', '3000', '4000'];
+  final _formKey = GlobalKey<FormState>();
 
   void _addCriteria() {
     setState(() {
@@ -138,10 +133,17 @@ class _RubricFormState extends State<RubricForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Rubric Form', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            TextField(
+            const Text('Rubric Form',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            TextFormField(
               controller: _titleController,
               decoration: const InputDecoration(labelText: 'Title'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Title is required';
+                }
+                return null;
+              },
             ),
             TextField(
               controller: _descriptionController,
@@ -165,7 +167,8 @@ class _RubricFormState extends State<RubricForm> {
             ),
             DropdownButtonFormField<String>(
               value: _selectedGradeLevel,
-              decoration: const InputDecoration(labelText: 'Grade Level/Course Level'),
+              decoration:
+                  const InputDecoration(labelText: 'Grade Level/Course Level'),
               items: gradeLevels.map((level) {
                 return DropdownMenuItem(
                   value: level,
@@ -179,7 +182,8 @@ class _RubricFormState extends State<RubricForm> {
               },
             ),
             const SizedBox(height: 10),
-            const Text('Criteria:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Criteria:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ..._criteriaControllers.map((controller) {
               return TextField(
                 controller: controller,
@@ -236,11 +240,14 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
   int _numQuestions = 1;
   bool _showAddAssignmentTypeTextBox = false;
   bool _showAddCodingLanguageTextBox = false;
-  final TextEditingController _assignmentTypeController = TextEditingController();
-  final TextEditingController _codingLanguageController = TextEditingController();
+  final TextEditingController _assignmentTypeController =
+      TextEditingController();
+  final TextEditingController _codingLanguageController =
+      TextEditingController();
   final TextEditingController _topicController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
   // final Map<String, int> _assignmentTypeCount = {};
   // final Map<String, int> _codingLanguageCount = {};
 
@@ -268,159 +275,191 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
         courses = result;
       });
     }
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Assignment Form', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Assignment Title'),
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedSubject,
-              decoration: const InputDecoration(labelText: 'Subject'),
-              items: subjects.map((subject) {
-                return DropdownMenuItem(
-                  value: subject,
-                  child: Text(subject),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedSubject = value;
-                });
-              },
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedGradeLevel,
-              decoration: const InputDecoration(labelText: 'Grade Level'),
-              items: gradeLevels.map((grade) {
-                return DropdownMenuItem(
-                  value: grade,
-                  child: Text(grade),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedGradeLevel = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            const Text('Assignment Types:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Row(
-              children: [
-                const Text('Number of Questions'),
-                IconButton(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () {
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Assignment Form',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  label: RichText(
+                    text: const TextSpan(
+                      text: 'Title',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Title is required';
+                  }
+                  return null;
+                },
+              ),
+              DropdownButtonFormField<String>(
+                value: _selectedSubject,
+                decoration: const InputDecoration(labelText: 'Subject'),
+                items: subjects.map((subject) {
+                  return DropdownMenuItem(
+                    value: subject,
+                    child: Text(subject),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedSubject = value;
+                  });
+                },
+              ),
+              DropdownButtonFormField<String>(
+                value: _selectedGradeLevel,
+                decoration: const InputDecoration(labelText: 'Grade Level'),
+                items: gradeLevels.map((grade) {
+                  return DropdownMenuItem(
+                    value: grade,
+                    child: Text(grade),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGradeLevel = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 10),
+              const Text('Assignment Types:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Row(
+                children: [
+                  const Text('Number of Questions'),
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
                       setState(() {
                         _numQuestions--;
                         if (_numQuestions < 1) _numQuestions = 1;
                       });
-                  },
-                ),
-                Text('$_numQuestions'),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      _numQuestions++;
-                    });
-                  },
-                ),
-              ]
-            ),
-            DropdownButtonFormField<QuestionType>(
-              value: _selectedAssignmentType,
-              decoration: const InputDecoration(labelText: 'Question Type'),
-              items: assignmentTypes.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type.displayName),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedAssignmentType = value;
-                });
-              },
-            ),
-            TextField(
-              controller: _topicController,
-              decoration: InputDecoration(labelText: 'Descriptive Topic'),
-              maxLines: 3,
-            ),
-            if (_selectedSubject == 'Computer Science') 
-            DropdownButtonFormField<String>(
-              value: _selectedCodingLanguage,
-              decoration: const InputDecoration(labelText: 'Coding Language'),
-              items: codingLanguages.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedCodingLanguage = value;
-                });
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _isLoading ? null : () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-
-                    // Build a new AssignmentForm object based on the form data
-                    AssignmentForm form = AssignmentForm(
-                      title: _titleController.text,
-                      subject: _selectedSubject ?? '',
-                      gradeLevel: _selectedGradeLevel ?? '',
-                      questionType: _selectedAssignmentType ?? QuestionType.essay,
-                      codingLanguage: _selectedCodingLanguage,
-                      topic: _topicController.text,
-                      questionCount: _numQuestions,
+                    },
+                  ),
+                  Text('$_numQuestions'),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        _numQuestions++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              DropdownButtonFormField<QuestionType>(
+                value: _selectedAssignmentType,
+                decoration: const InputDecoration(labelText: 'Question Type'),
+                items: assignmentTypes.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type.displayName),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedAssignmentType = value;
+                  });
+                },
+              ),
+              TextField(
+                controller: _topicController,
+                decoration: InputDecoration(labelText: 'Descriptive Topic'),
+                maxLines: 3,
+              ),
+              if (_selectedSubject == 'Computer Science')
+                DropdownButtonFormField<String>(
+                  value: _selectedCodingLanguage,
+                  decoration:
+                      const InputDecoration(labelText: 'Coding Language'),
+                  items: codingLanguages.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type),
                     );
-
-                    bool success = await CreatePage.controller.createAssessments(form);
-                    if (success) {
-                      Navigator.pushReplacementNamed(context, '/viewExams');
-                    } else {
-                      // Handle failure
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Failed to create assessments')),
-                      );
-                    }
-
+                  }).toList(),
+                  onChanged: (value) {
                     setState(() {
-                      _isLoading = false;
+                      _selectedCodingLanguage = value;
                     });
                   },
-                  child: _isLoading 
-                      ? const CircularProgressIndicator(color: Colors.white) 
-                      : const Text('Submit'),
                 ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: widget.onCancel,
-                  child: const Text('Cancel'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Form is valid, proceed with your logic
+                        setState(() {
+                          _isLoading = true;
+                        });
+
+                        // Build a new AssignmentForm object based on the form data
+                        AssignmentForm form = AssignmentForm(
+                          title: _titleController.text,
+                          subject: _selectedSubject ?? '',
+                          gradeLevel: _selectedGradeLevel ?? '',
+                          questionType:
+                              _selectedAssignmentType ?? QuestionType.essay,
+                          codingLanguage: _selectedCodingLanguage,
+                          topic: _topicController.text,
+                          questionCount: _numQuestions,
+                        );
+
+                        bool success =
+                            await CreatePage.controller.createAssessments(form);
+                        if (success) {
+                          Navigator.pushReplacementNamed(context, '/viewExams');
+                        } else {
+                          // Handle failure
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Failed to create assessments')),
+                          );
+                        }
+
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    },
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Submit'),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: widget.onCancel,
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
