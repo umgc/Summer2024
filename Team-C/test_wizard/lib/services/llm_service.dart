@@ -60,26 +60,26 @@ class LLMService {
 
     //TODO: identify how to add focus to the prompt.
     return '''Please generate as many complete assessments as you can with $totalCount questions each based on the following assessment. This assessment is about the subject $topic. Each assessment should be very similar to the original assessment and include $multipleChoiceCount multiple choice questions, 0 math questions, $shortAnswerCount short answer questions and $essayCount essay questions. Essay questions should instead include a grading rubric. Provide each assessment formatted as its own json. 
-    Use in the following format for short answer and math questions:
-    QUESTION NUMBER:
-    TYPE:
-    QUESTION:
-    ANSWER:
+Use in the following format for short answer and math questions:
+QUESTION NUMBER:
+TYPE:
+QUESTION:
+ANSWER:
 
-    Use the following format for multiple choice questions:
-    QUESTION NUMBER:
-    TYPE:
-    QUESTION:
-    OPTIONS:
-    ANSWER:
+Use the following format for multiple choice questions:
+QUESTION NUMBER:
+TYPE:
+QUESTION:
+OPTIONS:
+ANSWER:
 
-    Use the following format for essay questions:
-    QUESTION NUMBER:
-    TYPE:
-    QUESTION:
-    RUBRIC:
-    
-    Check your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet. None of the assessments should contain exact copies of the assessments provided in this prompt. Only return assessments that include all $totalCount questions.
+Use the following format for essay questions:
+QUESTION NUMBER:
+TYPE:
+QUESTION:
+RUBRIC:
+
+Check your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet. None of the assessments should contain exact copies of the assessments provided in this prompt. Only return assessments that include all $totalCount questions.
     ${getAssessmentAsJson(state.assessment)}''';
   }
 
