@@ -23,6 +23,7 @@ class MainController {
   MainController._internal();
   final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
   static bool isLoggedIn = false;
+
   Future<bool> createAssessments(AssignmentForm userForm) async {
     try {
     var queryPrompt = PromptEngine.generatePrompt(userForm);
@@ -42,11 +43,13 @@ class MainController {
     return false;
   }
   }
+  
   void gradeAssessment() {
     //TODO:
     //will use LLM
     // Handle grading logic
   }
+
   Quiz viewLocalAssessment(String filename) {
     if (filename.isEmpty) {
       throw Exception('Filename is required.');
@@ -61,10 +64,7 @@ class MainController {
     }
     return Quiz.fromXmlString(cookieValue);
   }
-  void settings() {
-    //what is this supposed to do?
-    // Handle settings logic
-  }
+
   void saveFileLocally(Quiz quiz) {
     String cookieName =
         quiz.name ?? DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
@@ -108,31 +108,22 @@ class MainController {
                   final question = entry.value;
                   final questionNumber = entry.key + 1;
 
-                  // Determine the answer prefix based on question type
+                  
                   List<pw.Widget> answerWidgets = [];
-                  if (question.type == QuestionType.multichoice.xmlName) {
-                    // Multiple choice question - use letters a), b), c), etc.
-                    final options = question.answerList.asMap().entries.map((answerEntry) {
-                      final optionLetter = String.fromCharCode('a'.codeUnitAt(0) + answerEntry.key);
-                      final answerText = answerEntry.value.answerText;
-                      final feedbackText = includeAnswers ? ' (${answerEntry.value.feedbackText ?? ''})' : '';
+                    answerWidgets.addAll(question.answerList.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final answer = entry.value;
+                    final answerText = answer.answerText ?? '';
+                    final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
+                    
+                    final prefix = question.type == QuestionType.multichoice.xmlName
+                      ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
+                      : '-';
                       return pw.Text(
-                        '$optionLetter) $answerText${includeAnswers ? ' $feedbackText' : ''}',
+                        'prefix $answerText${includeAnswers ? ' $feedbackText' : ''}',
                         style: pw.TextStyle(fontSize: 14),
                       );
-                    }).toList();
-                    answerWidgets.addAll(options);
-                  } else {
-                    // Other question types - use hyphens
-                    answerWidgets.addAll(question.answerList.map((answer) {
-                      final answerText = answer.answerText;
-                      final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
-                      return pw.Text(
-                        '- $answerText${includeAnswers ? ' $feedbackText' : ''}',
-                        style: pw.TextStyle(fontSize: 14),
-                      );
-                    }).toList());
-                  }
+                    }).toList());                  
 
                   return pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -173,7 +164,6 @@ class MainController {
   }
 }
 
-
   List<Quiz?> listAllAssessments() {
     // Retrieve all cookies as a single string
     String allCookies = html.document.cookie ?? '';
@@ -205,6 +195,7 @@ class MainController {
     }).where((quiz) => quiz != null).toList();
     return allQuizzes;
   }
+
   void updateFileLocally(Quiz quiz) {
     if (quiz.name == null) {
       throw Exception('Quiz name is required.');
@@ -224,6 +215,7 @@ class MainController {
     // Set the updated cookie
     html.document.cookie = '$cookieName=$cookieValue';
   }
+
   void deleteLocalFile(String filename) {
     if (filename.isEmpty) {
       throw Exception('Filename is required.');
@@ -236,6 +228,7 @@ class MainController {
     // Set the cookie with an expired date and empty value
     html.document.cookie = '$cookieName=; expires=$pastDate; path=/';
   }
+
   void postAssessmentToMoodle(Quiz quiz, String courseId) async {
     if (!isLoggedIn) {
       throw Exception('User is not logged in.');
@@ -253,10 +246,12 @@ class MainController {
     // Handle getting logic
     return Quiz();
   }
+
   String complieCodeAndGetOutput(String code) {
     // Handle compiling logic
     return '';
   }
+
   Future<bool> loginToMoodle(String username, String password) async {
     var moodleApi = MoodleApiSingleton();
     try {
@@ -269,6 +264,7 @@ class MainController {
       return false;
     }
   }
+
   Future<List<Course>> getCourses() async {
     var moodleApi = MoodleApiSingleton();
     try {
@@ -279,4 +275,5 @@ class MainController {
       return [];
     }
   }
+  
 }
