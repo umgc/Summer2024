@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
-import 'package:test_wizard/providers/assessment_state.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
@@ -62,8 +62,8 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
     Size screenSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) {
-        var state = AssessmentState(assessmentId: 0, version: 0);
-        state.add(Question(
+        var state = AssessmentProvider();
+        state.addQuestion(Question(
           points: 0,
           questionId: id++,
           questionText: '',
@@ -87,7 +87,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: screenSize.width * 0.9,
-                    child: Consumer<AssessmentState>(
+                    child: Consumer<AssessmentProvider>(
                       builder: (context, assessment, child) {
                         return Column(
                           children: <Widget>[
@@ -96,7 +96,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                 return Column(children: [
                                   AddedQuestion(
                                     question: question,
-                                    assessment: assessment,
+                                    assessmentProvider: assessment,
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -121,7 +121,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                assessment.add(Question(
+                                assessment.addQuestion(Question(
                                   questionId: id++,
                                   points: 0,
                                   questionText: '',
@@ -181,14 +181,14 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 }
 
 class AddedQuestion extends StatelessWidget {
-  final AssessmentState assessment;
+  final AssessmentProvider assessmentProvider;
   final Question question;
   final TextEditingController controller;
 
   AddedQuestion({
     super.key,
     required this.question,
-    required this.assessment,
+    required this.assessmentProvider,
   }) : controller = TextEditingController.fromValue(
           TextEditingValue(
             text: question.questionText,
@@ -224,7 +224,7 @@ class AddedQuestion extends StatelessWidget {
               ),
             ],
             onChanged: (value) =>
-                assessment.update(id: question.questionId, newType: value),
+                assessmentProvider.updateQuestion(id: question.questionId, newType: value),
           ),
         ),
         const SizedBox(width: 10),
@@ -232,7 +232,7 @@ class AddedQuestion extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             onChanged: (value) =>
-                assessment.update(id: question.questionId, newText: value),
+                assessmentProvider.updateQuestion(id: question.questionId, newText: value),
             decoration: const InputDecoration(
               hintText: 'What is 2 + 2?',
               border: OutlineInputBorder(),
@@ -243,7 +243,7 @@ class AddedQuestion extends StatelessWidget {
         const SizedBox(width: 10),
         IconButton(
           style: IconButton.styleFrom(backgroundColor: Colors.amber),
-          onPressed: () => assessment.remove(question.questionId),
+          onPressed: () => assessmentProvider.removeQuestion(question.questionId),
           icon: const Icon(Icons.delete),
         ),
       ],

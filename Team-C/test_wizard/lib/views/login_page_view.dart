@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
                             ),
                           ];
                           aSet.assessments.add(a);
-                          savedAssessments.add(aSet);
+                          savedAssessments.addAssessmentSet(aSet);
                           savedAssessments.saveAssessmentsToFile();
                           // Your OAuth login logic goes here
                           Navigator.of(context).push(
