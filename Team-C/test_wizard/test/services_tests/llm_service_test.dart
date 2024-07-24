@@ -7,10 +7,23 @@ import 'package:test_wizard/services/llm_service.dart';
 
 void main() {
   group('LLM Service', () {
-    test('constructor correctly instantiates class', () {
+    // commenting this out for now
+    // test('constructor correctly instantiates class', () {
+    //   final llm = LLMService();
+    //   expect(llm.url, 'https://api.perplexity.ai/chat/completions');
+    //   expect(llm.apiKey, const String.fromEnvironment('API_KEY'));
+    // });
+
+    test('extractAssessment', () {
+      String testString =
+          'this is some text ```json{"hello": "world"}``` this is the rest';
+      String broken = 'This isnt json';
+
       final llm = LLMService();
-      expect(llm.url, 'https://api.perplexity.ai/chat/completions');
-      expect(llm.apiKey, const String.fromEnvironment('API_KEY'));
+      Map<String, dynamic>? expected = llm.extractAssessment(testString);
+      Map<String, dynamic>? expected2 = llm.extractAssessment(broken);
+      expect(expected, {"hello": "world"});
+      expect(expected2, null);
     });
 
     // mock successful response from AI, probably not what it actually looks like

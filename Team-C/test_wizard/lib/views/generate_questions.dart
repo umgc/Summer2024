@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
@@ -131,14 +132,29 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               child: const Text('Add Question'),
                             ),
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   questionGenerationDetail.prompt =
                                       llmService.buildPrompt(
                                           questionGenerationDetail.topic,
                                           assessment);
-                                  textEditingController.text =
-                                      questionGenerationDetail.prompt;
+                                  Client client = Client();
+                                  try {
+                                    Response res = await llmService.sendRequest(
+                                        client,
+                                        questionGenerationDetail.prompt);
+                                    if (res.statusCode == 200) {
+                                      final finalResponse = res.body;
+                                      textEditingController.text =
+                                          finalResponse;
+                                    } else {
+                                      print(res.statusCode);
+                                      textEditingController.text =
+                                          'Something went wrong';
+                                    }
+                                  } catch (e) {
+                                    print(e);
+                                  }
                                 }
                               },
                               child: const Text('Generate Assessment'),
