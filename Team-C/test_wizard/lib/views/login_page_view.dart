@@ -6,6 +6,7 @@ import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -66,7 +67,7 @@ class LoginPage extends StatelessWidget {
                       return ElevatedButton(
                         // for now this button populates the state with some sample data
                         // if the Moodle login button is pressed
-                        onPressed: () {
+                        onPressed: () async {
                           AssessmentSet aSet = AssessmentSet([], 'Math Test',  Course(1, 'Geometry 101'));
                           Assessment a = Assessment(1,1);
                           a.questions = [
@@ -99,6 +100,17 @@ class LoginPage extends StatelessWidget {
                           savedAssessments.add(aSet);
                           savedAssessments.saveAssessmentsToFile();
                           // Your OAuth login logic goes here
+                          UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+                          try {
+                            await userProvider.loginToMoodle('admin', 'Moodle!23');
+                            if (userProvider.isLoggedInToMoodle) {
+                              print('Logged in successfully!');
+                              print('Token: ${userProvider.token}');
+                            }
+                          } catch (e) {
+                            print('Error: $e');
+                          }
+
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               // to Teacher Dashboard with 'logged in' status for now

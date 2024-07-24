@@ -1,7 +1,26 @@
-class UserProvider {
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class UserProvider extends ChangeNotifier {
   bool isLoggedInToMoodle;
+  String? token;
 
   UserProvider({
     this.isLoggedInToMoodle = false,
   });
+
+  Future<void> loginToMoodle(String username, String password) async {
+    final url = Uri.parse('http://localhost/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      token = responseData['token'];
+      isLoggedInToMoodle = true;
+      notifyListeners();
+    } else {
+      throw Exception('Failed to login to Moodle');
+    }
+  }
 }
