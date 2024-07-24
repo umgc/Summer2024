@@ -39,6 +39,8 @@ class MainController {
         llm.parseQueryResponse(llmResp);
     for (var xml in parsedXmlList) {
       var quiz = Quiz.fromXmlString(xml);
+      quiz.name = userForm.title;
+      quiz.description = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
       saveFileLocally(quiz);
     }
     return true;
@@ -82,31 +84,88 @@ class MainController {
     String cookieName =
         quiz.name ?? DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
     String cookieValue = XmlConverter.convertQuizToXml(quiz).toString();
-    html.document.cookie = '$cookieName=$cookieValue';
+    final hundredYearsFromNow = DateTime.now().add(Duration(days: 365 * 100)).toUtc().toIso8601String();
+    html.document.cookie = '$cookieName=$cookieValue; expires=$hundredYearsFromNow; path=/';
   }
 
-  void downloadAssessmentAsPdf(String filename) async {
-    if (filename.isEmpty) {
-      throw Exception('Quiz name is required.');
-    }
-
+  Future<bool> downloadAssessmentAsPdf(String filename, bool includeAnswers) async {
+  if (filename.isEmpty) {
+    throw Exception('Quiz name is required.');
+  }
+  try {
     String allCookies = html.document.cookie ?? '';
     List<String> cookieList = allCookies.split('; ');
 
     String cookieValue = cookieList.firstWhere((String cookie) {
       return cookie.startsWith('$filename=');
-    });
+    }, orElse: () => '');
 
-    if (cookieValue == null) {
+    if (cookieValue.isEmpty) {
       throw Exception('No quiz found with the name: $filename');
     }
 
-    // Convert XML string to PDF
+    var quiz = Quiz.fromXmlString(cookieValue);
+
+    // Create PDF document
     final pdf = pw.Document();
     pdf.addPage(
       pw.Page(
-        build: (pw.Context context) =>
-            pw.Text(cookieValue), // Simplified example
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(filename, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.Text(quiz.description ?? 'No description', style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic)),
+              pw.SizedBox(height: 20),
+              pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: quiz.questionList.asMap().entries.map((entry) {
+                  final question = entry.value;
+                  final questionNumber = entry.key + 1;
+
+                  // Determine the answer prefix based on question type
+                  List<pw.Widget> answerWidgets = [];
+                  if (question.type == QuestionType.multichoice.xmlName) {
+                    // Multiple choice question - use letters a), b), c), etc.
+                    final options = question.answerList.asMap().entries.map((answerEntry) {
+                      final optionLetter = String.fromCharCode('a'.codeUnitAt(0) + answerEntry.key);
+                      final answerText = answerEntry.value.answerText;
+                      final feedbackText = includeAnswers ? ' (${answerEntry.value.feedbackText ?? ''})' : '';
+                      return pw.Text(
+                        '$optionLetter) $answerText${includeAnswers ? ' $feedbackText' : ''}',
+                        style: pw.TextStyle(fontSize: 14),
+                      );
+                    }).toList();
+                    answerWidgets.addAll(options);
+                  } else {
+                    // Other question types - use hyphens
+                    answerWidgets.addAll(question.answerList.map((answer) {
+                      final answerText = answer.answerText;
+                      final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
+                      return pw.Text(
+                        '- $answerText${includeAnswers ? ' $feedbackText' : ''}',
+                        style: pw.TextStyle(fontSize: 14),
+                      );
+                    }).toList());
+                  }
+
+                  return pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Question $questionNumber: ${question.questionText}', style: pw.TextStyle(fontSize: 16)),
+                      pw.SizedBox(height: 5),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: answerWidgets,
+                      ),
+                      pw.SizedBox(height: 10),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        },
       ),
     );
 
@@ -124,7 +183,13 @@ class MainController {
 
     // Cleanup
     html.Url.revokeObjectUrl(url);
+    return true;
+  } catch (e) {
+    print('Error downloading assessment as PDF: $e');
+    return false;
   }
+}
+
 
   List<Quiz?> listAllAssessments() {
     // Retrieve all cookies as a single string
@@ -152,7 +217,9 @@ class MainController {
         print(quizXml);
 
         // Convert the XML string to a Quiz object
-        return Quiz.fromXmlString(quizXml);
+        var quiz = Quiz.fromXmlString(quizXml);
+        quiz.name = quizName;
+        return quiz;
       } catch (e) {
         print('Error parsing cookie: $e');
         return null; // Return null for invalid cookies

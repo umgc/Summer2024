@@ -13,6 +13,8 @@ class XmlConverter {
     builder.processing('xml', 'version="1.0" encoding="UTF-8"');
     builder.element(XmlConsts.quiz, nest: () {
       // build category dummy node
+      builder.element(XmlConsts.name, nest: quiz.name ?? 'Unnamed Quiz');
+      builder.element(XmlConsts.description, nest: quiz.description ?? 'No description');
       builder.element(XmlConsts.question, nest: () {
         builder.attribute(XmlConsts.type, 'category');
         builder.element('category', nest: () {

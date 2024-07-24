@@ -76,14 +76,6 @@ class _CreatePageState extends State<CreatePage>
                     ],
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: ()
-                    {
-                      _selectForm('Edit');
-                    },
-                    child: const Text('Edit Past Rubric/Assignment'),
-                  ),
-                  const SizedBox(height: 20),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -92,8 +84,6 @@ class _CreatePageState extends State<CreatePage>
                             RubricForm(onCancel: _clearForm)
                           else if (_selectedForm == 'Assignment')
                             UiAssignmentForm(onCancel: _clearForm)
-                          else if (_selectedForm == 'Edit')
-                              EditForm(onCancel: _clearForm),
                         ],
                       ),
                     ),
@@ -250,6 +240,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
   final TextEditingController _codingLanguageController = TextEditingController();
   final TextEditingController _topicController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
+  bool _isLoading = false;
   // final Map<String, int> _assignmentTypeCount = {};
   // final Map<String, int> _codingLanguageCount = {};
 
@@ -387,8 +378,12 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () async {
-                    //build a new AssignmentForm object based on the form data
+                  onPressed: _isLoading ? null : () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+
+                    // Build a new AssignmentForm object based on the form data
                     AssignmentForm form = AssignmentForm(
                       title: _titleController.text,
                       subject: _selectedSubject ?? '',
@@ -398,7 +393,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
                       topic: _topicController.text,
                       questionCount: _numQuestions,
                     );
-                    
+
                     bool success = await CreatePage.controller.createAssessments(form);
                     if (success) {
                       Navigator.pushReplacementNamed(context, '/viewExams');
@@ -408,8 +403,14 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
                         const SnackBar(content: Text('Failed to create assessments')),
                       );
                     }
+
+                    setState(() {
+                      _isLoading = false;
+                    });
                   },
-                  child: const Text('Submit'),
+                  child: _isLoading 
+                      ? const CircularProgressIndicator(color: Colors.white) 
+                      : const Text('Submit'),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
@@ -421,42 +422,6 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
             const SizedBox(height: 20),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class EditForm extends StatelessWidget {
-  final VoidCallback onCancel;
-  const EditForm({super.key, required this.onCancel});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const Text('Edit Past Rubric or Assignment', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
-          const TextField(
-            decoration: InputDecoration(labelText: 'Search Past Rubric or Assignment'),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Search'),
-              ),
-              const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: onCancel,
-                child: const Text('Cancel'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-        ],
       ),
     );
   }

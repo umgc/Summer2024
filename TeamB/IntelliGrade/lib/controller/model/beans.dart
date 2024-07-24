@@ -5,6 +5,7 @@ class XmlConsts {
   static const quiz = 'quiz';
   static const question = 'question';
   static const name = 'name';
+  static const description = 'description';
   static const type = 'type';
   static const text = 'text';
   static const questiontext = 'questiontext';
@@ -35,11 +36,19 @@ class Quiz {
   factory Quiz.fromXmlString(String xmlStr) {
     Quiz quiz = Quiz();
     final document = XmlDocument.parse(xmlStr);
-    for (XmlElement questionElement in document.findAllElements(XmlConsts.question).toList()) {
-      quiz.questionList.add(Question.fromXml(questionElement));
+    final quizElement = document.getElement(XmlConsts.quiz);
+    if (quizElement != null) {
+        quiz.name = quizElement.getElement(XmlConsts.name)?.getElement(XmlConsts.text)?.innerText;
+        quiz.description = quizElement.getElement(XmlConsts.description)?.innerText;
+        for (XmlElement questionElement in quizElement.findElements(XmlConsts.question)) {
+            if (questionElement.getAttribute(XmlConsts.type) == 'category') {
+                continue; // Skip category type questions
+            }
+            quiz.questionList.add(Question.fromXml(questionElement));
+        }
     }
     return quiz;
-  }
+}
 
   @override
   String toString() {
