@@ -7,6 +7,7 @@ import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
 import 'package:test_wizard/providers/user_provider.dart';
+import 'package:logger/logger.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -101,14 +102,15 @@ class LoginPage extends StatelessWidget {
                           savedAssessments.saveAssessmentsToFile();
                           // Your OAuth login logic goes here
                           UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+                          var logger = Logger();
                           try {
-                            await userProvider.loginToMoodle('admin', 'Moodle!23');
+                            await userProvider.loginToMoodle('admin', 'Moodle!23');                             
                             if (userProvider.isLoggedInToMoodle) {
-                              print('Logged in successfully!');
-                              print('Token: ${userProvider.token}');
+                                logger.i('Logged in successfully!');
+                                logger.i('Token: ${userProvider.token}');
                             }
                           } catch (e) {
-                            print('Error: $e');
+                            logger.i('Error: $e');
                           }
 
                           Navigator.of(context).push(
