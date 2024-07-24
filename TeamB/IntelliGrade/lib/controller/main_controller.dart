@@ -35,11 +35,11 @@ class MainController {
     try {
     var queryPrompt = PromptEngine.generatePrompt(userForm);
     final String llmResp = await llm.postToLlm(queryPrompt);
-    final List<Map<String, dynamic>> parsedXmlList =
+    final List<String> parsedXmlList =
         llm.parseQueryResponse(llmResp);
     for (var xml in parsedXmlList) {
-      // TODO var xml is a map entry not the XML string
-      saveFileLocally(Quiz.fromXmlString(xml.toString()));
+      var quiz = Quiz.fromXmlString(xml);
+      saveFileLocally(quiz);
     }
     return true;
     } catch (e) {
@@ -129,6 +129,8 @@ class MainController {
   List<Quiz?> listAllAssessments() {
   // Retrieve all cookies as a single string
   String allCookies = html.document.cookie ?? '';
+
+  print('All cookies: $allCookies');
 
   // Split the string into a list of cookies
   List<String> cookieList = allCookies.split('; ');

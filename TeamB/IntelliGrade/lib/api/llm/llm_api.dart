@@ -58,7 +58,7 @@ class LlmApi {
     return httpPackageResponse.body;
   }
 
-  List<Map<String, dynamic>> parseQueryResponse(String resp) {
+  List<String> parseQueryResponse(String resp) {
     // ignore: prefer_adjacent_string_concatenation
     String quizRegExp =
         // r'(<\?xml.*?\?>\s*<quiz>(\s*.*?<question>\s*.*?<text>\s*(.*?)</text>\s*.*?<options>(\s*.*?<option>\s*(.*?)</option>)+\s*</options>\s*.*?<answer>\s*(.*?)</answer>\s*.*?</question>)+\s*</quiz>)';
@@ -67,18 +67,19 @@ class LlmApi {
     RegExp exp = RegExp(quizRegExp);
     String respNoNewlines = resp.replaceAll('\n', '');
     Iterable<RegExpMatch> matches = exp.allMatches(respNoNewlines);
-    List<Map<String, dynamic>> parsedResp = [];
-    int index = 0;
+     List<String> parsedResp = [];
 
     print("Parsing the query response - matches: $matches");
 
     for (final m in matches) {
-      parsedResp.add({'Assignment ${index + 1}': m[0]!});
+    if (m.group(0) != null) {
+      parsedResp.add(m.group(0)!);
 
-      print("This is a match : ${m[0]}");
+      print("This is a match : ${m.group(0)}");
       print("Number of groups in the match: ${m.groupCount}");
       print("parsedResp : $parsedResp");
     }
+  }
 
     return parsedResp;
   }
