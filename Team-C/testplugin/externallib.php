@@ -428,7 +428,7 @@ class export_questions extends external_api {
     }
 };
 
-class import_questions extends \external_api {
+class import_questions_xml extends \external_api {
 
     public static function execute_parameters() {
         return new external_function_parameters([
@@ -498,6 +498,143 @@ class import_questions extends \external_api {
         return $retval;
     }
 };
+
+class import_questions_json extends \external_api {
+
+    public static function execute_parameters() {
+        return new external_function_parameters([
+            'questionjson' => new external_value(PARAM_RAW, 'Question JSON'),
+        ]);
+    }
+    
+    public static function execute_returns() {
+        return new external_multiple_structure(
+            new external_single_structure([
+                'questionid' => new external_value(PARAM_INT, 'The question ID'),
+            ])
+        );
+    }
+
+    public static function execute($questionjson) {
+        global $CFG, $DB;
+        require_once("$CFG->dirroot/lib/questionlib.php");
+        require_once("$CFG->dirroot/lib/datalib.php");
+        require_once("$CFG->dirroot/question/format/xml/format.php");
+
+        // Set default home course
+        $courseid = 1;
+
+        // Validate parameters
+        $params = self::validate_parameters(self::execute_parameters(), [
+            'questionjson' => $questionjson,
+        ]);
+
+        // Decode JSON to PHP array
+        $questionArray = json_decode($questionjson, true);        
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new invalid_parameter_exception('Invalid JSON: ' . json_last_error_msg());
+        }
+
+        // Convert PHP array to XML
+        $questionxml = self::convertArrayToXml($questionArray['quiz']);
+
+        // Log the generated XML for debugging
+        debugging("Generated XML: $questionxml", DEBUG_DEVELOPER);    
+
+        // Create temp file for XML data
+        $tempdir = make_request_directory();
+        $tempfile = tempnam($tempdir, 'questionxml_');
+        file_put_contents($tempfile, $questionxml);
+
+        // Set up import formatter
+        $qformat = new \qformat_xml();
+        $qformat->setContexts((new question_edit_contexts(context_course::instance($courseid)))->all());
+        $qformat->setCourse(get_course($courseid));
+        $qformat->setFilename($tempfile);
+        $qformat->setMatchgrades('error');
+        $qformat->setCatfromfile(1);
+        $qformat->setContextfromfile(1);
+        $qformat->setStoponerror(1);
+        $qformat->setCattofile(1);
+        $qformat->setContexttofile(1);
+        $qformat->set_display_progress(false);
+
+        // Import data
+        try {
+            $imported = $qformat->importprocess();
+        } catch (Exception $e) {
+            // Log the error for debugging
+            debugging("Import error: " . $e->getMessage(), DEBUG_DEVELOPER);
+            throw new moodle_exception('importerror', 'local_testplugin', '', $e->getMessage());
+        } finally {
+            // Clean up temporary file
+            if (file_exists($tempfile)) {
+                unlink($tempfile);
+            }
+        }
+
+        // Set list of question IDs
+        $retval = [];
+        foreach ($qformat->questionids as $questionid) {
+            $retval[] = ['questionid' => $questionid];
+        }
+
+        return $retval;
+    }
+
+    private static function convertArrayToXml($array) {
+        $xml = new \SimpleXMLElement('<quiz/>');
+        self::arrayToXml($array, $xml);
+        $dom = dom_import_simplexml($xml)->ownerDocument;
+        $dom->formatOutput = true;
+        return $dom->saveXML($dom->documentElement);
+    }
+
+    private static function arrayToXml($array, &$xml) {
+        foreach ($array as $key => $value) {
+            if (is_int($key)) {
+                $key = "e";
+            }
+            if (is_array($value)) {
+                if (self::isAssociativeArray($value)) {
+                    if ($key == "question" && isset($value['type'])) {
+                        $child = $xml->addChild($key);
+                        $child->addAttribute('type', $value['type']);
+                        unset($value['type']);
+                    } else {
+                        $child = $xml->addChild($key);
+                    }
+                    self::arrayToXml($value, $child);
+                } else {
+                    foreach ($value as $subValue) {
+                        $child = $xml->addChild($key);
+                        self::arrayToXml($subValue, $child);
+                    }
+                }
+            } else {
+                if ($key === 'text' && strpos($value, '<') !== false) {
+                    $child = $xml->addChild($key);
+                    $node = dom_import_simplexml($child);
+                    $no = $node->ownerDocument;
+                    $node->appendChild($no->createCDATASection($value));
+                } elseif ($key === 'format') {
+                    $xml->addAttribute('format', $value);
+                } elseif ($key === 'fraction') {
+                    $xml->addAttribute('fraction', $value);
+                } elseif ($key === 'type') {
+                    $xml->addAttribute('type', $value);
+                } else {
+                    $xml->addChild($key, htmlspecialchars($value));
+                }
+            }
+        }
+    }
+
+    private static function isAssociativeArray(array $array) {
+        return array_keys($array) !== range(0, count($array) - 1);
+    }
+}
 
 class delete_questions extends \external_api {
 
