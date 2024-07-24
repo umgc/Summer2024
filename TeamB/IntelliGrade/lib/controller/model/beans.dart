@@ -23,19 +23,20 @@ class XmlConsts {
 
 // A Moodle quiz containing a list of questions.
 class Quiz {
-  String? name;         // quiz name - optional.
+  String? name; // quiz name - optional.
   String? description; // quiz description - optional.
   List<Question> questionList = <Question>[]; // list of questions on the quiz.
 
   // Constructor with all optional params.
   Quiz({this.name, this.description, List<Question>? questionList})
-    : questionList = questionList ?? [];
+      : questionList = questionList ?? [];
 
   // XML factory constructor using XML string
   factory Quiz.fromXmlString(String xmlStr) {
     Quiz quiz = Quiz();
     final document = XmlDocument.parse(xmlStr);
-    for (XmlElement questionElement in document.findAllElements(XmlConsts.question).toList()) {
+    for (XmlElement questionElement
+        in document.findAllElements(XmlConsts.question).toList()) {
       quiz.questionList.add(Question.fromXml(questionElement));
     }
     return quiz;
@@ -57,23 +58,34 @@ class Quiz {
 
 // Abstract class that represents a single question.
 class Question {
-  String name;             // question name - required.
-  String type;             // question type (multichoice, truefalse, shortanswer, essay) - required.
-  String questionText;     // question text - required.
-  List<Answer> answerList = <Answer>[]; // list of answers. Not needed for essay.
+  String name; // question name - required.
+  String
+      type; // question type (multichoice, truefalse, shortanswer, essay) - required.
+  String questionText; // question text - required.
+  List<Answer> answerList =
+      <Answer>[]; // list of answers. Not needed for essay.
 
   // Simple constructor. The answerList param is optional.
   Question(this.name, this.type, this.questionText, [List<Answer>? answerList])
-    : answerList = answerList ?? [];
+      : answerList = answerList ?? [];
 
   // XML factory constructor
   factory Question.fromXml(XmlElement questionElement) {
     Question question = Question(
-      questionElement.getElement(XmlConsts.name)?.getElement(XmlConsts.text)?.innerText ?? 'UNKNOWN',
+      questionElement
+              .getElement(XmlConsts.name)
+              ?.getElement(XmlConsts.text)
+              ?.innerText ??
+          'UNKNOWN',
       questionElement.getAttribute(XmlConsts.type) ?? XmlConsts.essay,
-      questionElement.getElement(XmlConsts.questiontext)?.getElement(XmlConsts.text)?.innerText ?? 'UNKNOWN',
+      questionElement
+              .getElement(XmlConsts.questiontext)
+              ?.getElement(XmlConsts.text)
+              ?.innerText ??
+          'UNKNOWN',
     );
-    for (XmlElement answerElement in questionElement.findElements(XmlConsts.answer).toList()) {
+    for (XmlElement answerElement
+        in questionElement.findElements(XmlConsts.answer).toList()) {
       question.answerList.add(Answer.fromXml(answerElement));
     }
     return question;
@@ -96,8 +108,8 @@ class Question {
 
 // A single answer for a Question object. Used by all question types except for essay.
 class Answer {
-  String answerText;  // Multiple choice text - required
-  String fraction;     // Point value from 0 (incorrect) to 100 (correct) - required
+  String answerText; // Multiple choice text - required
+  String fraction; // Point value from 0 (incorrect) to 100 (correct) - required
   String? feedbackText; // Feedback for the choice - optional
 
   // Simple constructor. Feedback param is optional.
@@ -106,10 +118,12 @@ class Answer {
   // XML factory constructor
   factory Answer.fromXml(XmlElement answerElement) {
     return Answer(
-      answerElement.getElement(XmlConsts.text)?.innerText ?? 'UNKNOWN',
-      answerElement.getAttribute(XmlConsts.fraction) ?? '100',
-      answerElement.getElement(XmlConsts.feedback)?.getElement(XmlConsts.text)?.innerText
-    );
+        answerElement.getElement(XmlConsts.text)?.innerText ?? 'UNKNOWN',
+        answerElement.getAttribute(XmlConsts.fraction) ?? '100',
+        answerElement
+            .getElement(XmlConsts.feedback)
+            ?.getElement(XmlConsts.text)
+            ?.innerText);
   }
 
   @override
@@ -140,7 +154,8 @@ class Course {
         'id': int id,
         'shortname': String shortName,
         'fullname': String fullName,
-      } => Course(id, shortName, fullName),
+      } =>
+        Course(id, shortName, fullName),
       _ => throw const FormatException('Failed to load course from json.'),
     };
   }
@@ -161,21 +176,26 @@ enum QuestionType {
 
 // Object to pass user-specified parameters to LLM API.
 class AssignmentForm {
-
   QuestionType questionType;
+  String? gradingCriteria;
   String subject;
   String topic;
   String gradeLevel;
+  int maximumGrade;
+  int? assignmentCount;
   int questionCount;
   String? codingLanguage;
   String title;
 
-  AssignmentForm({
-    required this.questionType,
-    required this.subject,
-    required this.topic,
-    required this.gradeLevel,
-    required this.questionCount,
-    required this.title,
-    this.codingLanguage});
+  AssignmentForm(
+      {required this.questionType,
+      required this.subject,
+      required this.topic,
+      required this.gradeLevel,
+      required this.title,
+      required this.questionCount,
+      required this.maximumGrade,
+      this.assignmentCount,
+      this.gradingCriteria,
+      this.codingLanguage});
 }

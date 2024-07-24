@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intelligrade/controller/main_controller.dart';
-import 'package:intelligrade/controller/model/beans.dart' show AssignmentForm, Course, QuestionType;
+import 'package:intelligrade/controller/model/beans.dart'
+    show AssignmentForm, Course, QuestionType;
 import 'package:intelligrade/ui/drawer.dart';
 import 'package:intelligrade/ui/header.dart';
 
-class CreatePage extends StatefulWidget
-{
+class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
   static MainController controller = MainController();
 
@@ -13,33 +13,28 @@ class CreatePage extends StatefulWidget
   _CreatePageState createState() => _CreatePageState();
 }
 
-class _CreatePageState extends State<CreatePage>
-{
+class _CreatePageState extends State<CreatePage> {
   String _selectedForm = '';
 
-  void _selectForm(String formType)
-  {
-    setState(()
-    {
+  void _selectForm(String formType) {
+    setState(() {
       _selectedForm = formType;
     });
   }
+
   void _clearForm() {
-    setState(()
-    {
+    setState(() {
       _selectedForm = '';
     });
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppHeader(),
       drawer: const AppDrawer(),
       body: LayoutBuilder(
-        builder: (context, constraints)
-        {
+        builder: (context, constraints) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -59,16 +54,14 @@ class _CreatePageState extends State<CreatePage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           _selectForm('Rubric');
                         },
                         child: const Text('Rubric'),
                       ),
                       const SizedBox(width: 20),
                       ElevatedButton(
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           _selectForm('Assignment');
                         },
                         child: const Text('Assignment'),
@@ -77,8 +70,7 @@ class _CreatePageState extends State<CreatePage>
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: ()
-                    {
+                    onPressed: () {
                       _selectForm('Edit');
                     },
                     child: const Text('Edit Past Rubric/Assignment'),
@@ -93,7 +85,7 @@ class _CreatePageState extends State<CreatePage>
                           else if (_selectedForm == 'Assignment')
                             UiAssignmentForm(onCancel: _clearForm)
                           else if (_selectedForm == 'Edit')
-                              EditForm(onCancel: _clearForm),
+                            EditForm(onCancel: _clearForm),
                         ],
                       ),
                     ),
@@ -107,6 +99,7 @@ class _CreatePageState extends State<CreatePage>
     );
   }
 }
+
 class RubricForm extends StatefulWidget {
   final VoidCallback onCancel;
   const RubricForm({super.key, required this.onCancel});
@@ -148,7 +141,8 @@ class _RubricFormState extends State<RubricForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Rubric Form', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text('Rubric Form',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             TextField(
               controller: _titleController,
               decoration: const InputDecoration(labelText: 'Title'),
@@ -175,7 +169,8 @@ class _RubricFormState extends State<RubricForm> {
             ),
             DropdownButtonFormField<String>(
               value: _selectedGradeLevel,
-              decoration: const InputDecoration(labelText: 'Grade Level/Course Level'),
+              decoration:
+                  const InputDecoration(labelText: 'Grade Level/Course Level'),
               items: gradeLevels.map((level) {
                 return DropdownMenuItem(
                   value: level,
@@ -189,7 +184,8 @@ class _RubricFormState extends State<RubricForm> {
               },
             ),
             const SizedBox(height: 10),
-            const Text('Criteria:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Criteria:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ..._criteriaControllers.map((controller) {
               return TextField(
                 controller: controller,
@@ -246,8 +242,10 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
   int _numQuestions = 1;
   bool _showAddAssignmentTypeTextBox = false;
   bool _showAddCodingLanguageTextBox = false;
-  final TextEditingController _assignmentTypeController = TextEditingController();
-  final TextEditingController _codingLanguageController = TextEditingController();
+  final TextEditingController _assignmentTypeController =
+      TextEditingController();
+  final TextEditingController _codingLanguageController =
+      TextEditingController();
   final TextEditingController _topicController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   // final Map<String, int> _assignmentTypeCount = {};
@@ -277,7 +275,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
         courses = result;
       });
     }
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +285,8 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Assignment Form', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text('Assignment Form',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             TextField(
               controller: _titleController,
               decoration: InputDecoration(labelText: 'Assignment Title'),
@@ -323,30 +322,29 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
               },
             ),
             const SizedBox(height: 10),
-            const Text('Assignment Types:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Row(
-              children: [
-                const Text('Number of Questions'),
-                IconButton(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () {
-                      setState(() {
-                        _numQuestions--;
-                        if (_numQuestions < 1) _numQuestions = 1;
-                      });
-                  },
-                ),
-                Text('$_numQuestions'),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      _numQuestions++;
-                    });
-                  },
-                ),
-              ]
-            ),
+            const Text('Assignment Types:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Row(children: [
+              const Text('Number of Questions'),
+              IconButton(
+                icon: const Icon(Icons.remove),
+                onPressed: () {
+                  setState(() {
+                    _numQuestions--;
+                    if (_numQuestions < 1) _numQuestions = 1;
+                  });
+                },
+              ),
+              Text('$_numQuestions'),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  setState(() {
+                    _numQuestions++;
+                  });
+                },
+              ),
+            ]),
             DropdownButtonFormField<QuestionType>(
               value: _selectedAssignmentType,
               decoration: const InputDecoration(labelText: 'Question Type'),
@@ -367,22 +365,22 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
               decoration: InputDecoration(labelText: 'Descriptive Topic'),
               maxLines: 3,
             ),
-            if (_selectedSubject == 'Computer Science') 
-            DropdownButtonFormField<String>(
-              value: _selectedCodingLanguage,
-              decoration: const InputDecoration(labelText: 'Coding Language'),
-              items: codingLanguages.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedCodingLanguage = value;
-                });
-              },
-            ),
+            if (_selectedSubject == 'Computer Science')
+              DropdownButtonFormField<String>(
+                value: _selectedCodingLanguage,
+                decoration: const InputDecoration(labelText: 'Coding Language'),
+                items: codingLanguages.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCodingLanguage = value;
+                  });
+                },
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -390,22 +388,27 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
                   onPressed: () async {
                     //build a new AssignmentForm object based on the form data
                     AssignmentForm form = AssignmentForm(
-                      title: _titleController.text,
-                      subject: _selectedSubject ?? '',
-                      gradeLevel: _selectedGradeLevel ?? '',
-                      questionType: _selectedAssignmentType ?? QuestionType.essay,
-                      codingLanguage: _selectedCodingLanguage,
-                      topic: _topicController.text,
-                      questionCount: _numQuestions,
-                    );
-                    
-                    bool success = await CreatePage.controller.createAssessments(form);
+                        title: _titleController.text,
+                        subject: _selectedSubject ?? '',
+                        gradeLevel: _selectedGradeLevel ?? '',
+                        questionType:
+                            _selectedAssignmentType ?? QuestionType.essay,
+                        codingLanguage: _selectedCodingLanguage,
+                        topic: _topicController.text,
+                        questionCount: _numQuestions,
+                        maximumGrade: 50,
+                        assignmentCount: 2,
+                        gradingCriteria: "");
+
+                    bool success =
+                        await CreatePage.controller.createAssessments(form);
                     if (success) {
                       Navigator.pushReplacementNamed(context, '/viewExams');
                     } else {
                       // Handle failure
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Failed to create assessments')),
+                        const SnackBar(
+                            content: Text('Failed to create assessments')),
                       );
                     }
                   },
@@ -435,10 +438,12 @@ class EditForm extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const Text('Edit Past Rubric or Assignment', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          const Text('Edit Past Rubric or Assignment',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           const TextField(
-            decoration: InputDecoration(labelText: 'Search Past Rubric or Assignment'),
+            decoration:
+                InputDecoration(labelText: 'Search Past Rubric or Assignment'),
           ),
           const SizedBox(height: 20),
           Row(
