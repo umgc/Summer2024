@@ -102,7 +102,7 @@ Check your answers to ensure they are correct. Do not provide the work checking 
     );
   }
 
-  Map<String, dynamic>? extractAssessment(String input) {
+  (Map<String, dynamic>?, String)? extractAssessment(String input) {
     // we need to look for the first time we see ```json
     int startIndex = input.indexOf('```json');
     if (startIndex < 0) return null;
@@ -110,9 +110,13 @@ Check your answers to ensure they are correct. Do not provide the work checking 
     int endIndex = input.indexOf('```', startIndex + 1);
     // find the substring
     String json = input.substring(startIndex + 7, endIndex);
+    // scrub the string to make it json decodable
+    json = json.replaceAll('\\n', '');
+    json = json.replaceAll('\\', '');
+    print(json);
     // then extract and parse
     try {
-      return jsonDecode(json);
+      return (jsonDecode(json), input.substring(endIndex + 1));
     } catch (e) {
       return null;
     }

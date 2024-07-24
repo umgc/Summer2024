@@ -1,8 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/providers/assessment_state.dart';
 import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
@@ -131,33 +136,15 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               },
                               child: const Text('Add Question'),
                             ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  questionGenerationDetail.prompt =
-                                      llmService.buildPrompt(
-                                          questionGenerationDetail.topic,
-                                          assessment);
-                                  Client client = Client();
-                                  try {
-                                    Response res = await llmService.sendRequest(
-                                        client,
-                                        questionGenerationDetail.prompt);
-                                    if (res.statusCode == 200) {
-                                      final finalResponse = res.body;
-                                      textEditingController.text =
-                                          finalResponse;
-                                    } else {
-                                      print(res.statusCode);
-                                      textEditingController.text =
-                                          'Something went wrong';
-                                    }
-                                  } catch (e) {
-                                    print(e);
-                                  }
-                                }
-                              },
-                              child: const Text('Generate Assessment'),
+                            GenerateAssessmentsButton(
+                              formKey: _formKey,
+                              textEditingController: textEditingController,
+                              llmService: llmService,
+                              questionGenerationDetail:
+                                  questionGenerationDetail,
+                              assessment: assessment,
+                              assessmentName: widget.assessmentName,
+                              courseName: widget.courseName,
                             ),
                             TextFormField(
                               decoration: const InputDecoration(
@@ -252,5 +239,133 @@ class AddedQuestion extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class GenerateAssessmentsButton extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final LLMService llmService;
+  final TextEditingController textEditingController;
+  final QuestionGenerationDetail questionGenerationDetail;
+  final AssessmentState assessment;
+  final String assessmentName;
+  final String courseName;
+
+  const GenerateAssessmentsButton({
+    super.key,
+    required this.formKey,
+    required this.textEditingController,
+    required this.llmService,
+    required this.questionGenerationDetail,
+    required this.assessment,
+    required this.assessmentName,
+    required this.courseName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AssessmentProvider>(
+        builder: (context, savedAssessments, child) {
+      return ElevatedButton(
+        onPressed: () async {
+          if (formKey.currentState!.validate()) {
+            // getResponseFromLLM(assessment);
+            questionGenerationDetail.prompt = llmService.buildPrompt(
+                questionGenerationDetail.topic, assessment);
+            Client client = Client();
+            try {
+              Response res = await llmService.sendRequest(
+                  client, questionGenerationDetail.prompt);
+              if (res.statusCode == 200) {
+                final finalResponse = res.body;
+                String? output = finalResponse;
+                AssessmentSet resultSet = AssessmentSet(
+                    [],
+                    assessmentName,
+                    Course(
+                        0, courseName)); // course is always generated for now
+                int assessmentId =
+                    0; // this gets incremented with each new assessment
+                while (output != null) {
+                  var (extractedAssessment, rest) =
+                      llmService.extractAssessment(output) ?? (null, null);
+                  output = rest;
+                  if (extractedAssessment != null) {
+                    int questionId = 0; // same thing as assessmentId
+                    // generate a new assessment from the extracted
+                    List<dynamic>? multipleChoiceQuestions =
+                        extractedAssessment['multipleChoice'] ?? [];
+                    List<dynamic>? shortAnswerQuestions =
+                        extractedAssessment['shortAnswer'] ?? [];
+                    List<dynamic>? essayQuestions =
+                        extractedAssessment['essay'] ?? [];
+                    Assessment newAssessment = Assessment(assessmentId,
+                        assessmentId++); // increment assessmentId after using
+                    if (multipleChoiceQuestions != null) {
+                      for (var question in multipleChoiceQuestions) {
+                        newAssessment.questions.add(Question(
+                          points: 0,
+                          questionId: questionId++, // increment after use
+                          questionType: 'Multiple Choice',
+                          questionText: question['QUESTION'] ?? '',
+                          answer: question['ANSWER'] != null
+                              ? question['ANSWER'].toString()
+                              : '',
+                          answerOptions: question['OPTIONS'] != null
+                              ? question['OPTIONS'].cast<String>()
+                              : [],
+                        ));
+                      }
+                    }
+                    if (shortAnswerQuestions != null) {
+                      for (var question in shortAnswerQuestions) {
+                        newAssessment.questions.add(Question(
+                          points: 0,
+                          questionId: questionId++, // increment after use
+                          questionType: 'Short Answer',
+                          questionText: question['QUESTION'] ?? '',
+                          answer: question['ANSWER'] ?? '',
+                        ));
+                      }
+                    }
+                    if (essayQuestions != null) {
+                      for (var question in essayQuestions) {
+                        newAssessment.questions.add(Question(
+                          points: 0,
+                          questionId: questionId++, // increment after use
+                          questionType: 'Essay',
+                          questionText: question['QUESTION'] ?? '',
+                          rubric: question['RUBRIC'] is String
+                              ? question['RUBRIC']
+                              : '',
+                        ));
+                      }
+                    }
+                    resultSet.assessments.add(newAssessment);
+                  }
+                }
+                savedAssessments.add(resultSet);
+                if (!kIsWeb) {
+                  savedAssessments.saveAssessmentsToFile();
+                }
+                print('Success!');
+                if (context.mounted) {
+                  Navigator.of(context)
+                      .popUntil((route) => route.settings.name == '/dashboard');
+                }
+              } else {
+                textEditingController.text =
+                    'Something went wrong with the request to Perplexity';
+              }
+            } catch (e) {
+              textEditingController.text =
+                  'Something went wrong with parsing the returned data';
+              print(e);
+            }
+          }
+        },
+        child: const Text('Generate Assessment'),
+      );
+    });
   }
 }

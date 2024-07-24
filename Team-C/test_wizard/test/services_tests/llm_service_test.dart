@@ -20,8 +20,8 @@ void main() {
       String broken = 'This isnt json';
 
       final llm = LLMService();
-      Map<String, dynamic>? expected = llm.extractAssessment(testString);
-      Map<String, dynamic>? expected2 = llm.extractAssessment(broken);
+      var (expected, _) = llm.extractAssessment(testString) ?? (null, null);
+      var (expected2, _) = llm.extractAssessment(broken) ?? (null, null);
       expect(expected, {"hello": "world"});
       expect(expected2, null);
     });

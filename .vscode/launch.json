@@ -37,7 +37,7 @@
       "flutterMode": "debug",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": ["-d", "chrome", "--dart-define-from-file=.env"]
+      "args": ["--dart-define-from-file=.env"]
     },
     {
       "name": "test_wizard (profile mode)",
