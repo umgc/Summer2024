@@ -20,6 +20,10 @@ class AssessmentState extends ChangeNotifier {
     return UnmodifiableListView(_a.questions);
   }
 
+  Assessment get assessment {
+    return _a;
+  }
+
   void add(Question q) {
     _a.questions.add(q);
     notifyListeners();

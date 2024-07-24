@@ -133,22 +133,10 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                             ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  var typeMap =
-                                      assessment.getQuestionTypeCount();
-                                  int multipleChoiceCount =
-                                      typeMap['Multiple Choice']!;
-                                  int shortAnswerCount =
-                                      typeMap['Short Answer']!;
-                                  int essayCount = typeMap['Essay']!;
-                                  print(multipleChoiceCount);
-                                  print(shortAnswerCount);
-                                  print(essayCount);
-
                                   questionGenerationDetail.prompt =
                                       llmService.buildPrompt(
-                                          questionGenerationDetail
-                                              .numberOfAssessments,
-                                          questionGenerationDetail.topic);
+                                          questionGenerationDetail.topic,
+                                          assessment);
                                   textEditingController.text =
                                       questionGenerationDetail.prompt;
                                 }
