@@ -82,24 +82,6 @@ $functions = array(
         'ajax'        => true,
         'capabilities'=> 'moodle/question:manage',
     ),
-    'local_testplugin_edit_questions' => array(
-        'classname'   => 'local_testplugin\external\edit_questions',
-        'methodname'  => 'execute',
-        'classpath'   => 'local/testplugin/externallib.php',
-        'description' => 'Edit questions in the question bank',
-        'type'        => 'write',
-        'ajax'        => true,
-        'capabilities'=> 'moodle/question:editall',
-    ),
-    'local_testplugin_create_groups' => array(
-        'classname'   => 'local_testplugin\external\create_groups',
-        'methodname'  => 'execute',
-        'classpath'   => 'local/testplugin/externallib.php',
-        'description' => 'Create groups in a specified course',
-        'type'        => 'write',
-        'ajax'        => true,
-        'capabilities'=> 'moodle/course:managegroups',
-    ),
 );
 
 $services = array(
@@ -114,8 +96,6 @@ $services = array(
             'local_testplugin_import_questions_json',
             'local_testplugin_delete_questions',
             'local_testplugin_delete_qb_questions',
-            'local_testplugin_edit_questions',
-            'local_testplugin_create_groups',
         ),
         'restrictedusers' => 0,
         'enabled' => 1,
