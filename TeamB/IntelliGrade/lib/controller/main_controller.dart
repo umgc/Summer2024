@@ -58,130 +58,103 @@ class MainController {
     html.window.localStorage[quizName] = quizData;
   }
 
-  Future<bool> downloadAssessmentAsPdf(
-      String filename, bool includeAnswers) async {
-    if (filename.isEmpty) {
-      throw Exception('Quiz name is required.');
-    }
-
-    try {
-      String? quizData = html.window.localStorage[filename];
-      if (quizData == null) {
-        throw Exception('No quiz found with the name: $filename');
-      }
-
-      var quiz = Quiz.fromXmlString(quizData);
-
-      final pdf = pw.Document();
-      var pageHeight = PdfPageFormat.letter.height;
-      var margin = 40.0;
-      var availableHeight = pageHeight - margin * 2;
-      double currentHeight = 0;
-
-      void addPage(List<pw.Widget> content) {
-        pdf.addPage(
-          pw.Page(
-            build: (pw.Context context) {
-              return pw.Padding(
-                padding: pw.EdgeInsets.all(margin),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: content,
-                ),
-              );
-            },
-          ),
-        );
-      }
-
-      List<pw.Widget> pageContent = [
-        pw.Text(filename,
-            style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-        pw.SizedBox(height: 10),
-        pw.Text(quiz.description ?? 'No description',
-            style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic)),
-        pw.SizedBox(height: 20),
-      ];
-      currentHeight += 24 + 10 + 18 + 20; // Initial content height
-
-      for (var entry in quiz.questionList.asMap().entries) {
-        final question = entry.value;
-        final questionNumber = entry.key + 1;
-
-        // Estimate height of question text
-        const double questionTextHeight = 16;
-        const double answerTextHeight = 14;
-        double questionHeight = questionTextHeight + 5 + 10;
-
-        List<pw.Widget> answerWidgets = [];
-        for (var answerEntry in question.answerList.asMap().entries) {
-          final index = answerEntry.key;
-          final answer = answerEntry.value;
-          final answerText = answer.answerText ?? '';
-          final feedbackText =
-              includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
-          final prefix = question.type == QuestionType.multichoice.xmlName
-              ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
-              : '-';
-
-          answerWidgets.add(pw.Text(
-            '$prefix $answerText$feedbackText',
-            style: pw.TextStyle(fontSize: answerTextHeight),
-          ));
-          questionHeight += answerTextHeight;
-        }
-
-        if (currentHeight + questionHeight > availableHeight) {
-          // Add current content to a new page
-          addPage(pageContent);
-          pageContent = []; // clear the content for the new page
-          currentHeight = 0;
-        }
-
-        pageContent.add(
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text('Question $questionNumber: ${question.questionText}',
-                  style: pw.TextStyle(fontSize: questionTextHeight)),
-              pw.SizedBox(height: 5),
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: answerWidgets,
-              ),
-              pw.SizedBox(height: 10),
-            ],
-          ),
-        );
-
-        currentHeight += questionHeight;
-      }
-
-      // Add any remaining content
-      if (pageContent.isNotEmpty) {
-        addPage(pageContent);
-      }
-
-      // Save the PDF as bytes
-      final pdfBytes = await pdf.save();
-
-      // Create a Blob from the PDF bytes
-      final blob = html.Blob([Uint8List.fromList(pdfBytes)]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-
-      // Create an anchor element and trigger the download
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', '$filename.pdf')
-        ..click();
-
-      // Cleanup
-      html.Url.revokeObjectUrl(url);
-      return true;
-    } catch (e) {
-      print('Error downloading assessment as PDF: $e');
-      return false;
-    }
+  Future<bool> downloadAssessmentAsPdf(String filename, bool includeAnswers) async {
+  if (filename.isEmpty) {
+    throw Exception('Quiz name is required.');
   }
+
+  try {
+    String? quizData = html.window.localStorage[filename];
+    if (quizData == null) {
+      throw Exception('No quiz found with the name: $filename');
+    }
+
+    var quiz = Quiz.fromXmlString(quizData);
+
+    // List of pdf widgets
+    List<pw.Widget> widgets = [];
+
+    // Add quiz title
+    widgets.add(pw.Text(
+      filename,
+      style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+    ));
+    widgets.add(pw.SizedBox(height: 10));
+
+    // Add quiz description
+    widgets.add(pw.Text(
+      quiz.description ?? 'No description',
+      style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic),
+    ));
+    widgets.add(pw.SizedBox(height: 20));
+
+    // Add each question and its answers
+    for (var entry in quiz.questionList.asMap().entries) {
+      final question = entry.value;
+      final questionNumber = entry.key + 1;
+
+      // Question text
+      widgets.add(
+        pw.Text(
+          'Question $questionNumber: ${question.questionText}',
+          style: pw.TextStyle(fontSize: 16),
+        ),
+      );
+      widgets.add(pw.SizedBox(height: 5));
+
+      // Answers
+      List<pw.Widget> answerWidgets = [];
+      for (var answerEntry in question.answerList.asMap().entries) {
+        final index = answerEntry.key;
+        final answer = answerEntry.value;
+        final answerText = answer.answerText ?? '';
+        final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
+        final prefix = question.type == QuestionType.multichoice.xmlName
+            ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
+            : '-';
+
+        answerWidgets.add(pw.Text(
+          '$prefix $answerText$feedbackText',
+          style: pw.TextStyle(fontSize: 14),
+        ));
+      }
+
+      widgets.add(pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: answerWidgets,
+      ));
+      widgets.add(pw.SizedBox(height: 10));
+    }
+
+    // Create the PDF document
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.letter,
+        build: (context) => widgets, // Pass the widgets list here
+      ),
+    );
+
+    // Save the PDF as bytes
+    final pdfBytes = await pdf.save();
+
+    // Create a Blob from the PDF bytes
+    final blob = html.Blob([Uint8List.fromList(pdfBytes)]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    // Create an anchor element and trigger the download
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute('download', '$filename.pdf')
+      ..click();
+
+    // Cleanup
+    html.Url.revokeObjectUrl(url);
+    return true;
+  } catch (e) {
+    print('Error downloading assessment as PDF: $e');
+    return false;
+  }
+}
 
   List<Quiz?> listAllAssessments() {
     var allKeys = html.window.localStorage.keys;
