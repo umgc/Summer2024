@@ -189,8 +189,9 @@ class LoginPageState extends State<LoginPage> {
                         // for now this button populates the state with some sample data
                         // if the Moodle login button is pressed
                         onPressed: () async {
-                          AssessmentSet aSet = AssessmentSet([], 'Math Test',  Course(1, 'Geometry 101'));
-                          Assessment a = Assessment(1,1);
+                          AssessmentSet aSet = AssessmentSet(
+                              [], 'Math Test', Course(1, 'Geometry 101'));
+                          Assessment a = Assessment(1, 1);
                           a.questions = [
                             Question(
                               questionId: 1,
@@ -246,6 +247,7 @@ class LoginPageState extends State<LoginPage> {
                         MaterialPageRoute(
                           // to Teacher Dashboard with no info for now
                           builder: (context) => const TeacherDashboard(),
+                          settings: const RouteSettings(name: '/dashboard'),
                         ),
                       );
                     },
