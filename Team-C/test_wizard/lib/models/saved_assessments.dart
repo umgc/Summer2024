@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/services/document_directory_service.dart';
@@ -12,7 +13,9 @@ class SavedAssessments {
   List<AssessmentSet> assessmentSets = [];
 
   SavedAssessments() {
-    loadAssessmentsFromFile();
+    if (!kIsWeb) {
+      loadAssessmentsFromFile();
+    }
   }
 
   factory SavedAssessments.fromJson(Map<String, dynamic> json) =>
@@ -25,11 +28,11 @@ class SavedAssessments {
   }
 
   Future<void> loadAssessmentsFromFile() async {
-    try{
+    try {
       assessmentSets = SavedAssessments.fromJson(
               await _documentDirectoryService.readJsonFromFile())
           .assessmentSets;
-    }catch(e){
+    } catch (e) {
       assessmentSets = [];
     }
   }
