@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:intelligrade/api/llm/llm_api.dart';
 import 'package:intelligrade/api/llm/prompt_engine.dart';
 import 'package:intelligrade/api/moodle/moodle_api_singleton.dart';
@@ -6,12 +6,9 @@ import 'package:intelligrade/controller/model/beans.dart';
 import 'package:intelligrade/controller/model/xml_converter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
-import 'assessment_generator.dart';
-import 'assessment_grader.dart';
 import 'dart:html' as html;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/widgets.dart' as pdfWidgets;
 
 class MainController {
   // Singleton instance
@@ -40,14 +37,16 @@ class MainController {
       return true;
     } catch (e) {
       // Handle any errors
-      print('Error creating assessments: $e');
+      if (kDebugMode) {
+        print('Error creating assessments: $e');
+      }
       return false;
     }
   }
 
   void gradeAssessment() {
     //TODO:
-    //will use LLM
+    //will use compiler to compile code and get output
     // Handle grading logic
   }
   
@@ -97,7 +96,7 @@ class MainController {
       widgets.add(
         pw.Text(
           'Question $questionNumber: ${question.questionText}',
-          style: pw.TextStyle(fontSize: 16),
+          style: const pw.TextStyle(fontSize: 16),
         ),
       );
       widgets.add(pw.SizedBox(height: 5));
@@ -107,7 +106,7 @@ class MainController {
       for (var answerEntry in question.answerList.asMap().entries) {
         final index = answerEntry.key;
         final answer = answerEntry.value;
-        final answerText = answer.answerText ?? '';
+        final answerText = answer.answerText;
         final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
         final prefix = question.type == QuestionType.multichoice.xmlName
             ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
@@ -115,7 +114,7 @@ class MainController {
 
         answerWidgets.add(pw.Text(
           '$prefix $answerText$feedbackText',
-          style: pw.TextStyle(fontSize: 14),
+          style: const pw.TextStyle(fontSize: 14),
         ));
       }
 
@@ -151,7 +150,9 @@ class MainController {
     html.Url.revokeObjectUrl(url);
     return true;
   } catch (e) {
-    print('Error downloading assessment as PDF: $e');
+    if (kDebugMode) {
+      print('Error downloading assessment as PDF: $e');
+    }
     return false;
   }
 }
@@ -166,7 +167,9 @@ class MainController {
             quiz.name = key;
             return quiz;
           } catch (e) {
-            print('Error parsing quiz: $e');
+            if (kDebugMode) {
+              print('Error parsing quiz: $e');
+            }
             return null; // Return null for invalid quizzes
           }
         })
@@ -194,7 +197,7 @@ class MainController {
     html.window.localStorage.remove(filename);
   }
 
-  void postAssessmentToMoodle(Quiz quiz, String courseId) async {
+  Future<bool> postAssessmentToMoodle(Quiz quiz, String courseId) async {
     if (!isLoggedIn) {
       throw Exception('User is not logged in.');
     }
@@ -202,15 +205,16 @@ class MainController {
     var moodleApi = MoodleApiSingleton();
     try {
       await moodleApi.importQuiz(courseId, xml);
-      print('Questions successfully imported!');
+      if (kDebugMode) {
+        print('Questions successfully imported!');
+      }
+      return true;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
     }
-  }
-
-  Quiz getAssessmentFromMoodle() {
-    // Handle getting logic
-    return Quiz();
   }
 
   String complieCodeAndGetOutput(String code) {
@@ -225,7 +229,9 @@ class MainController {
       isLoggedIn = true;
       return true;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       isLoggedIn = false;
       return false;
     }
@@ -237,7 +243,9 @@ class MainController {
       List<Course> courses = await moodleApi.getCourses();
       return courses;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return [];
     }
   }

@@ -1,10 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intelligrade/ui/drawer.dart';
 import 'package:intelligrade/ui/header.dart';
 import 'package:intelligrade/controller/main_controller.dart';
 import 'package:intelligrade/controller/model/beans.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ViewExamPage extends StatefulWidget {
   const ViewExamPage({super.key});
@@ -36,7 +35,7 @@ class _ViewExamPageState extends State<ViewExamPage> {
   }
 
   Future<void> _checkUserLoginStatus() async {
-    _isUserLoggedIn = await ViewExamPage.controller.isUserLoggedIn();
+    _isUserLoggedIn = ViewExamPage.controller.isUserLoggedIn();
     setState(() {});
   }
 
@@ -57,7 +56,7 @@ class _ViewExamPageState extends State<ViewExamPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton.icon(
-                          icon: Icon(Icons.edit, color: Colors.black),
+                          icon: const Icon(Icons.edit, color: Colors.black),
                           label: const Text('Edit'),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -73,16 +72,17 @@ class _ViewExamPageState extends State<ViewExamPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Question ${i + 1}: ${quiz.questionList[i].questionText ?? ''}',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            SizedBox(height: 10),
+                                'Question ${i + 1}: ${quiz.questionList[i].questionText}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 10),
                             for (int j = 0;
                                 j < quiz.questionList[i].answerList.length;
                                 j++)
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  '${String.fromCharCode('a'.codeUnitAt(0) + j)}) ${quiz.questionList[i].answerList[j].answerText ?? ''}',
+                                  '${String.fromCharCode('a'.codeUnitAt(0) + j)}) ${quiz.questionList[i].answerList[j].answerText}',
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: quiz.questionList[i].answerList[j]
@@ -114,12 +114,13 @@ class _ViewExamPageState extends State<ViewExamPage> {
   }
 
   void _editQuiz(Quiz quiz) async {
-    List<List<TextEditingController>> controllers = quiz.questionList.map((question) {
+    List<List<TextEditingController>> controllers =
+        quiz.questionList.map((question) {
       List<TextEditingController> questionControllers = [
-        TextEditingController(text: question.questionText ?? '')
+        TextEditingController(text: question.questionText)
       ];
       questionControllers.addAll(question.answerList
-          .map((answer) => TextEditingController(text: answer.answerText ?? ''))
+          .map((answer) => TextEditingController(text: answer.answerText))
           .toList());
       return questionControllers;
     }).toList();
@@ -135,7 +136,8 @@ class _ViewExamPageState extends State<ViewExamPage> {
               children: [
                 ...controllers.asMap().entries.map((entry) {
                   int questionIndex = entry.key;
-                  List<TextEditingController> controllersForQuestion = entry.value;
+                  List<TextEditingController> controllersForQuestion =
+                      entry.value;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,11 +168,11 @@ class _ViewExamPageState extends State<ViewExamPage> {
                                 .answerList[answerIndex].answerText = text;
                           },
                         );
-                      }).toList(),
-                      SizedBox(height: 20),
+                      }),
+                      const SizedBox(height: 20),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
@@ -183,7 +185,9 @@ class _ViewExamPageState extends State<ViewExamPage> {
                   Navigator.of(context).pop();
                   _fetchQuizzes(); // Refresh quiz list
                 } catch (e) {
-                  print('Error updating quiz: $e');
+                  if (kDebugMode) {
+                    print('Error updating quiz: $e');
+                  }
                 }
               },
             ),
@@ -229,7 +233,9 @@ class _ViewExamPageState extends State<ViewExamPage> {
         ViewExamPage.controller.deleteLocalFile(filename);
         _fetchQuizzes(); // Refresh quiz list
       } catch (e) {
-        print('Error deleting quiz: $e');
+        if (kDebugMode) {
+          print('Error deleting quiz: $e');
+        }
       }
     }
   }
@@ -242,7 +248,9 @@ class _ViewExamPageState extends State<ViewExamPage> {
         const SnackBar(content: Text('Quiz downloaded successfully')),
       );
     } catch (e) {
-      print('Error downloading quiz: $e');
+      if (kDebugMode) {
+        print('Error downloading quiz: $e');
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error downloading quiz')),
       );
@@ -275,13 +283,16 @@ class _ViewExamPageState extends State<ViewExamPage> {
       );
 
       if (selectedCourseId != null) {
-        ViewExamPage.controller.postAssessmentToMoodle(quiz, selectedCourseId);
+        await ViewExamPage.controller
+            .postAssessmentToMoodle(quiz, selectedCourseId);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Quiz posted to Moodle successfully')),
         );
       }
     } catch (e) {
-      print('Error posting quiz to Moodle: $e');
+      if (kDebugMode) {
+        print('Error posting quiz to Moodle: $e');
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error posting quiz to Moodle')),
       );
@@ -329,29 +340,36 @@ class _ViewExamPageState extends State<ViewExamPage> {
                               : null,
                         ),
                       ),
-                      PopupMenuButton(
-                        icon: const Icon(Icons.download, color: Colors.blue),
-                        onSelected: (bool includeAnswers) {
-                          _downloadQuiz(quiz, includeAnswers);
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<bool>>[
-                          const PopupMenuItem<bool>(
-                            value: true,
-                            child: Text('Download with Answers'),
-                          ),
-                          const PopupMenuItem<bool>(
-                            value: false,
-                            child: Text('Download without Answers'),
-                          ),
-                        ],
+                      Tooltip(
+                        message: 'Download as pdf',
+                        child: PopupMenuButton<bool>(
+                          icon: const Icon(Icons.download, color: Colors.blue),
+                          tooltip: '',
+                          onSelected: (bool includeAnswers) {
+                            _downloadQuiz(quiz, includeAnswers);
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<bool>>[
+                            const PopupMenuItem<bool>(
+                              value: true,
+                              child: Text('Download with Answers'),
+                            ),
+                            const PopupMenuItem<bool>(
+                              value: false,
+                              child: Text('Download without Answers'),
+                            ),
+                          ],
+                        ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _deleteQuiz(quiz.name ?? ''); // Assumes quiz name is used as filename
-                        },
-                      ),
+                      Tooltip(
+                        message: 'Delete',
+                        child: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            _deleteQuiz(quiz.name ?? '');
+                          },
+                        ),
+                      )
                     ],
                   ),
                   onTap: () {

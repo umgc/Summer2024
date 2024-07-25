@@ -277,12 +277,6 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
   QuestionType? _selectedAssignmentType;
   String? _selectedCodingLanguage;
   int _numQuestions = 1;
-  bool _showAddAssignmentTypeTextBox = false;
-  bool _showAddCodingLanguageTextBox = false;
-  final TextEditingController _assignmentTypeController =
-      TextEditingController();
-  final TextEditingController _codingLanguageController =
-      TextEditingController();
   final TextEditingController _topicController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   bool _isLoading = false;
@@ -425,7 +419,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
               ),
               TextField(
                 controller: _topicController,
-                decoration: InputDecoration(labelText: 'Descriptive Topic'),
+                decoration: const InputDecoration(labelText: 'Descriptive Topic'),
                 maxLines: 3,
               ),
               if (_selectedSubject == 'Computer Science')
