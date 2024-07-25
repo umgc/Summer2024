@@ -85,8 +85,11 @@ class _DrawerMenuState extends State<DrawerMenu> {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('LogOut'),
+            // onTap: () {
+            //   Navigator.pushNamed(context, '/logout');
+            // },
             onTap: () {
-              Navigator.pushNamed(context, '/register');
+              _logout(context);
             },
           ),
         ],
@@ -123,18 +126,30 @@ class _DrawerMenuState extends State<DrawerMenu> {
   Future<String> getUserName(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userName = prefs.getString("user_name");
-    if(userName == null){
-    userName = await db.getUserName(email);
+    if (userName == null) {
+      userName = await db.getUserName(email);
     }
-    prefs.setString("user_name",userName);
+    prefs.setString("user_name", userName);
     return userName;
   }
 
   Future<String> getUserId(String email) async {
     String userId = await db.getUserId(email);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("user_id",userId);
+    prefs.setString("user_id", userId);
     return userId;
   }
-  
+
+  Future<void> _logout(BuildContext context) async {
+    // Clear user data
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.clear();
+
+    // Navigate to LoginPage and clear the navigation stack
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+      (route) => false, // Remove all previous routes
+    );
+  }
 }

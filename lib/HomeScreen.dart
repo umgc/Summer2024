@@ -27,7 +27,7 @@ class Home extends StatelessWidget {
           children: [
             // MIND IN SYNC ICON
             Container(
-              alignment: Alignment.topRight,
+              alignment: Alignment.center,
               child: Container(
                 width: 50,
                 height: 50,
@@ -57,7 +57,8 @@ class Home extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           '/Prompt',
-                          arguments: "supersecretaudiostartnobodygoingtofigureout",
+                          arguments:
+                              "supersecretaudiostartnobodygoingtofigureout",
                         );
                       }),
                 ),
