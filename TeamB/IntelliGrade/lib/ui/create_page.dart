@@ -108,6 +108,7 @@ class _RubricFormState extends State<RubricForm> {
   final List<String> subjects = ['Math', 'Science', 'History', 'Language Arts'];
   final List<String> gradeLevels = ['1000', '2000', '3000', '4000'];
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   void _addCriteria() {
     setState(() {
@@ -136,15 +137,28 @@ class _RubricFormState extends State<RubricForm> {
             const Text('Rubric Form',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Title is required';
-                }
-                return null;
-              },
-            ),
+                controller: _titleController,
+                decoration: InputDecoration(
+                  label: RichText(
+                    text: const TextSpan(
+                      text: 'Title',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Title is required';
+                  }
+                  return null;
+                },
+              ),
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(labelText: 'Description'),
@@ -204,10 +218,35 @@ class _RubricFormState extends State<RubricForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Handle form submission
-                  },
-                  child: const Text('Generate'),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Form is valid, proceed with your logic
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        // Build a new AssignmentForm object based on the form data
+
+                        /*bool success =
+                            await CreatePage.controller.createAssessments(form);
+                        if (success) {
+                          Navigator.pushReplacementNamed(context, '/viewExams');
+                        } else {
+                          // Handle failure
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Failed to create assessments')),
+                          );
+                        }*/
+
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    },
+                  child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Generate'),
+                    
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
@@ -427,6 +466,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
                           codingLanguage: _selectedCodingLanguage,
                           topic: _topicController.text,
                           questionCount: _numQuestions,
+                          maximumGrade: 100,
                         );
 
                         bool success =
@@ -448,7 +488,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
                     },
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Submit'),
+                        : const Text('Generate'),
                   ),
                   const SizedBox(width: 20),
                   ElevatedButton(

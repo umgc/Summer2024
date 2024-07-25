@@ -241,4 +241,8 @@ class MainController {
       return [];
     }
   }
+
+  bool isUserLoggedIn() {
+    return isLoggedIn;
+  }
 }

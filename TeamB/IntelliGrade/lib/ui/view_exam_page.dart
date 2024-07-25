@@ -16,12 +16,13 @@ class ViewExamPage extends StatefulWidget {
 
 class _ViewExamPageState extends State<ViewExamPage> {
   List<Quiz?> quizzes = []; // Initialize as an empty list
+  bool _isUserLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
-    // Fetch quizzes
     _fetchQuizzes();
+    _checkUserLoginStatus();
   }
 
   Future<void> _fetchQuizzes() async {
@@ -32,6 +33,11 @@ class _ViewExamPageState extends State<ViewExamPage> {
       print('Error fetching quizzes: $e');
       quizzes = [];
     }
+  }
+
+  Future<void> _checkUserLoginStatus() async {
+    _isUserLoggedIn = await ViewExamPage.controller.isUserLoggedIn();
+    setState(() {});
   }
 
   void _showQuizDetails(Quiz quiz) {
@@ -51,11 +57,9 @@ class _ViewExamPageState extends State<ViewExamPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton.icon(
-                          icon: Icon(Icons.edit,
-                              color: Colors.black),
+                          icon: Icon(Icons.edit, color: Colors.black),
                           label: const Text('Edit'),
                           onPressed: () {
-                            // Handle editing functionality here
                             Navigator.of(context).pop();
                             _editQuiz(quiz);
                           },
@@ -110,18 +114,13 @@ class _ViewExamPageState extends State<ViewExamPage> {
   }
 
   void _editQuiz(Quiz quiz) async {
-    // Create a list of controllers for each question and its answers
-    List<List<TextEditingController>> controllers =
-        quiz.questionList.map((question) {
+    List<List<TextEditingController>> controllers = quiz.questionList.map((question) {
       List<TextEditingController> questionControllers = [
         TextEditingController(text: question.questionText ?? '')
       ];
-
-      // Add controllers for answers
       questionControllers.addAll(question.answerList
           .map((answer) => TextEditingController(text: answer.answerText ?? ''))
           .toList());
-
       return questionControllers;
     }).toList();
 
@@ -136,13 +135,11 @@ class _ViewExamPageState extends State<ViewExamPage> {
               children: [
                 ...controllers.asMap().entries.map((entry) {
                   int questionIndex = entry.key;
-                  List<TextEditingController> controllersForQuestion =
-                      entry.value;
+                  List<TextEditingController> controllersForQuestion = entry.value;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // TextField for the question
                       TextField(
                         controller: controllersForQuestion[0],
                         decoration: InputDecoration(
@@ -252,6 +249,45 @@ class _ViewExamPageState extends State<ViewExamPage> {
     }
   }
 
+  Future<void> _postQuizToMoodle(Quiz quiz) async {
+    try {
+      List<Course> courses = await ViewExamPage.controller.getCourses();
+      String? selectedCourseId = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Select Moodle Course To Post To'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: courses.map((course) {
+                  return ListTile(
+                    title: Text(course.fullName),
+                    onTap: () {
+                      Navigator.of(context).pop(course.id.toString());
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        },
+      );
+
+      if (selectedCourseId != null) {
+        ViewExamPage.controller.postAssessmentToMoodle(quiz, selectedCourseId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Quiz posted to Moodle successfully')),
+        );
+      }
+    } catch (e) {
+      print('Error posting quiz to Moodle: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error posting quiz to Moodle')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -282,12 +318,16 @@ class _ViewExamPageState extends State<ViewExamPage> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _deleteQuiz(quiz.name ??
-                              ''); // Assumes quiz name is used as filename
-                        },
+                      Tooltip(
+                        message: _isUserLoggedIn
+                            ? 'Post to Moodle'
+                            : 'Login to Moodle to be able to post exams',
+                        child: IconButton(
+                          icon: const Icon(Icons.upload, color: Colors.green),
+                          onPressed: _isUserLoggedIn
+                              ? () => _postQuizToMoodle(quiz)
+                              : null,
+                        ),
                       ),
                       PopupMenuButton(
                         icon: const Icon(Icons.download, color: Colors.blue),
@@ -305,7 +345,13 @@ class _ViewExamPageState extends State<ViewExamPage> {
                             child: Text('Download without Answers'),
                           ),
                         ],
-                      )
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _deleteQuiz(quiz.name ?? ''); // Assumes quiz name is used as filename
+                        },
+                      ),
                     ],
                   ),
                   onTap: () {
