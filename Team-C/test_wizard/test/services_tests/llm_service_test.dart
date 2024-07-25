@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
+import 'package:test_wizard/providers/assessment_state.dart';
 import 'package:test_wizard/services/llm_service.dart';
 
 void main() {
@@ -49,6 +50,15 @@ void main() {
 
       expect(llm.sendRequest(mockHTTPClient, 'this is my prompt'),
           isInstanceOf<Future<Response>>());
+    });
+
+    test('correctly builds prompt', () {
+      final llm = LLMService();
+      AssessmentState state = AssessmentState(assessmentId: 0, version: 0);
+      String prompt = llm.buildPrompt('math', state, true);
+      expect(prompt.startsWith('The focus of this assessment is math.'), true);
+      String prompt2 = llm.buildPrompt('not math', state, false);
+      expect(prompt2.startsWith('Please generate'), true);
     });
   });
 }

@@ -324,7 +324,9 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 );
                 // build the original prompt
                 questionGenerationDetail.prompt = llmService.buildPrompt(
-                    questionGenerationDetail.topic, assessment);
+                    questionGenerationDetail.topic,
+                    assessment,
+                    questionGenerationDetail.isMathQuiz);
                 // create the client and resultSet to add to
                 Client client = Client();
                 AssessmentSet resultSet = AssessmentSet(
