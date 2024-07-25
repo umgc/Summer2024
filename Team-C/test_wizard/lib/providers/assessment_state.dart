@@ -6,6 +6,7 @@ import 'package:test_wizard/models/question.dart';
 
 class AssessmentState extends ChangeNotifier {
   final Assessment _a;
+  int cursorPos = 0;
 
   AssessmentState({
     required int assessmentId,
@@ -29,7 +30,11 @@ class AssessmentState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void update({required int id, String? newText, String? newType}) {
+  void update(
+      {required int id,
+      String? newText,
+      String? newType,
+      required int newPos}) {
     _a.questions = _a.questions.map(
       (curr) {
         if (curr.questionId == id) {
@@ -39,6 +44,7 @@ class AssessmentState extends ChangeNotifier {
         return curr;
       },
     ).toList();
+    cursorPos = newPos;
     notifyListeners();
   }
 

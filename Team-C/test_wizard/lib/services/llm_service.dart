@@ -9,17 +9,19 @@ import 'package:test_wizard/providers/assessment_state.dart';
 class LLMService {
   final String _url = 'https://api.perplexity.ai/chat/completions';
   final String _apiKey = const String.fromEnvironment('API_KEY');
+  List<Map<String, String>> messages = [
+    {
+      'role': 'system',
+      'content': // the system prompt is something that gives the AI context into the type of job it will perform.
+          'Only return the format specified in the prompt.',
+    },
+  ];
 
   LLMService();
 
-  String getAssessmentAsJson(Assessment assessment) {
+  String _getAssessmentAsJson(Assessment assessment) {
     JsonEncoder encoder = const JsonEncoder();
-    var map = {
-      "multipleChoice": [],
-      "math": [],
-      "shortAnswer": [],
-      "essay": []
-    };
+    var map = {"multipleChoice": [], "shortAnswer": [], "essay": []};
     for (var question in assessment.questions) {
       switch (question.questionType) {
         case "Multiple Choice":
@@ -73,10 +75,11 @@ QUESTION:
 RUBRIC:
 
 Check your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet. None of the assessments should contain exact copies of the assessments provided in this prompt. Only return assessments that include all $totalCount questions.
-    ${getAssessmentAsJson(state.assessment)}''';
+    ${_getAssessmentAsJson(state.assessment)}''';
   }
 
   Future<http.Response> sendRequest(http.Client httpClient, String prompt) {
+    messages.add({'role': 'user', 'content': prompt});
     return httpClient.post(
       Uri.parse(_url),
       headers: {
@@ -84,21 +87,8 @@ Check your answers to ensure they are correct. Do not provide the work checking 
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $_apiKey',
       },
-      body: jsonEncode({
-        'model': 'llama-3-sonar-small-32k-online',
-        'messages': [
-          {
-            'role': 'system',
-            'content': // the system prompt is something that gives the AI context into the type of job it will perform.
-                'Only return the format specified in the prompt.',
-          },
-          {
-            'role':
-                'user', // the user prompt is something that gives the AI context into what specific job it will perform.
-            'content': prompt,
-          }
-        ]
-      }),
+      body: jsonEncode(
+          {'model': 'llama-3-sonar-small-32k-online', 'messages': messages}),
     );
   }
 
@@ -113,12 +103,26 @@ Check your answers to ensure they are correct. Do not provide the work checking 
     // scrub the string to make it json decodable
     json = json.replaceAll('\\n', '');
     json = json.replaceAll('\\', '');
-    print(json);
     // then extract and parse
     try {
       return (jsonDecode(json), input.substring(endIndex + 1));
     } catch (e) {
       return null;
     }
+  }
+
+  String getMoreAssessmentsPrompt(AssessmentState state) {
+    var typeMap = state.getQuestionTypeCount();
+    int multipleChoiceCount = typeMap['Multiple Choice']!;
+    int shortAnswerCount = typeMap['Short Answer']!;
+    int essayCount = typeMap['Essay']!;
+    int totalCount = multipleChoiceCount + shortAnswerCount + essayCount;
+    return 'Please generate as many complete assessments as you can with $totalCount questions each based on the previous assessments you sent me. Do not repeat questions. Do use the same format.';
+  }
+
+  void addMessage(String input) {
+    Map<String, dynamic> json = jsonDecode(input);
+    String message = json['choices'][0]['message']['content'] ?? '';
+    messages.add({'role': 'assistant', 'content': message});
   }
 }
