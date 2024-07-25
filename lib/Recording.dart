@@ -102,8 +102,14 @@ Future<String> getUserName(String email) async {
     );
     final directory = await getApplicationDocumentsDirectory();
     var path = directory.path;
+    Uint8List byteList;
+    try{
     final File file = File(path + "/" + "register.wav");
-    final Uint8List byteList = await file.readAsBytes();
+     byteList = await file.readAsBytes();
+    } on Exception catch (e){
+      var data = await rootBundle.load('assets/register.wav');
+      byteList = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    }
     //var stream = _getAudioStream('register.wav');
     var data = await rootBundle.load('assets/register.wav');
     var started = false;
