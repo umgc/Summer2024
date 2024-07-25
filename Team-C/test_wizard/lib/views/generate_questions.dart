@@ -14,6 +14,8 @@ import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/providers/user_provider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class QuestionGenerateForm extends StatefulWidget {
   final String assessmentName;
@@ -305,6 +307,30 @@ class GenerateAssessmentsButton extends StatelessWidget {
     return newAssessment;
   }
 
+  Future<void> addQuizToMoodle(String quizName, String intro, int courseId) async {
+    final url = 'http://localhost/webservice/rest/server.php';
+    final token = 'e1744c2b49d8354b357acc09411e7fb6';
+    final function = 'local_testplugin_create_quiz';
+    
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'wsfunction': function,
+        'wstoken': token,
+        'courseid': courseId.toString(),
+        'name': quizName,
+        'intro': intro,
+        'moodlewsrestformat': 'json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Quiz added to Moodle successfully!');
+    } else {
+      print('Failed to add quiz to Moodle: ${response.body}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AssessmentProvider>(
@@ -414,12 +440,19 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   }
                 }
               }
-              // add quiz to moodle
-              UserProvider userProvider = Provider.of<UserProvider>(context);
-              if(userProvider.isLoggedInToMoodle) {
-                // savedAssessments
+              // add quiz to Moodle
+              // if (!mounted) return;
+              try {
+                if (Provider.of<UserProvider>(context, listen: false).isLoggedInToMoodle) {
+                  await addQuizToMoodle(
+                    assessmentName,
+                    'This is a sample created programmatically.',
+                    5, // Replace with the appropriate course ID
+                  );
+                }
+              } catch (e) {
+                print('Error adding quiz to Moodle: $e');
               }
-
             },
             child: const Text('Generate Assessment'),
           ),
