@@ -12,13 +12,18 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> loginToMoodle(String username, String password, String moodleUrl) async {
     // final url = Uri.parse('http://localhost/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
+    if (username == "" || password == "" || moodleUrl == "") {
+      throw Exception('Username, password and URL are required');
+    }
     final url = Uri.parse('$moodleUrl/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       token = responseData['token'];
-      isLoggedInToMoodle = true;
+      if (token != "" && token != null) {
+        isLoggedInToMoodle = true;
+      }
       notifyListeners();
     } else {
       throw Exception('Failed to login to Moodle');

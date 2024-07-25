@@ -19,8 +19,15 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _urlController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController(text: "http://localhost");
   bool _loginError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial value for the URL field
+    _urlController.text = "http://localhost";
+  }
 
   Future<void> _login(UserProvider userProvider) async {
     var logger = Logger();
