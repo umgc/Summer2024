@@ -69,13 +69,6 @@ class _CreatePageState extends State<CreatePage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _selectForm('Edit');
-                    },
-                    child: const Text('Edit Past Rubric/Assignment'),
-                  ),
-                  const SizedBox(height: 20),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -84,8 +77,6 @@ class _CreatePageState extends State<CreatePage> {
                             RubricForm(onCancel: _clearForm)
                           else if (_selectedForm == 'Assignment')
                             UiAssignmentForm(onCancel: _clearForm)
-                          else if (_selectedForm == 'Edit')
-                            EditForm(onCancel: _clearForm),
                         ],
                       ),
                     ),
@@ -116,6 +107,7 @@ class _RubricFormState extends State<RubricForm> {
   String? _selectedGradeLevel;
   final List<String> subjects = ['Math', 'Science', 'History', 'Language Arts'];
   final List<String> gradeLevels = ['1000', '2000', '3000', '4000'];
+  final _formKey = GlobalKey<FormState>();
 
   void _addCriteria() {
     setState(() {
@@ -143,9 +135,15 @@ class _RubricFormState extends State<RubricForm> {
           children: [
             const Text('Rubric Form',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            TextField(
+            TextFormField(
               controller: _titleController,
               decoration: const InputDecoration(labelText: 'Title'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Title is required';
+                }
+                return null;
+              },
             ),
             TextField(
               controller: _descriptionController,
@@ -248,6 +246,8 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
       TextEditingController();
   final TextEditingController _topicController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
   // final Map<String, int> _assignmentTypeCount = {};
   // final Map<String, int> _codingLanguageCount = {};
 
@@ -282,186 +282,185 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Assignment Form',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Assignment Title'),
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedSubject,
-              decoration: const InputDecoration(labelText: 'Subject'),
-              items: subjects.map((subject) {
-                return DropdownMenuItem(
-                  value: subject,
-                  child: Text(subject),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedSubject = value;
-                });
-              },
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedGradeLevel,
-              decoration: const InputDecoration(labelText: 'Grade Level'),
-              items: gradeLevels.map((grade) {
-                return DropdownMenuItem(
-                  value: grade,
-                  child: Text(grade),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedGradeLevel = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            const Text('Assignment Types:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Row(children: [
-              const Text('Number of Questions'),
-              IconButton(
-                icon: const Icon(Icons.remove),
-                onPressed: () {
-                  setState(() {
-                    _numQuestions--;
-                    if (_numQuestions < 1) _numQuestions = 1;
-                  });
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Assignment Form',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  label: RichText(
+                    text: const TextSpan(
+                      text: 'Title',
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Title is required';
+                  }
+                  return null;
                 },
               ),
-              Text('$_numQuestions'),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
-                  setState(() {
-                    _numQuestions++;
-                  });
-                },
-              ),
-            ]),
-            DropdownButtonFormField<QuestionType>(
-              value: _selectedAssignmentType,
-              decoration: const InputDecoration(labelText: 'Question Type'),
-              items: assignmentTypes.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type.displayName),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedAssignmentType = value;
-                });
-              },
-            ),
-            TextField(
-              controller: _topicController,
-              decoration: InputDecoration(labelText: 'Descriptive Topic'),
-              maxLines: 3,
-            ),
-            if (_selectedSubject == 'Computer Science')
               DropdownButtonFormField<String>(
-                value: _selectedCodingLanguage,
-                decoration: const InputDecoration(labelText: 'Coding Language'),
-                items: codingLanguages.map((type) {
+                value: _selectedSubject,
+                decoration: const InputDecoration(labelText: 'Subject'),
+                items: subjects.map((subject) {
                   return DropdownMenuItem(
-                    value: type,
-                    child: Text(type),
+                    value: subject,
+                    child: Text(subject),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedCodingLanguage = value;
+                    _selectedSubject = value;
                   });
                 },
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    //build a new AssignmentForm object based on the form data
-                    AssignmentForm form = AssignmentForm(
-                        title: _titleController.text,
-                        subject: _selectedSubject ?? '',
-                        gradeLevel: _selectedGradeLevel ?? '',
-                        questionType:
-                            _selectedAssignmentType ?? QuestionType.essay,
-                        codingLanguage: _selectedCodingLanguage,
-                        topic: _topicController.text,
-                        questionCount: _numQuestions,
-                        maximumGrade: 50,
-                        assignmentCount: 2,
-                        gradingCriteria: "");
-
-                    bool success =
-                        await CreatePage.controller.createAssessments(form);
-                    if (success) {
-                      Navigator.pushReplacementNamed(context, '/viewExams');
-                    } else {
-                      // Handle failure
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Failed to create assessments')),
-                      );
-                    }
+              DropdownButtonFormField<String>(
+                value: _selectedGradeLevel,
+                decoration: const InputDecoration(labelText: 'Grade Level'),
+                items: gradeLevels.map((grade) {
+                  return DropdownMenuItem(
+                    value: grade,
+                    child: Text(grade),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGradeLevel = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 10),
+              const Text('Assignment Types:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Row(
+                children: [
+                  const Text('Number of Questions'),
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      setState(() {
+                        _numQuestions--;
+                        if (_numQuestions < 1) _numQuestions = 1;
+                      });
+                    },
+                  ),
+                  Text('$_numQuestions'),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        _numQuestions++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              DropdownButtonFormField<QuestionType>(
+                value: _selectedAssignmentType,
+                decoration: const InputDecoration(labelText: 'Question Type'),
+                items: assignmentTypes.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type.displayName),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedAssignmentType = value;
+                  });
+                },
+              ),
+              TextField(
+                controller: _topicController,
+                decoration: InputDecoration(labelText: 'Descriptive Topic'),
+                maxLines: 3,
+              ),
+              if (_selectedSubject == 'Computer Science')
+                DropdownButtonFormField<String>(
+                  value: _selectedCodingLanguage,
+                  decoration:
+                      const InputDecoration(labelText: 'Coding Language'),
+                  items: codingLanguages.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCodingLanguage = value;
+                    });
                   },
-                  child: const Text('Submit'),
                 ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: widget.onCancel,
-                  child: const Text('Cancel'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Form is valid, proceed with your logic
+                        setState(() {
+                          _isLoading = true;
+                        });
 
-class EditForm extends StatelessWidget {
-  final VoidCallback onCancel;
-  const EditForm({super.key, required this.onCancel});
+                        // Build a new AssignmentForm object based on the form data
+                        AssignmentForm form = AssignmentForm(
+                          title: _titleController.text,
+                          subject: _selectedSubject ?? '',
+                          gradeLevel: _selectedGradeLevel ?? '',
+                          questionType:
+                              _selectedAssignmentType ?? QuestionType.essay,
+                          codingLanguage: _selectedCodingLanguage,
+                          topic: _topicController.text,
+                          questionCount: _numQuestions,
+                        );
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const Text('Edit Past Rubric or Assignment',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
-          const TextField(
-            decoration:
-                InputDecoration(labelText: 'Search Past Rubric or Assignment'),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Search'),
+                        bool success =
+                            await CreatePage.controller.createAssessments(form);
+                        if (success) {
+                          Navigator.pushReplacementNamed(context, '/viewExams');
+                        } else {
+                          // Handle failure
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Failed to create assessments')),
+                          );
+                        }
+
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    },
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Submit'),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: widget.onCancel,
+                    child: const Text('Cancel'),
+                  ),
+                ],
               ),
-              const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: onCancel,
-                child: const Text('Cancel'),
-              ),
+              const SizedBox(height: 20),
             ],
           ),
-          const SizedBox(height: 20),
-        ],
+        ),
       ),
     );
   }

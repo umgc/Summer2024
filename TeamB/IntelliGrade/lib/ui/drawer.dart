@@ -43,6 +43,13 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.login),
+            title: const Text('Login'),
+            onTap: () {
+              Navigator.pushNamed(context, '/login');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {

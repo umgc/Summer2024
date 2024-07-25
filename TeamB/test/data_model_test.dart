@@ -1,6 +1,5 @@
 // test class for the data model.
-
-import 'package:teamb_intelligrade/data_model/beans.dart';
+import '../data_model/beans.dart';
 
 void main() {
   var quiz = Quiz('Test Quiz', 'This is a test quiz!');

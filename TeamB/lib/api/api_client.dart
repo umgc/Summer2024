@@ -1,11 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:http/src/mock_client.dart';
+
 class ApiClient {
   final String baseUrl;
   String token;
 
-  ApiClient({required this.baseUrl, required this.token});
+  ApiClient({required this.baseUrl, required this.token, required MockClient client});
 
   Future<http.Response> get(String endpoint) async {
     final response = await http.get(
