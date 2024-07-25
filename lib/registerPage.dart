@@ -163,8 +163,6 @@ class _RegisterPageState extends State<RegisterPage> {
     String lastname = _lastNameController.text;
     String email = _emailController.text;
     
-    StorageService tran_store = new StorageService();
-    tran_store.deleteTable();
     // Save the user's email using SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userEmail', email);
