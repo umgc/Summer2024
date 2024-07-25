@@ -46,6 +46,22 @@ class _ViewExamPageState extends State<ViewExamPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton.icon(
+                          icon: Icon(Icons.edit,
+                              color: Colors.black),
+                          label: const Text('Edit'),
+                          onPressed: () {
+                            // Handle editing functionality here
+                            Navigator.of(context).pop();
+                            _editQuiz(quiz);
+                          },
+                        ),
+                      ],
+                    ),
                     for (int i = 0; i < quiz.questionList.length; i++)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20.0),
@@ -75,16 +91,6 @@ class _ViewExamPageState extends State<ViewExamPage> {
                           ],
                         ),
                       ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.edit, color: Colors.white),
-                      label: const Text('Edit'),
-                      onPressed: () {
-                        // Handle editing functionality here
-                        Navigator.of(context).pop();
-                        _editQuiz(quiz);
-                      },
-                    ),
                   ],
                 ),
               ),
