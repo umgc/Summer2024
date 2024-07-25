@@ -17,59 +17,43 @@ void main() {
         throw ArgumentError.value(optionName);
       }
     }
-
-    testWidgets('shows progress indicator before connecting', (tester) async {
+    
+    testWidgets('renders list correctly when enabled', (tester) async {
       Widget app = MaterialApp(
         home: Scaffold(
           body: DropdownSelect(
             isDisabled: false,
             controller: controller,
             dropdownTitle: "Course",
-            future: fakeDropdownFunction,
+            options: ['Select Course', 'Course 1', 'Course 2'],
           ),
         ),
       );
       await tester.pumpWidget(app);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
-
-    testWidgets('on error renders error message', (tester) async {
-      Widget app = MaterialApp(
-        home: Scaffold(
-          body: DropdownSelect(
-            isDisabled: false,
-            controller: controller,
-            dropdownTitle: "Wrong Value",
-            future: fakeDropdownFunction,
-          ),
-        ),
-      );
-      await tester.pumpWidget(app);
-      await tester.pumpAndSettle();
-      expect(
-          find.text('Error: Invalid argument: "Wrong Value"'), findsOneWidget);
-    });
-
-    testWidgets('on success renders list', (tester) async {
-      Widget app = MaterialApp(
-        home: Scaffold(
-          body: DropdownSelect(
-            isDisabled: false,
-            controller: controller,
-            dropdownTitle: "Course",
-            future: fakeDropdownFunction,
-          ),
-        ),
-      );
-      await tester.pumpWidget(app);
-      await tester.pump();
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'),
-          findsOneWidget);
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 2'),
-          findsOneWidget);
+      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'), findsOneWidget);
+      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 2'), findsOneWidget);
+    });
+
+    testWidgets('renders list correctly when disabled', (tester) async {
+      Widget app = MaterialApp(
+        home: Scaffold(
+          body: DropdownSelect(
+            isDisabled: true,
+            controller: controller,
+            dropdownTitle: "Course",
+            options: ['Select Course', 'Course 1', 'Course 2'],
+          ),
+        ),
+      );
+      await tester.pumpWidget(app);
+      expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'), findsNothing);
+      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 2'), findsNothing);
     });
   });
 }
