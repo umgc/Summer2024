@@ -20,6 +20,40 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _urlController = TextEditingController();
+  bool _loginError = false;
+
+  Future<void> _login(UserProvider userProvider) async {
+    var logger = Logger();
+    try {
+      await userProvider.loginToMoodle(
+        _usernameController.text,
+        _passwordController.text,
+        _urlController.text,
+      );
+      setState(() {
+        bool hasError = !userProvider.isLoggedInToMoodle;
+        _loginError = hasError;
+      });
+      if (userProvider.isLoggedInToMoodle) {
+        logger.i('Logged in successfully!');
+        logger.i('Token: ${userProvider.token}');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const TeacherDashboard(
+              status: 'logged in',
+            ),
+          ),
+        );
+      } else {
+        logger.i('Login failed.');
+      }
+    } catch (e) {
+      logger.i('Error: $e');
+      setState(() {
+        _loginError = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +108,39 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Username',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                        color: _loginError ? Colors.red : Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.blue),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                        color: _loginError ? Colors.red : Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.blue),
+                      ),
                     ),
                     obscureText: true,
                   ),
@@ -92,9 +148,30 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     // initialValue: "http://localhost",
                     controller: _urlController,
-                    decoration: const InputDecoration(
-                      labelText: 'URL',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: 'Moodle URL',
+                      labelStyle: TextStyle(
+                        color: _loginError ? Colors.red : Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.blue),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: _loginError,
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Invalid Username, Password, and/or URL',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -135,31 +212,9 @@ class _LoginPageState extends State<LoginPage> {
                           aSet.assessments.add(a);
                           savedAssessments.add(aSet);
                           savedAssessments.saveAssessmentsToFile();
-                          // Your OAuth login logic goes here
+                          // Login logic
                           UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
-                          var logger = Logger();
-                          try {
-                            await userProvider.loginToMoodle(
-                              _usernameController.text,
-                              _passwordController.text,
-                              _urlController.text,
-                            );
-                            if (userProvider.isLoggedInToMoodle) {
-                                logger.i('Logged in successfully!');
-                                logger.i('Token: ${userProvider.token}');
-                            }
-                          } catch (e) {
-                            logger.i('Error: $e');
-                          }
-
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              // to Teacher Dashboard with 'logged in' status for now
-                              builder: (context) => const TeacherDashboard(
-                                status: 'logged in',
-                              ),
-                            ),
-                          );
+                          await _login(userProvider);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff0072bb),
