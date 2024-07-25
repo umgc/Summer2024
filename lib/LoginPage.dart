@@ -107,8 +107,6 @@ class _LoginPageState extends State<LoginPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       userEmail = prefs.getString('userEmail');
       if (userEmail == null) {
-        StorageService tran_store = new StorageService();
-        tran_store.deleteTable();
         prefs.setString('userEmail', emailController.text);
       }
       if (mounted) {

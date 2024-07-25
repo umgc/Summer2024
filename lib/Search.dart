@@ -81,7 +81,6 @@ class _SearchState extends State<Search> {
         dense: true,
         child: ListView.builder(
           itemCount: transcriptValues.length,
-          reverse: true,
           itemBuilder: (context, index) {
             final transcript = transcriptValues[index];
             return Padding(
