@@ -13,6 +13,7 @@ import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 
 class QuestionGenerateForm extends StatefulWidget {
   final String assessmentName;
@@ -413,6 +414,12 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   }
                 }
               }
+              // add quiz to moodle
+              UserProvider userProvider = Provider.of<UserProvider>(context);
+              if(userProvider.isLoggedInToMoodle) {
+                // savedAssessments
+              }
+
             },
             child: const Text('Generate Assessment'),
           ),
