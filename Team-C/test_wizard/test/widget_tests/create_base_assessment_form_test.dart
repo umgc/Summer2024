@@ -11,7 +11,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Provider(
+            body: ChangeNotifierProvider(
               create: (context) => UserProvider(),
               child: const CreateBaseAssessmentForm(),
             ),
@@ -25,7 +25,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Provider(
+            body: ChangeNotifierProvider(
               create: (context) => UserProvider(isLoggedInToMoodle: true),
               child: const CreateBaseAssessmentForm(),
             ),
@@ -39,7 +39,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Provider(
+            body: ChangeNotifierProvider(
               create: (context) => UserProvider(),
               child: const CreateBaseAssessmentForm(),
             ),
@@ -53,7 +53,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Provider(
+            body: ChangeNotifierProvider(
               create: (context) => UserProvider(),
               child: const CreateBaseAssessmentForm(),
             ),
@@ -67,7 +67,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Provider(
+            body: ChangeNotifierProvider(
               create: (context) => UserProvider(),
               child: const CreateBaseAssessmentForm(),
             ),
