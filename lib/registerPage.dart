@@ -159,7 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _submitForm() async {
-    String firstname = _firstNameController.text;
+    String firstname = _firstNameController.text.replaceAll(" ","_");
     String lastname = _lastNameController.text;
     String email = _emailController.text;
     

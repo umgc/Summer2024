@@ -40,16 +40,26 @@ factory KnowledgeService() {
     return knowledge;
   }
 
-  void setKnowledge(String str) {
+  void setKnowledge(String str, userID) {
     db.getConnection().then((conn) {
       // This needs to grab the stored user ID to set it appropriatly.
       String sql =
-          "INSERT INTO KnowledgeBase (Information, UserID) VALUES ('$str', 1)";
+          "INSERT INTO KnowledgeBase (Information, UserID) VALUES ('$str', $userID)";
       conn.query(sql);
       db.closeConnection(conn);
     });
   }
   
+
+   void removeKnowledge(String str, userID) {
+    db.getConnection().then((conn) {
+      // This needs to grab the stored user ID to set it appropriatly.
+      String sql =
+          "DELETE FROM KnowledgeBase WHERE Information='$str' AND UserID=$userID";
+      conn.query(sql);
+      db.closeConnection(conn);
+    });
+  }
  
 Future<String> getInventory() async{
     String knowledge = "";

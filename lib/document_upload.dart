@@ -155,8 +155,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:mindinsync/KnowledgeService.dart';
+import 'package:mindinsync/db_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'Drawer.dart';
 import 'BottomNavigation.dart';
@@ -170,11 +173,13 @@ class DocumentUpload extends StatefulWidget {
 
 class _DocumentUploadState extends State<DocumentUpload> {
   List<File> _uploadedFiles = [];
+  KnowledgeService knowledge = KnowledgeService();
+  DBHelper db = DBHelper();
 
   Future<void> _pickDocument() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx', 'txt'],
+      type: FileType.any,
+      // allowedExtensions: ['pdf', 'doc', 'docx', 'txt'],
     );
 
     if (result != null) {
@@ -216,6 +221,20 @@ class _DocumentUploadState extends State<DocumentUpload> {
   void initState() {
     super.initState();
     _listUploadedFiles();
+  }
+
+  void insertKnowledge(content) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString("userEmail");
+    String userId = await db.getUserId(email!);
+    knowledge.setKnowledge(content, userID);
+  }
+
+void removeKnowledge(content) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString("userEmail");
+    String userId = await db.getUserId(email!);
+    knowledge.removeKnowledge(content, userID);
   }
 
   @override
@@ -306,6 +325,18 @@ class _DocumentUploadState extends State<DocumentUpload> {
           child: Text(content),
         ),
         actions: <Widget>[
+          TextButton(
+            child: const Text('Upload'),
+            onPressed: () {
+              insertKnowledge(content);
+            },
+          ),
+          TextButton(
+            child: const Text('Remove'),
+            onPressed: () {
+              removeKnowledge(content);
+            },
+          ),
           TextButton(
             child: const Text('Close'),
             onPressed: () {

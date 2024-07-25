@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mindinsync/db_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'BottomNavigation.dart';
 import 'Drawer.dart';
@@ -18,11 +19,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   File? _profileImage;
   String? userEmail;
+  String? userName;
 
   @override
   void initState() {
     super.initState();
-    _loadUserEmail;
+    _loadUserEmail();
+    _loadUserName();
     // Load existing profile data here if available
   }
 
@@ -44,17 +47,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  Future<void> _loadUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userEmail = prefs.getString('userEmail');
+    userName = await getUserName(userEmail!);
+   // print("test");
+    setState(() {         
+      _nameController.text = userName ?? '';
+    });
+  }
+
+  Future<String> getUserName(String email) async {
+    DBHelper db = DBHelper();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString("user_name");
+    if(userName == null){
+    userName = await db.getUserName(email);
+    }
+    prefs.setString("user_name",userName);
+    return userName;
+  }
+
   Future<void> _loadUserEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userEmail = prefs.getString('userEmail');
+    userEmail = prefs.getString('userEmail');
+    print(userEmail);
+   // print("test");
+    setState(() {         
       _emailController.text = userEmail ?? '';
     });
   }
 
   Future<void> _saveProfile() async {
     // Save the user's name and email
-    final name = _nameController.text;
+    final name = _nameController.text.replaceAll(" ","_");
     final email = _emailController.text;
 
     // Optionally, save the profile data to persistent storage
