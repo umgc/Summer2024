@@ -9,8 +9,17 @@ import 'package:test_wizard/views/teacher_dashboard_view.dart';
 import 'package:test_wizard/providers/user_provider.dart';
 import 'package:logger/logger.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +72,32 @@ class LoginPage extends StatelessWidget {
                     width: 200,
                   ),
                   const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    // initialValue: "http://localhost",
+                    controller: _urlController,
+                    decoration: const InputDecoration(
+                      labelText: 'URL',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Consumer<AssessmentProvider>(
                     builder: (context, savedAssessments, child) {
                       return ElevatedButton(
@@ -104,7 +139,11 @@ class LoginPage extends StatelessWidget {
                           UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
                           var logger = Logger();
                           try {
-                            await userProvider.loginToMoodle('admin', 'Moodle!23');                             
+                            await userProvider.loginToMoodle(
+                              _usernameController.text,
+                              _passwordController.text,
+                              _urlController.text,
+                            );
                             if (userProvider.isLoggedInToMoodle) {
                                 logger.i('Logged in successfully!');
                                 logger.i('Token: ${userProvider.token}');

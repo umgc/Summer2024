@@ -10,8 +10,9 @@ class UserProvider extends ChangeNotifier {
     this.isLoggedInToMoodle = false,
   });
 
-  Future<void> loginToMoodle(String username, String password) async {
-    final url = Uri.parse('http://localhost/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
+  Future<void> loginToMoodle(String username, String password, String moodleUrl) async {
+    // final url = Uri.parse('http://localhost/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
+    final url = Uri.parse('$moodleUrl/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
