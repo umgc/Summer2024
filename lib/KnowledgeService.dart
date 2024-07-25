@@ -51,6 +51,25 @@ factory KnowledgeService() {
   }
   
  
+Future<String> getInventory() async{
+    String knowledge = "";
+    var inventory = "";
+     await db.getConnection().then((conn)  async {
+      // This needs needs a User ID to get the appropriate knowledge base contents.
+      String sql = "SELECT * FROM Product";
+       var temp = await conn.query(sql).then((results) {
+        for (var row in results) {
+            //print(row[1]);
+            inventory += "Item:" + row[5].toString()  + ", Count: " + row[3].toString() + ", Location: " + row[4].toString() + ", Price: " + row[2].toString()+ "\$" + '.\n';
+        }
+        //print (inventory);
+        db.closeConnection(conn);
+      });
+      
+    });
+    return inventory;
+  }
+
 
 
 }

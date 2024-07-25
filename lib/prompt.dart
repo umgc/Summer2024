@@ -80,11 +80,15 @@ class _PromptScreenState extends State<PromptScreen> {
   void loadKnowledge() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString("user_id");
+   
     print(userid);
-    var facts = knowledge.getKnowledge(int.parse(userid!));
+    var facts = knowledge.getKnowledge(int.parse(userid!));   
     facts.then((value) {
+      var inventory =  knowledge.getInventory();
+      inventory.then((inventory){
       promptStart += knowledge.knowledgeLoaded + "}";
-      //print (promptStart);
+      promptStart += " and the following inventory data {" + inventory + "}";  
+      print(promptStart);
       messages = [
         OpenAIChatCompletionChoiceMessageModel(
           content: [
@@ -95,6 +99,7 @@ class _PromptScreenState extends State<PromptScreen> {
           role: OpenAIChatMessageRole.assistant,
         ),
       ];
+      });
     });
   }
 

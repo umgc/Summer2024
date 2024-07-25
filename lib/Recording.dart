@@ -8,6 +8,7 @@ import 'package:google_speech/google_speech.dart';
 import 'package:mindinsync/BottomNavigation.dart';
 import 'package:mindinsync/StorageService.dart';
 import 'package:mindinsync/TranscriptionProcessor.dart';
+import 'package:mindinsync/db_helper.dart';
 import 'package:mindinsync/main.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,10 +64,22 @@ class _RecordScreenState extends State<RecordScreen> {
 
   void loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userName = prefs.getString("user_name");
+    String? userEmail = prefs.getString("userEmail");
+    String userName = await getUserName(userEmail!);
     if(userName != null){
       speakers[0] = userName+ ": ";
     }
+  }
+
+Future<String> getUserName(String email) async {
+    DBHelper db = DBHelper();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString("user_name");
+    if(userName == null){
+    userName = await db.getUserName(email);
+    }
+    prefs.setString("user_name",userName);
+    return userName;
   }
 
   void streamingRecognize() async {

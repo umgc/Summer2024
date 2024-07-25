@@ -17,7 +17,7 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        title: const Text("MindInSYNC"),
         centerTitle: true,
         backgroundColor: Colors.blue[300],
       ),
