@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/views/view_test_view.dart';
@@ -56,7 +57,9 @@ class TeacherDashboard extends StatelessWidget {
                     foregroundColor: Colors.white, // Ensure text color is white
                   ),
                   onPressed: () {
-                    // put in logic for checking if logged in and then logging out if necessary
+                    if (status != 'guest') {
+                      Provider.of<UserProvider>(context, listen: false).logout();
+                    }
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const LoginPage(),

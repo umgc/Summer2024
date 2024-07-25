@@ -42,4 +42,11 @@ class UserProvider extends ChangeNotifier {
       throw Exception('Failed to fetch courses');
     }
   }
+
+  void logout() {
+    isLoggedInToMoodle = false;
+    token = null;
+    courses = [];
+    notifyListeners();
+  }
 }
