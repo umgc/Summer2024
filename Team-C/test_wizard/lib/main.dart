@@ -4,11 +4,7 @@ import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/views/login_page_view.dart';
 
-
 void main() {
-  // this line ignores invalid value types when running tests on github pull request
-  Provider.debugCheckInvalidValueType = null;
-
   runApp(
     MultiProvider(
       providers: [

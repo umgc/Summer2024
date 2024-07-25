@@ -11,7 +11,7 @@ void main() {
     testWidgets('renders TWAppBar', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Provider(
+          home: ChangeNotifierProvider(
             create: (context) => UserProvider(),
             child: const CreateBaseAssessmentView(),
           ),
@@ -22,7 +22,7 @@ void main() {
     testWidgets('renders Create Base Assessment Form', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Provider(
+          home: ChangeNotifierProvider(
             create: (context) => UserProvider(),
             child: const CreateBaseAssessmentView(),
           ),

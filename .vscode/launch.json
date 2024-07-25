@@ -36,7 +36,8 @@
       "type": "dart",
       "flutterMode": "debug",
       "request": "launch",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=.env"]
     },
     {
       "name": "test_wizard (profile mode)",
