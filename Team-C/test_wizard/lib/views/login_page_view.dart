@@ -13,10 +13,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _urlController = TextEditingController();
@@ -34,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         bool hasError = !userProvider.isLoggedInToMoodle;
         _loginError = hasError;
       });
+      if (!mounted) return;
       if (userProvider.isLoggedInToMoodle) {
         logger.i('Logged in successfully!');
         logger.i('Token: ${userProvider.token}');
