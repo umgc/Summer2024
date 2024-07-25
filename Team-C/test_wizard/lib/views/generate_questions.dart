@@ -145,13 +145,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               assessmentName: widget.assessmentName,
                               courseName: widget.courseName,
                             ),
-                            textEditingController.text.isNotEmpty
-                                ? TextField(
-                                    enabled: false,
-                                    style: const TextStyle(color: Colors.red),
-                                    controller: textEditingController,
-                                  )
-                                : const SizedBox.shrink(),
                           ],
                         );
                       },
@@ -315,105 +308,118 @@ class GenerateAssessmentsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AssessmentProvider>(
         builder: (context, savedAssessments, child) {
-      return ElevatedButton(
-        onPressed: () async {
-          if (formKey.currentState!.validate()) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const Center(
-                child: CircularProgressIndicator.adaptive(
-                  strokeWidth: 5,
-                ),
-              ),
-            );
-            // build the original prompt
-            questionGenerationDetail.prompt = llmService.buildPrompt(
-                questionGenerationDetail.topic, assessment);
-            // create the client and resultSet to add to
-            Client client = Client();
-            AssessmentSet resultSet = AssessmentSet([], assessmentName,
-                Course(0, courseName)); // course is always generated for now
-            // this gets incremented with each new assessment
-            int assessmentId = 0;
-            // manually check for error
-            bool wasError = false;
-            // check the count of requests because it might be stuck in an endless loop.
-            int requestCount = 0;
-            // while we don't have the right number, we need to request the llm for more assessments
-            while (resultSet.assessments.length <
-                questionGenerationDetail.numberOfAssessments) {
-              try {
-                if (requestCount >
-                    questionGenerationDetail.numberOfAssessments + 1) {
-                  throw Exception('Endless Loop in LLM requests');
-                }
-                // make a request to the llm with the prompt
-                Response res = await llmService.sendRequest(
-                    client, questionGenerationDetail.prompt);
-                // on success
-                if (res.statusCode == 200) {
-                  final finalResponse = res.body;
-                  String? output = finalResponse;
-                  // save the output to create thread behavior
-                  llmService.addMessage(output);
-                  // parse the whole output one assessment at a time
-                  while (output != null) {
-                    var (extractedAssessment, rest) =
-                        llmService.extractAssessment(output) ?? (null, null);
-                    output = rest;
-
-                    if (extractedAssessment != null) {
-                      Assessment newAssessment = getAssessmentFromOutput(
-                          extractedAssessment, assessmentId++);
-                      resultSet.assessments.add(newAssessment);
+      return Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(
+                    child: CircularProgressIndicator.adaptive(
+                      strokeWidth: 5,
+                    ),
+                  ),
+                );
+                // build the original prompt
+                questionGenerationDetail.prompt = llmService.buildPrompt(
+                    questionGenerationDetail.topic, assessment);
+                // create the client and resultSet to add to
+                Client client = Client();
+                AssessmentSet resultSet = AssessmentSet(
+                    [],
+                    assessmentName,
+                    Course(
+                        0, courseName)); // course is always generated for now
+                // this gets incremented with each new assessment
+                int assessmentId = 0;
+                // manually check for error
+                bool wasError = false;
+                // check the count of requests because it might be stuck in an endless loop.
+                int requestCount = 0;
+                // while we don't have the right number, we need to request the llm for more assessments
+                while (resultSet.assessments.length <
+                    questionGenerationDetail.numberOfAssessments) {
+                  try {
+                    if (requestCount >
+                        questionGenerationDetail.numberOfAssessments + 1) {
+                      throw Exception('Endless Loop in LLM requests');
                     }
+                    // make a request to the llm with the prompt
+                    Response res = await llmService.sendRequest(
+                        client, questionGenerationDetail.prompt);
+                    // on success
+                    if (res.statusCode == 200) {
+                      final finalResponse = res.body;
+                      String? output = finalResponse;
+                      // save the output to create thread behavior
+                      llmService.addMessage(output);
+                      // parse the whole output one assessment at a time
+                      while (output != null) {
+                        var (extractedAssessment, rest) =
+                            llmService.extractAssessment(output) ??
+                                (null, null);
+                        output = rest;
+
+                        if (extractedAssessment != null) {
+                          Assessment newAssessment = getAssessmentFromOutput(
+                              extractedAssessment, assessmentId++);
+                          resultSet.assessments.add(newAssessment);
+                        }
+                      }
+                      questionGenerationDetail.prompt =
+                          llmService.getMoreAssessmentsPrompt(assessment);
+                      requestCount++;
+                    } else {
+                      textEditingController.text =
+                          'Something went wrong with the request to Perplexity';
+                      wasError = true;
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                      break;
+                    }
+                  } catch (e) {
+                    textEditingController.text =
+                        'Something went wrong with parsing the returned data';
+                    wasError = true;
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                    print(e);
+                    break;
                   }
-                  questionGenerationDetail.prompt =
-                      llmService.getMoreAssessmentsPrompt(assessment);
-                  requestCount++;
-                } else {
-                  textEditingController.text =
-                      'Something went wrong with the request to Perplexity';
-                  wasError = true;
+                }
+                // if we get here, we add the result set to state
+                // delete extra assessments if necessary
+                if (!wasError) {
+                  while (resultSet.assessments.length >
+                      questionGenerationDetail.numberOfAssessments) {
+                    resultSet.assessments.removeLast();
+                  }
+                  savedAssessments.add(resultSet);
+                  // can't save to file using web browser
+                  if (!kIsWeb) {
+                    savedAssessments.saveAssessmentsToFile();
+                  }
+                  print('Success!');
                   if (context.mounted) {
                     Navigator.of(context).pop();
+                    Navigator.of(context).popUntil(
+                        (route) => route.settings.name == '/dashboard');
                   }
-                  break;
                 }
-              } catch (e) {
-                textEditingController.text =
-                    'Something went wrong with parsing the returned data';
-                wasError = true;
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-                print(e);
-                break;
               }
-            }
-            // if we get here, we add the result set to state
-            // delete extra assessments if necessary
-            if (!wasError) {
-              while (resultSet.assessments.length >
-                  questionGenerationDetail.numberOfAssessments) {
-                resultSet.assessments.removeLast();
-              }
-              savedAssessments.add(resultSet);
-              // can't save to file using web browser
-              if (!kIsWeb) {
-                savedAssessments.saveAssessmentsToFile();
-              }
-              print('Success!');
-              if (context.mounted) {
-                Navigator.of(context).pop();
-                Navigator.of(context)
-                    .popUntil((route) => route.settings.name == '/dashboard');
-              }
-            }
-          }
-        },
-        child: const Text('Generate Assessment'),
+            },
+            child: const Text('Generate Assessment'),
+          ),
+          TextField(
+            enabled: false,
+            style: const TextStyle(color: Colors.red),
+            controller: textEditingController,
+          )
+        ],
       );
     });
   }
