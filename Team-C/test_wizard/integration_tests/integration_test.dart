@@ -106,6 +106,7 @@ void main() {
         await tester.enterText(
             find.widgetWithText(TextFormField, 'What is 2 + 2?'),
             'What is the nucleus1?');
+        await tester.pumpAndSettle();
         expect(find.byType(TextFormField), findsOne);
         expect(find.text('What is the nucleus1?'), findsOne);
         await tester.tap(find.text('Add Question'));
