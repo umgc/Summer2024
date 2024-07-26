@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 import 'dartCompiler.dart';
 import 'dart:async';
 
@@ -26,11 +25,50 @@ Future<Response> _compilerHandler(Request req) async {
   // Read payload from request and split contents
   final payload = await req.readAsString();
   final contents = payload.split('\n');
-  final code = contents.sublist(4, contents.length - 2).join('\n');
-  
+
+  //Set http boundary, file counter, and file variables
+  final boundary = '--dart-http-boundary';
+  int fileIncrement = 0;
+  List<String> testFile = [];
+  List<String> submissionFile = [];
+  String studentFileName = '';
+
+  for(var i = 0; i < contents.length; i++) {
+    // Checking if at boundary of response, and if both files have been read
+    if(contents[i].startsWith(boundary) && fileIncrement < 2) {
+      // Looking for unit test file
+      if(contents[i+2].contains('_test.dart')) {
+        //Read code-portion of payload up to the next boundary
+        for(var j = i + 4; j < contents.length; j++) {
+          // If boundary was reached, set j to list length to terminate loop
+          if(contents[j].startsWith(boundary)) {
+            j = contents.length;
+            fileIncrement++;
+          } else {
+            testFile.add(contents[j]);
+          }
+        }
+      // If unit test file was not found, we are at submission file
+      } else {
+        //Get name of student-code submitted file
+        studentFileName = contents[i+2].split('"')[1];
+        //Read code-portion of payload up to the next boundary
+        for(var j = i + 4; j < contents.length; j++) {
+          // If boundary was reached, set j to list length to terminate loop
+          if(contents[j].startsWith(boundary)) {
+            j = contents.length;
+            fileIncrement++;
+          } else {
+            submissionFile.add(contents[j]);
+          }
+        }
+      }
+    }
+  }
+
   // Run compiler and return results
   final compiler = new DartCompiler();
-  final output = await compiler.getOutput(code);
+  final output = await compiler.getOutput(testFile.join('\n'), submissionFile.join('\n'), studentFileName);
 
   return Response.ok(output);
 }

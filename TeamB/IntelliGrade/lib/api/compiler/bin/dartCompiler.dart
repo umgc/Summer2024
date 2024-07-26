@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-
 //If testing as a standalone component, uncomment this portion out.
 /*void main() {
   var compiler1 = new DartCompiler().getOutput("sample.dart");
@@ -10,17 +9,21 @@ import 'dart:io';
 }*/
 
 class DartCompiler {
-  Future<String> getOutput(String code) async {
+  Future<String> getOutput(String testCode, studentCode, studentFileName) async {
 
     //Timer(const Duration(seconds: 10), handleTimeout);
-    final filename = '/app/bin/file.dart';
-    var file = await File(filename).writeAsString(code);
-    var result = Process.runSync('dart', [filename]);
+    final testFileName = '/app/bin/unit_test.dart';
+    var testFile = await File(testFileName).writeAsString(testCode);
 
-    if(result.exitCode != 0) {
-      return result.stderr + '\n';
+    studentFileName = '/app/bin/$studentFileName';
+    var studentFile = await File(studentFileName).writeAsString(studentCode);
+    
+    var testResult = Process.runSync('dart', [testFileName]);
+
+    if(testResult.exitCode != 0) {
+      return testResult.stderr + '\n';
     } else {
-      return result.stdout;
+      return testResult.stdout;
     }
   }
 
