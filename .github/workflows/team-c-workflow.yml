@@ -77,4 +77,4 @@ jobs:
       - name: Install dependencies
         run: cd Team-C/test_wizard && flutter pub get
       - name: Run Tests
-        run: cd Team-C/test_wizard && flutter test integration_tests/integration_test.dart -d all
+        run: cd Team-C/test_wizard && flutter test integration_tests/integration_test.dart -d chrome
