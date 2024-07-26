@@ -24,11 +24,11 @@ Response _echoHandler(Request request) {
 Future<Response> _compilerHandler(Request req) async {
   // Read payload from request and split contents
   final payload = await req.readAsString();
-  //final payload = req.read();
   final contents = payload.split('\n');
-  final boundary = '--dart-http-boundary';//contents[0];
+
+  //Set http boundary, file counter, and file variables
+  final boundary = '--dart-http-boundary';
   int fileIncrement = 0;
-  
   List<String> testFile = [];
   List<String> submissionFile = [];
   String studentFileName = '';
@@ -50,7 +50,6 @@ Future<Response> _compilerHandler(Request req) async {
         }
       // If unit test file was not found, we are at submission file
       } else {
-
         //Get name of student-code submitted file
         studentFileName = contents[i+2].split('"')[1];
         //Read code-portion of payload up to the next boundary
