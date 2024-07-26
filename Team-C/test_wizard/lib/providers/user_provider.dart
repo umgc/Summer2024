@@ -6,13 +6,14 @@ class UserProvider extends ChangeNotifier {
   bool isLoggedInToMoodle;
   String? token;
   List<dynamic> courses = [];
+  String? moodleUrl;
 
   UserProvider({
     this.isLoggedInToMoodle = false,
+    this.moodleUrl,
   });
 
   Future<void> loginToMoodle(String username, String password, String moodleUrl) async {
-    // final url = Uri.parse('http://localhost/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
     if (username == "" || password == "" || moodleUrl == "") {
       throw Exception('Username, password and URL are required');
     }
@@ -20,6 +21,7 @@ class UserProvider extends ChangeNotifier {
     final response = await http.get(url);
     // If successful, set token and logged in flag
     if (response.statusCode == 200) {
+      this.moodleUrl = moodleUrl;
       final responseData = json.decode(response.body);
       token = responseData['token'];
       if (token != "" && token != null) {
@@ -52,6 +54,7 @@ class UserProvider extends ChangeNotifier {
     isLoggedInToMoodle = false;
     token = null;
     courses = [];
+    moodleUrl = null;
     notifyListeners();
   }
 }

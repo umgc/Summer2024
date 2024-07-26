@@ -138,15 +138,21 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               },
                               child: const Text('Add Question'),
                             ),
-                            GenerateAssessmentsButton(
-                              formKey: _formKey,
-                              textEditingController: textEditingController,
-                              llmService: llmService,
-                              questionGenerationDetail:
-                                  questionGenerationDetail,
-                              assessment: assessment,
-                              assessmentName: widget.assessmentName,
-                              courseName: widget.courseName,
+                            Consumer<UserProvider>(
+                              builder: (context, userProvider, child) {
+                                return GenerateAssessmentsButton(
+                                  formKey: _formKey,
+                                  textEditingController: textEditingController,
+                                  llmService: llmService,
+                                  questionGenerationDetail:
+                                      questionGenerationDetail,
+                                  assessment: assessment,
+                                  assessmentName: widget.assessmentName,
+                                  courseName: widget.courseName,
+                                  moodleUrl: userProvider.moodleUrl ?? '', 
+                                  token: userProvider.token ?? '',
+                                );
+                              },
                             ),
                           ],
                         );
@@ -247,6 +253,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
   final AssessmentState assessment;
   final String assessmentName;
   final String courseName;
+  final String? moodleUrl;
+  final String? token;
 
   const GenerateAssessmentsButton({
     super.key,
@@ -257,6 +265,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
     required this.assessment,
     required this.assessmentName,
     required this.courseName,
+    required this.moodleUrl, 
+    required this.token,
   });
 
   Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
@@ -308,15 +318,24 @@ class GenerateAssessmentsButton extends StatelessWidget {
   }
 
   Future<void> addQuizToMoodle(String quizName, String intro, int courseId) async {
-    final url = 'http://localhost/webservice/rest/server.php';
-    final token = 'e1744c2b49d8354b357acc09411e7fb6';
+    if (moodleUrl == null || moodleUrl!.isEmpty) {
+      print('Moodle URL is not provided.');
+      return;
+    }
+
+    if (token == null || token!.isEmpty) {
+      print('Token is not provided.');
+      return;
+    }
+
+    final url = '$moodleUrl/webservice/rest/server.php';
     final function = 'local_testplugin_create_quiz';
     
     final response = await http.post(
       Uri.parse(url),
       body: {
         'wsfunction': function,
-        'wstoken': token,
+        'wstoken': token!,
         'courseid': courseId.toString(),
         'name': quizName,
         'intro': intro,
@@ -447,7 +466,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   await addQuizToMoodle(
                     assessmentName,
                     'This is a sample created programmatically.',
-                    5, // Replace with the appropriate course ID
+                    5, // TODO: Replace with the appropriate course ID
                   );
                 }
               } catch (e) {
