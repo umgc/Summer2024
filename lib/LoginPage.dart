@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mindinsync/StorageService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mindinsync/db_helper.dart';
 
 bool _isButtonActive = false;
 TextEditingController emailController = TextEditingController();
@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String? userEmail;
-
+  bool _emailExists = false;
   late final LocalAuthentication auth;
   bool _supportState = false;
   final _formKey = GlobalKey<FormState>(); // Add a global key for the Form
@@ -37,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userEmail = prefs.getString('userEmail');
-      print(userEmail);
       emailController.text = userEmail ?? '';
     });
   }
@@ -74,18 +73,32 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(labelText: 'Email Address'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null; // No error
+                },
               ),
+              //const SizedBox(height: 16),
+              //Row(
+              //  children: [
+              //  InkWell(
+              //    onTap: () {
+              //    _authenticate();
+              //  },
+              // child: Text("Use Biometric Authentication"),
+              //)
+              // ],
+              // ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      // Call your function here
-                      _authenticate();
-                    },
-                    child: Text("Use Biometric Authentication"),
-                  )
-                ],
+              ElevatedButton(
+                onPressed: _isButtonActive ? _login : null,
+                child: const Text('Login'),
               ),
             ],
           ),
@@ -94,7 +107,32 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _authenticate() async {
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Check if email exists before proceeding with authentication
+      _emailExists = await _checkEmail();
+
+      if (_emailExists) {
+        // Perform biometric authentication
+        bool authenticated = await _authenticate();
+        if (authenticated) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('userEmail', emailController.text);
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Authentication failed.')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Email address does not exist.')),
+        );
+      }
+    }
+  }
+
+  Future<bool> _authenticate() async {
     try {
       bool authenticated = await auth.authenticate(
         localizedReason: 'Please authenticate to access your account',
@@ -104,16 +142,15 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       print("Authenticated: $authenticated");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      userEmail = prefs.getString('userEmail');
-      if (userEmail == null) {
-        prefs.setString('userEmail', emailController.text);
-      }
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
+      return authenticated;
     } on PlatformException catch (e) {
       print(e);
+      return false;
     }
+  }
+
+  Future<bool> _checkEmail() async {
+    DBHelper db = DBHelper();
+    return await db.checkEmail(emailController.text);
   }
 }

@@ -113,4 +113,23 @@ class DBHelper {
     await conn.close();
     return username;
   }
+
+  Future<bool> checkEmail(String email) async {
+    final conn = await getConnection();
+
+    // Execute the query
+    var results = await conn.query(
+      'SELECT firstname FROM User WHERE email = ?',
+      [email],
+    );
+    bool emailExists;
+    if (results.isNotEmpty) {
+      emailExists = true;
+    } else {
+      emailExists = false;
+    }
+
+    await conn.close();
+    return emailExists;
+  }
 }

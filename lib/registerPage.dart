@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mindinsync/StorageService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mindinsync/db_helper.dart';
 import 'package:mindinsync/LoginPage.dart';
 import 'package:mindinsync/Disclaimer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isButtonActive = false;
 
@@ -23,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final LocalAuthentication auth;
   bool _supportState = false;
   final _formKey = GlobalKey<FormState>(); // Add a global key for the Form
+  Future<bool>? _emailExistsFuture;
 
   @override
   void initState() {
@@ -33,6 +33,11 @@ class _RegisterPageState extends State<RegisterPage> {
             _supportState = isSupported;
           }),
         );
+  }
+
+  Future<bool> _checkEmail(String email) async {
+    DBHelper db = DBHelper();
+    return await db.checkEmail(email);
   }
 
   @override
@@ -46,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Form(
-          key: _formKey, // Assign the global key to the Form
+          key: _formKey, // Assign a global key to the Form
           onChanged: () {
             setState(() {
               _isButtonActive = _firstNameController.text.isNotEmpty &&
@@ -92,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email Address'),
                 validator: (value) {
-                  if (value!.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
                   if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -101,47 +106,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
                   return null;
                 },
+                onChanged: (value) {
+                  // Check if the email exists whenever the text changes
+                  setState(() {
+                    _emailExistsFuture = _checkEmail(value);
+                  });
+                },
+                // Using a FutureBuilder to show the error based on the async email check
+                // The email error will be set in the FutureBuilder
+                // But we need to show the error in the TextFormField itself
               ),
               const SizedBox(height: 16),
-              // Row(
-              //   children: [
-              //     InkWell(
-              //       onTap: () {
-              //         // Call your function here
-              //         _authenticate();
-              //       },
-              //       child: Text("Use Biometric Authentication"),
-              //     )
-              //   ],
-              // ),
-              const SizedBox(height: 16),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    // primary: Colors.green,
-                    ),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    SharedPreferences sp =
-                        await SharedPreferences.getInstance();
-                    sp.setString('userEmail', _emailController.text);
-                    print(sp.getString('userEmail'));
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            DisclaimerPage(submitForm: _submitForm),
-                      ),
-                    );
-                  }
-                },
+                onPressed: _isButtonActive ? _register : null,
                 child: const Text('Create Account'),
               ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    // primary: Colors.black,
-                    // onPrimary: Colors.white,
-                    ),
                 icon: const Icon(Icons.login),
                 label: const Text('Login'),
                 onPressed: () {
@@ -158,17 +139,57 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Future<void> _register() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      String firstname = _firstNameController.text.replaceAll(" ", "_");
+      String lastname = _lastNameController.text;
+      String email = _emailController.text;
+
+      // Check if email exists
+      bool emailExists = await _checkEmail(email);
+      if (emailExists) {
+        // Show email already exists error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Email address already exists.')),
+        );
+      } else {
+        // Save the user's email using SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userEmail', email);
+
+        // Insert user into the database
+        DBHelper db = DBHelper();
+        await db.insertUser(firstname, lastname, email);
+
+        // Clear the form fields
+        //_firstNameController.clear();
+        // _lastNameController.clear();
+        //_emailController.clear();
+
+        // Navigate to the disclaimer page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DisclaimerPage(submitForm: _submitForm),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _submitForm() async {
-    String firstname = _firstNameController.text.replaceAll(" ","_");
+    String firstname = _firstNameController.text.replaceAll(" ", "_");
     String lastname = _lastNameController.text;
     String email = _emailController.text;
-    
+
     // Save the user's email using SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userEmail', email);
 
-    DBHelper db = new DBHelper();
+    DBHelper db = DBHelper();
     await db.insertUser(firstname, lastname, email);
+
+    // Clear the form fields
     _firstNameController.clear();
     _lastNameController.clear();
     _emailController.clear();
