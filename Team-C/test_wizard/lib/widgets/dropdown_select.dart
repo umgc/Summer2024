@@ -5,7 +5,7 @@ class DropdownSelect extends StatefulWidget {
   final TextEditingController controller;
   final String dropdownTitle;
   final bool isDisabled;
-  final List<String> options;
+  final List<Map<String, dynamic>> options;
   const DropdownSelect({
     super.key,
     required this.isDisabled,
@@ -19,32 +19,38 @@ class DropdownSelect extends StatefulWidget {
 }
 
 class DropdownSelectState extends State<DropdownSelect> {
-  String? selectedValue;
+  Map<String, dynamic>? selectedValue;
+
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<Map<String, dynamic>>(
       value: selectedValue,
       iconDisabledColor: Colors.grey[50],
       disabledHint: const Text('Disabled without Moodle'),
       onChanged: widget.isDisabled
           ? null
-          : (String? newValue) {
+          : (Map<String, dynamic>? newValue) {
               setState(() {
                 if (newValue != null) {
-                  widget.controller.text = newValue;
+                  widget.controller.text = newValue['fullname'];
                   selectedValue = newValue;
                 }
               });
             },
-      items: widget.options.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: widget.options.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> value) {
+        return DropdownMenuItem<Map<String, dynamic>>(
           value: value,
-          child: Text(value),
+          child: Text(value['fullname']),
         );
       }).toList(),
       validator: widget.isDisabled
           ? null
-          : Validators.checkOptionHasBeenSelected,
+          : (Map<String, dynamic>? value) {
+              if (value == null || value['fullname'] == 'Select Course') {
+                return 'Please select a valid option';
+              }
+              return null;
+            },
       decoration: InputDecoration(
         label: Text(widget.dropdownTitle),
         border: const OutlineInputBorder(),

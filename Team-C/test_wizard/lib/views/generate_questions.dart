@@ -22,12 +22,15 @@ class QuestionGenerateForm extends StatefulWidget {
   final int numberOfAssessments;
   final String topic;
   final String courseName;
+  final int courseId;
+
   const QuestionGenerateForm({
     super.key,
     required this.assessmentName,
     required this.numberOfAssessments,
     required this.topic,
     required this.courseName,
+    required this.courseId,
   });
 
   @override
@@ -149,9 +152,10 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                   assessment: assessment,
                                   assessmentName: widget.assessmentName,
                                   courseName: widget.courseName,
-                                  moodleUrl: userProvider.moodleUrl ?? '', 
+                                  moodleUrl: userProvider.moodleUrl ?? '',
                                   token: userProvider.token ?? '',
-                                  topic: widget.topic, 
+                                  topic: widget.topic,
+                                  courseId: widget.courseId,
                                 );
                               },
                             ),
@@ -256,7 +260,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
   final String courseName;
   final String? moodleUrl;
   final String? token;
-  final String topic; 
+  final String topic;
+  final int courseId;
 
   const GenerateAssessmentsButton({
     super.key,
@@ -267,9 +272,10 @@ class GenerateAssessmentsButton extends StatelessWidget {
     required this.assessment,
     required this.assessmentName,
     required this.courseName,
-    required this.moodleUrl, 
+    required this.moodleUrl,
     required this.token,
     required this.topic,
+    required this.courseId,
   });
 
   Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
@@ -469,7 +475,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   await addQuizToMoodle(
                     assessmentName,
                     topic,
-                    5, // TODO: Replace with the appropriate course ID
+                    courseId,
                   );
                 }
               } catch (e) {

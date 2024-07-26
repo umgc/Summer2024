@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class UserProvider extends ChangeNotifier {
   bool isLoggedInToMoodle;
   String? token;
-  List<dynamic> courses = [];
+  List<Map<String, dynamic>> courses = [];
   String? moodleUrl;
 
   UserProvider({
@@ -43,6 +43,7 @@ class UserProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       courses = (json.decode(response.body) as List<dynamic>)
           .where((course) => course['categoryid'] == 1)
+          .map((course) => course as Map<String, dynamic>)
           .toList();
       notifyListeners();
     } else {

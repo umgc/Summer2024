@@ -32,9 +32,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
     // Prepare the course names from the filtered courses
-    List<String> courseNames = userProvider.courses.map<String>((course) {
-      return course['fullname'] as String;
-    }).toList();
+    List<Map<String, dynamic>> courseNames = userProvider.courses;
     // Build a Form widget using the _formKey created above.
     Size screenSize = MediaQuery.of(context).size;
     return ScrollContainer(
@@ -121,6 +119,11 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           String subjectDescription =
                               subjectDescriptionController.text;
 
+                          Map<String, dynamic>? selectedCourse = courseNames.firstWhere(
+                            (course) => course['fullname'] == courseNameController.text,
+                            orElse: () => {},
+                          );
+
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => QuestionGenerateForm(
@@ -128,6 +131,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                                 assessmentName: assessmentName,
                                 numberOfAssessments: int.parse(numOfStudents),
                                 topic: subjectDescription,
+                                courseId: selectedCourse?['id'] ?? 0,
                               ),
                             ),
                           );
