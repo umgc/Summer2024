@@ -103,9 +103,9 @@ void main() {
         expect(find.text('This field cannot be blank.'), findsOneWidget);
 
         // test the add question button
-        await tester.enterText(
-            find.widgetWithText(TextFormField, 'What is 2 + 2?'),
-            'What is the nucleus1?');
+        var found = find.widgetWithText(TextFormField, 'What is 2 + 2?');
+        await tester.tap(found);
+        await tester.enterText(found, 'What is the nucleus1?');
         await tester.pumpAndSettle();
         expect(find.byType(TextFormField), findsOne);
         expect(find.text('What is the nucleus1?'), findsOne);
