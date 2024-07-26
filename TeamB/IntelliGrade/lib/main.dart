@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intelligrade/ui/create_page.dart';
-import 'package:intelligrade/ui/feedbackpage.dart';
-import 'package:intelligrade/ui/gradesuggestionpage.dart';
-import 'package:intelligrade/ui/question_details_Page.dart';
-import 'package:intelligrade/ui/notifications_page.dart';
-import 'package:intelligrade/ui/search_page.dart';
 import 'package:intelligrade/ui/setting_page.dart';
 import 'package:intelligrade/ui/view_exam_page.dart';
-import 'package:intelligrade/ui/help_page.dart';
-import 'package:intelligrade/ui/testing_page.dart';
-import 'package:intelligrade/ui/dashboard_page.dart';
+import 'package:intelligrade/ui/grading_page.dart';
 import 'package:intelligrade/ui/login_page.dart';
-
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -42,17 +34,10 @@ class MyApp extends StatelessWidget
           home: const LoginPage(),
           routes:
           {
-            '/dashboard': (context) => const Dashboard(),
-            '/gradesuggestion': (context) => const GradeSuggestionPage(),
-            '/feedback': (context) => FeedbackPage(),
-            '/login': (context) => LoginPage(),
-            '/search': (context) => const Search(),
-            '/testing': (context) => const Testing(),
-            '/help': (context) => const Help(),
-            '/notifications': (context) => const Notifications(),
+            '/login': (context) => const LoginPage(),
+            '/grading': (context) => const Grading(),
             '/create': (context) => const CreatePage(),
             '/viewExams': (context) => const ViewExamPage(),
-            '/questiondetails': (context) => const QuestionDetail(),
             '/settings': (context) => Setting(themeModeNotifier: _themeModeNotifier)
           },
         );

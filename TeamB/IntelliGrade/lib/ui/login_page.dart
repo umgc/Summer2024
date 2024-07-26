@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                   _passwordController.text,
                 );
                 if (wasSuccessful) {
-                  Navigator.pushReplacementNamed(context, '/dashboard');
+                  Navigator.pushReplacementNamed(context, '/viewExams');
                 } else {
                   _showLoginFailedDialog();
                 }
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/dashboard');
+                Navigator.pushReplacementNamed(context, '/viewExams');
               },
               child: const Text('Proceed without Moodle'),
             ),

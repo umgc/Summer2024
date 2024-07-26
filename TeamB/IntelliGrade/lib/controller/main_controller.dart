@@ -21,6 +21,7 @@ class MainController {
   MainController._internal();
   final llm = LlmApi(dotenv.env['PERPLEXITY_API_KEY']!);
   static bool isLoggedIn = false;
+  final ValueNotifier<bool> isUserLoggedInNotifier = ValueNotifier(false);
 
   Future<bool> createAssessments(AssignmentForm userForm) async {
     try {
@@ -49,7 +50,7 @@ class MainController {
     //will use compiler to compile code and get output
     // Handle grading logic
   }
-  
+
   void saveFileLocally(Quiz quiz) {
     String quizName =
         quiz.name ?? DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
@@ -57,105 +58,110 @@ class MainController {
     html.window.localStorage[quizName] = quizData;
   }
 
-  Future<bool> downloadAssessmentAsPdf(String filename, bool includeAnswers) async {
-  if (filename.isEmpty) {
-    throw Exception('Quiz name is required.');
-  }
-
-  try {
-    String? quizData = html.window.localStorage[filename];
-    if (quizData == null) {
-      throw Exception('No quiz found with the name: $filename');
+  Future<bool> downloadAssessmentAsPdf(
+      String filename, bool includeAnswers) async {
+    if (filename.isEmpty) {
+      throw Exception('Quiz name is required.');
     }
 
-    var quiz = Quiz.fromXmlString(quizData);
-
-    // List of pdf widgets
-    List<pw.Widget> widgets = [];
-
-    // Add quiz title
-    widgets.add(pw.Text(
-      filename,
-      style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-    ));
-    widgets.add(pw.SizedBox(height: 10));
-
-    // Add quiz description
-    widgets.add(pw.Text(
-      quiz.description ?? 'No description',
-      style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic),
-    ));
-    widgets.add(pw.SizedBox(height: 20));
-
-    // Add each question and its answers
-    for (var entry in quiz.questionList.asMap().entries) {
-      final question = entry.value;
-      final questionNumber = entry.key + 1;
-
-      // Question text
-      widgets.add(
-        pw.Text(
-          'Question $questionNumber: ${question.questionText}',
-          style: const pw.TextStyle(fontSize: 16),
-        ),
-      );
-      widgets.add(pw.SizedBox(height: 5));
-
-      // Answers
-      List<pw.Widget> answerWidgets = [];
-      for (var answerEntry in question.answerList.asMap().entries) {
-        final index = answerEntry.key;
-        final answer = answerEntry.value;
-        final answerText = answer.answerText;
-        final feedbackText = includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
-        final prefix = question.type == QuestionType.multichoice.xmlName
-            ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
-            : '-';
-
-        answerWidgets.add(pw.Text(
-          '$prefix $answerText$feedbackText',
-          style: const pw.TextStyle(fontSize: 14),
-        ));
+    try {
+      String? quizData = html.window.localStorage[filename];
+      if (quizData == null) {
+        throw Exception('No quiz found with the name: $filename');
       }
 
-      widgets.add(pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: answerWidgets,
+      var quiz = Quiz.fromXmlString(quizData);
+
+      // List of pdf widgets
+      List<pw.Widget> widgets = [];
+
+      // Add quiz title
+      widgets.add(pw.Text(
+        filename,
+        style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
       ));
       widgets.add(pw.SizedBox(height: 10));
+
+      // Add quiz description
+      widgets.add(pw.Text(
+        quiz.description ?? 'No description',
+        style: pw.TextStyle(fontSize: 18, fontStyle: pw.FontStyle.italic),
+      ));
+      widgets.add(pw.SizedBox(height: 20));
+
+      // Add each question and its answers
+      for (var entry in quiz.questionList.asMap().entries) {
+        final question = entry.value;
+        final questionNumber = entry.key + 1;
+
+        // Question text
+        widgets.add(
+          pw.Text(
+            'Question $questionNumber: ${question.questionText}',
+            style: const pw.TextStyle(fontSize: 16),
+          ),
+        );
+        widgets.add(pw.SizedBox(height: 5));
+
+        // Answers
+        List<pw.Widget> answerWidgets = [];
+        for (var answerEntry in question.answerList.asMap().entries) {
+          final index = answerEntry.key;
+          final answer = answerEntry.value;
+          final answerText = answer.answerText;
+          final feedbackText =
+              includeAnswers ? ' (${answer.feedbackText ?? ''})' : '';
+          final prefix = question.type == QuestionType.multichoice.xmlName
+              ? '${String.fromCharCode('a'.codeUnitAt(0) + index)})'
+              : '-';
+
+          if (question.type != QuestionType.shortanswer.xmlName ||
+              includeAnswers) {
+            answerWidgets.add(pw.Text(
+              '$prefix $answerText$feedbackText',
+              style: const pw.TextStyle(fontSize: 14),
+            ));
+          }
+        }
+
+        widgets.add(pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: answerWidgets,
+        ));
+        widgets.add(pw.SizedBox(height: 10));
+      }
+
+      // Create the PDF document
+      final pdf = pw.Document();
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat: PdfPageFormat.letter,
+          build: (context) => widgets, // Pass the widgets list here
+        ),
+      );
+
+      // Save the PDF as bytes
+      final pdfBytes = await pdf.save();
+
+      // Create a Blob from the PDF bytes
+      final blob = html.Blob([Uint8List.fromList(pdfBytes)]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+
+      // Create an anchor element and trigger the download
+      final anchor = html.AnchorElement(href: url)
+        ..setAttribute('download', '$filename.pdf')
+        ..click();
+
+      // Cleanup
+      html.Url.revokeObjectUrl(url);
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error downloading assessment as PDF: $e');
+      }
+      return false;
     }
-
-    // Create the PDF document
-    final pdf = pw.Document();
-    pdf.addPage(
-      pw.MultiPage(
-        pageFormat: PdfPageFormat.letter,
-        build: (context) => widgets, // Pass the widgets list here
-      ),
-    );
-
-    // Save the PDF as bytes
-    final pdfBytes = await pdf.save();
-
-    // Create a Blob from the PDF bytes
-    final blob = html.Blob([Uint8List.fromList(pdfBytes)]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-
-    // Create an anchor element and trigger the download
-    final anchor = html.AnchorElement(href: url)
-      ..setAttribute('download', '$filename.pdf')
-      ..click();
-
-    // Cleanup
-    html.Url.revokeObjectUrl(url);
-    return true;
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error downloading assessment as PDF: $e');
-    }
-    return false;
   }
-}
 
   List<Quiz?> listAllAssessments() {
     var allKeys = html.window.localStorage.keys;
@@ -237,6 +243,12 @@ class MainController {
     }
   }
 
+  void logoutFromMoodle() {
+    var moodleApi = MoodleApiSingleton();
+    moodleApi.logout();
+    isLoggedIn = false;
+  }
+
   Future<List<Course>> getCourses() async {
     var moodleApi = MoodleApiSingleton();
     try {
@@ -250,7 +262,7 @@ class MainController {
     }
   }
 
-  bool isUserLoggedIn() {
+  Future<bool> isUserLoggedIn() async {
     return isLoggedIn;
   }
 }

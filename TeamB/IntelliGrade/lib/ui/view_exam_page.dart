@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intelligrade/ui/drawer.dart';
 import 'package:intelligrade/ui/header.dart';
 import 'package:intelligrade/controller/main_controller.dart';
 import 'package:intelligrade/controller/model/beans.dart';
@@ -35,7 +34,7 @@ class _ViewExamPageState extends State<ViewExamPage> {
   }
 
   Future<void> _checkUserLoginStatus() async {
-    _isUserLoggedIn = ViewExamPage.controller.isUserLoggedIn();
+    _isUserLoggedIn = await ViewExamPage.controller.isUserLoggedIn();
     setState(() {});
   }
 
@@ -302,8 +301,9 @@ class _ViewExamPageState extends State<ViewExamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppHeader(),
-      drawer: const AppDrawer(),
+      appBar: const AppHeader(
+        title: "View Created Exams",
+      ),
       body: quizzes.isEmpty
           ? Center(
               child: Column(
@@ -319,64 +319,81 @@ class _ViewExamPageState extends State<ViewExamPage> {
                 ],
               ),
             )
-          : ListView.builder(
-              itemCount: quizzes.length,
-              itemBuilder: (BuildContext context, int index) {
-                Quiz quiz = quizzes[index] ?? Quiz();
-                return ListTile(
-                  title: Text(quiz.name ?? 'Unnamed Quiz'),
-                  subtitle: Text(quiz.description ?? 'No description'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Tooltip(
-                        message: _isUserLoggedIn
-                            ? 'Post to Moodle'
-                            : 'Login to Moodle to be able to post exams',
-                        child: IconButton(
-                          icon: const Icon(Icons.upload, color: Colors.green),
-                          onPressed: _isUserLoggedIn
-                              ? () => _postQuizToMoodle(quiz)
-                              : null,
-                        ),
-                      ),
-                      Tooltip(
-                        message: 'Download as pdf',
-                        child: PopupMenuButton<bool>(
-                          icon: const Icon(Icons.download, color: Colors.blue),
-                          tooltip: '',
-                          onSelected: (bool includeAnswers) {
-                            _downloadQuiz(quiz, includeAnswers);
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<bool>>[
-                            const PopupMenuItem<bool>(
-                              value: true,
-                              child: Text('Download with Answers'),
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: quizzes.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Quiz quiz = quizzes[index] ?? Quiz();
+                        return Card(
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            title: Text(quiz.name ?? 'Unnamed Quiz'),
+                            subtitle:
+                                Text(quiz.description ?? 'No description'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Tooltip(
+                                  message: _isUserLoggedIn
+                                      ? 'Post to Moodle'
+                                      : 'Login to Moodle to be able to post exams',
+                                  child: IconButton(
+                                    icon: const Icon(Icons.upload,
+                                        color: Colors.green),
+                                    onPressed: _isUserLoggedIn
+                                        ? () => _postQuizToMoodle(quiz)
+                                        : null,
+                                  ),
+                                ),
+                                Tooltip(
+                                  message: 'Download as pdf',
+                                  child: PopupMenuButton<bool>(
+                                    icon: const Icon(Icons.download,
+                                        color: Colors.blue),
+                                    tooltip: '',
+                                    onSelected: (bool includeAnswers) {
+                                      _downloadQuiz(quiz, includeAnswers);
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry<bool>>[
+                                      const PopupMenuItem<bool>(
+                                        value: true,
+                                        child: Text('Download with Answers'),
+                                      ),
+                                      const PopupMenuItem<bool>(
+                                        value: false,
+                                        child: Text('Download without Answers'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Tooltip(
+                                  message: 'Delete',
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () {
+                                      _deleteQuiz(quiz.name ?? '');
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            const PopupMenuItem<bool>(
-                              value: false,
-                              child: Text('Download without Answers'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Tooltip(
-                        message: 'Delete',
-                        child: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            _deleteQuiz(quiz.name ?? '');
-                          },
-                        ),
-                      )
-                    ],
+                            onTap: () {
+                              _showQuizDetails(quiz);
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    _showQuizDetails(quiz);
-                  },
-                );
-              },
+                ],
+              ),
             ),
     );
   }
