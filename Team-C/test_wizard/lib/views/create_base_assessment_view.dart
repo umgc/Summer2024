@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/widgets/create_base_assessment_form.dart';
-import 'package:test_wizard/widgets/tw_app_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
+import 'package:test_wizard/providers/user_provider.dart';
+import 'package:test_wizard/WIDGETS/create_base_assessment_form.dart';
 
 class CreateBaseAssessmentView extends StatelessWidget {
   const CreateBaseAssessmentView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TWAppBar(
-        context: context,
-        screenTitle: 'Create Assessment',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AssessmentProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Create Assessment'),
+        ),
+        body: const CreateBaseAssessmentForm(),
       ),
-      body: const CreateBaseAssessmentForm(),
     );
   }
 }

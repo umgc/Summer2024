@@ -5,6 +5,7 @@ import 'package:test_wizard/widgets/view_assessment_page.dart';
 class CreateViewTest extends StatelessWidget {
   final String assessmentName;
   final String courseName;
+
   const CreateViewTest({
     super.key,
     required this.assessmentName,

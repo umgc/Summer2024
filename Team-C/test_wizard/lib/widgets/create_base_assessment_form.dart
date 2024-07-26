@@ -5,8 +5,9 @@ import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/dropdown_select.dart';
-import 'package:test_wizard/views/generate_questions.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/models/course.dart';
 
 class CreateBaseAssessmentForm extends StatefulWidget {
   const CreateBaseAssessmentForm({super.key});
@@ -20,8 +21,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
   final TextEditingController assessmentController = TextEditingController();
   final TextEditingController courseNameController = TextEditingController();
   final TextEditingController numOfStudentsController = TextEditingController();
-  final TextEditingController subjectDescriptionController =
-      TextEditingController();
+  final TextEditingController subjectDescriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                   controller: assessmentController,
                   validator: Validators.checkIsEmpty,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Consumer<UserProvider>(builder: (context, user, child) {
                   return DropdownSelect(
                     isDisabled: !user.isLoggedInToMoodle,
@@ -53,9 +51,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                     dropdownTitle: 'Course',
                   );
                 }),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Number of Tests',
@@ -63,14 +59,12 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   controller: numOfStudentsController,
                   validator: Validators.checkIsOneOrTwoDigits,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Subject Description',
@@ -83,9 +77,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                   maxLines: 4,
                   controller: subjectDescriptionController,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -104,23 +96,19 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           String numOfStudents = numOfStudentsController.text;
                           String subjectDescription = subjectDescriptionController.text;
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => QuestionGenerateForm(
-                                courseName: course,
-                                assessmentName: assessmentName,
-                                numberOfAssessments: int.parse(numOfStudents),
-                                topic: subjectDescription,
-                              ),
-                            ),
+                          // Create the new assessment set
+                          final newAssessment = AssessmentSet(
+                            [],
+                            assessmentName,
+                            Course(0, course),
                           );
+
+                          Navigator.pop(context, newAssessment);
                         }
                       },
-                      child: const Text('Add Questions'),
+                      child: const Text('Create Assessment'),
                     ),
-                    const SizedBox(
-                      width: 16,
-                    ),
+                    const SizedBox(width: 16),
                     const CancelButton(),
                   ],
                 ),

@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:test_wizard/providers/assessment_provider.dart';
-import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
 import 'package:test_wizard/views/create_base_assessment_view.dart';
-import 'package:test_wizard/views/view_test_view.dart';
 import 'package:test_wizard/views/login_page_view.dart';
-import 'package:test_wizard/models/assessment_set.dart';
-import 'package:test_wizard/models/course.dart';
-import 'package:test_wizard/models/question.dart';
-import 'package:test_wizard/models/assessment.dart'; // Ensure this import is correct
+import 'package:test_wizard/views/view_test_view.dart'; // Ensure this import is correct
+import 'package:provider/provider.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 
 class TeacherDashboard extends StatefulWidget {
   final String status;
-  final List<AssessmentSet> tests;
 
   const TeacherDashboard({
     super.key,
     this.status = 'guest',
-    required this.tests,
   });
 
   @override
@@ -27,59 +21,28 @@ class TeacherDashboard extends StatefulWidget {
 }
 
 class _TeacherDashboardState extends State<TeacherDashboard> {
-  List<AssessmentSet> sampleTests = [
-    AssessmentSet(
-      [
-        Assessment(1, 1)
-          ..questions = [
-            Question(
-              questionId: 1,
-              questionText: 'How many sides does a square have?',
-              questionType: 'Short Answer',
-              answer: '4',
-              points: 10,
-            ),
-            Question(
-              questionId: 2,
-              questionText: 'How many sides does a triangle have?',
-              questionType: 'Short Answer',
-              answer: '3',
-              points: 10,
-            ),
-            Question(
-              questionId: 3,
-              questionText: 'How many sides does a rectangle have?',
-              questionType: 'Short Answer',
-              answer: '4',
-              points: 10,
-            ),
-          ],
-      ],
-      'Math Quiz 1',
-      Course(1, 'Mathematics'),
-    ),
-    AssessmentSet(
-      [],
-      'Science Test',
-      Course(2, 'Science'),
-    ),
-    AssessmentSet(
-      [],
-      'History Quiz',
-      Course(3, 'History'),
-    ),
+  List<Map<String, String>> sampleTests = [
+    {'name': 'Math Quiz 1', 'course': 'Mathematics', 'percentage': '80%'},
+    {'name': 'Science Test', 'course': 'Science', 'percentage': '60%'},
+    {'name': 'History Quiz', 'course': 'History', 'percentage': '90%'},
   ];
+
+  String searchQuery = '';
 
   void _deleteTest(String testName) {
     setState(() {
-      sampleTests.removeWhere((test) => test.assessmentName == testName);
+      sampleTests.removeWhere((test) => test['name'] == testName);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, String>> filteredTests = sampleTests
+        .where((test) => test['name']!.toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
+
     return Scaffold(
-      backgroundColor: Colors.white, // Set background color to white
+      backgroundColor: Colors.white, // Changed background color to white
       appBar: TWAppBar(context: context, screenTitle: "Teacher's Dashboard"),
       body: SingleChildScrollView(
         child: Padding(
@@ -145,20 +108,32 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                     )
                   : const SizedBox(height: 0),
               const SizedBox(height: 20),
-              if (sampleTests.isNotEmpty)
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Search Tests',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              if (filteredTests.isNotEmpty)
                 DataTable(
                   columns: const [
                     DataColumn(label: Text('Test Name')),
                     DataColumn(label: Text('Completion Status')),
                     DataColumn(label: Text('Actions')),
                   ],
-                  rows: sampleTests.map((test) {
+                  rows: filteredTests.map((test) {
                     return DataRow(
                       cells: [
                         DataCell(
                           InkWell(
                             child: Text(
-                              test.assessmentName,
+                              test['name']!,
                               style: const TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline,
@@ -168,20 +143,20 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => CreateViewTest(
-                                    assessmentName: test.assessmentName,
-                                    courseName: test.course?.courseName ?? 'Unknown',
+                                    assessmentName: test['name']!,
+                                    courseName: test['course']!,
                                   ),
                                 ),
                               );
                             },
                           ),
                         ),
-                        const DataCell(Text('0%')),
+                        DataCell(Text(test['percentage']!)),
                         DataCell(
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
-                              _deleteTest(test.assessmentName);
+                              _deleteTest(test['name']!);
                             },
                           ),
                         ),
