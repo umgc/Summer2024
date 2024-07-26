@@ -691,6 +691,53 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   }
                 }
               }
+// savedAssessments.assessmentSets._source[0].assessments[0].questions[0].answer
+// savedAssessments.assessmentSets._source[0].assessments[0].questions[0].answerOptions[0]
+
+
+// savedAssessments.assessmentSets
+
+//   {
+//   "assessmentSets": [
+//     {
+//       "assessments": [
+//         {
+//           "assessmentId": 0,
+//           "assessmentVersion": 0,
+//           "questions": [
+//             {
+//               "questionId": 0,
+//               "questionText": "What is 2x + 1?",
+//               "questionType": "Multiple Choice",
+//               "answer": "2x + 1",
+//               "rubric": null,
+//               "points": 0,
+//               "answerOptions": ["2x", "2x + 1", "x + 1", "x"]
+//             },
+//             {
+//               "questionId": 1,
+//               "questionText": "What is 2x + 2?",
+//               "questionType": "Multiple Choice",
+//               "answer": "2x + 2",
+//               "rubric": null,
+//               "points": 0,
+//               "answerOptions": ["2x", "2x + 2", "x + 2", "x"]
+//             }
+//           ]
+//         }
+//       ],
+//       "assessmentName": "Algebra Test",
+//       "course": {
+//         "courseName": "test course 4",
+//         "courseId": 0
+//       }
+//     }
+//   ]
+// }
+
+              // convert assessments to Moodle JSON format
+              // final moodleJSON = convertAssessmentsToMoodleJSON(savedAssessments.assessmentSets);
+
               // add quiz to Moodle
               try {
                 if (Provider.of<UserProvider>(context, listen: false).isLoggedInToMoodle) {

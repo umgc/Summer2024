@@ -29,7 +29,9 @@
       "cwd": "Team-C\\test_wizard",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=.env"]
     },
     {
       "name": "test_wizard_macos",
