@@ -7,7 +7,7 @@ import 'package:test_wizard/models/saved_assessments.dart';
 class AssessmentProvider extends ChangeNotifier {
   /// Internal, private state of assessments in local storage.
   final SavedAssessments _savedAssessments = SavedAssessments();
-  Assessment _a = Assessment(0, 0, true);
+  Assessment a = Assessment(0, 0, true);
 
   /// An unmodifiable view of the assessments.
   List<AssessmentSet> get assessmentSets =>
@@ -20,21 +20,26 @@ class AssessmentProvider extends ChangeNotifier {
 
       /// An unmodifiable view of the assessments.
   Assessment getAssessmentFromAssessmentSet(int assessmentSetIndex, int assessmentIndex){
-    return _savedAssessments.assessmentSets[assessmentSetIndex].assessments[assessmentIndex];
+    if(assessmentSetIndex < _savedAssessments.assessmentSets.length){
+      if(assessmentIndex < _savedAssessments.assessmentSets[assessmentSetIndex].assessments.length){
+        return _savedAssessments.assessmentSets[assessmentSetIndex].assessments[assessmentIndex];
+      }
+    }
+    return Assessment(-1, -1, true);
   }
 
-  List<Question> get questions => _a.questions;
+  List<Question> get questions => a.questions;
 
   AssessmentProvider();
 
   //adds assessment to assessmentSet
   void addAssessmentToAssessmentSet(int savedAssessmentsIndex){
-    _savedAssessments.assessmentSets[savedAssessmentsIndex].assessments.add(_a);
+    _savedAssessments.assessmentSets[savedAssessmentsIndex].assessments.add(a);
     notifyListeners();
   }
 
   void createAssessmentVersion(int assessmentId, int version, bool isExampleAssessment){
-    _a = Assessment(assessmentId, version, isExampleAssessment);
+    a = Assessment(assessmentId, version, isExampleAssessment);
     notifyListeners();
   }
 
@@ -55,6 +60,7 @@ class AssessmentProvider extends ChangeNotifier {
 
   Future<void> saveAssessmentsToFile() async {
     await _savedAssessments.saveAssessmentsToFile();
+    notifyListeners();
   }
 
   Future<void> loadAssessmentsFromFile() async {
@@ -63,16 +69,16 @@ class AssessmentProvider extends ChangeNotifier {
   }
 
   int get length {
-    return _a.questions.length;
+    return a.questions.length;
   }
 
   void addQuestion(Question q) {
-    _a.questions.add(q);
+    a.questions.add(q);
     notifyListeners();
   }
 
   void updateQuestion({required int id, String? newText, String? newType}) {
-    _a.questions = _a.questions.map(
+    a.questions = a.questions.map(
       (curr) {
         if (curr.questionId == id) {
           curr.questionText = newText ?? curr.questionText;
@@ -85,11 +91,11 @@ class AssessmentProvider extends ChangeNotifier {
   }
 
   void removeQuestion(int id) {
-    int foundIndex = _a.questions.indexWhere((q) => q.questionId == id);
+    int foundIndex = a.questions.indexWhere((q) => q.questionId == id);
     // splice out the found question
-    _a.questions = [
-      ..._a.questions.getRange(0, foundIndex),
-      ..._a.questions.getRange(foundIndex + 1, _a.questions.length)
+    a.questions = [
+      ...a.questions.getRange(0, foundIndex),
+      ...a.questions.getRange(foundIndex + 1, a.questions.length)
     ];
     notifyListeners();
   }
@@ -101,7 +107,7 @@ class AssessmentProvider extends ChangeNotifier {
       "Essay": 0,
     };
 
-    for (Question question in _a.questions) {
+    for (Question question in a.questions) {
       questionCount[question.questionType] =
           questionCount[question.questionType]! + 1;
     }
