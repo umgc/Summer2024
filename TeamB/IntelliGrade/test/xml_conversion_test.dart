@@ -13,5 +13,11 @@ void main() {
 
   print('\nObject to XML:');
   print('-----------------');
-  print(XmlConverter.convertQuizToXml(quiz).toXmlString(pretty: true));
+  String convertedXml = XmlConverter.convertQuizToXml(quiz).toXmlString();
+  print(convertedXml);
+
+  print('\nXML back to Object:');
+  print('----------------------');
+  quiz = Quiz.fromXmlString(convertedXml);
+  print(quiz);
 }
