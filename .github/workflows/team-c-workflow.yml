@@ -77,7 +77,4 @@ jobs:
       - name: Install dependencies
         run: cd Team-C/test_wizard && flutter pub get
       - name: Run Tests
-        uses: futureware-tech/simulator-action@v3
-        with:
-          model: 'iPhone 14'
-      - run: cd Team-C/test_wizard && flutter test integration_tests/integration_test.dart
+        run: cd Team-C/test_wizard && flutter test integration_tests/integration_test.dart
