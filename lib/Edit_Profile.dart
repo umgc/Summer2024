@@ -80,11 +80,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     // Save the user's name and email
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();   
      DBHelper db = DBHelper();
+     var userid = await db.getUserId(userEmail!);
     final name = _nameController.text.replaceAll(" ","_");
     final email = _emailController.text;
 
+  if(userName != name){
+    prefs.setString("user_name",name);
+    db.setUserName(userid, name);
+  }
+
+  if(userEmail != email){
+    prefs.setString("userEmail",email);
+    db.setUserEmail(userid, email);
+  }
     // Optionally, save the profile data to persistent storage
     // For example, using SharedPreferences, SQLite, or any other storage solution
 
