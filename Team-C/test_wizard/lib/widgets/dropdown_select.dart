@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/utils/validators.dart';
 
 class DropdownSelect extends StatefulWidget {
   final TextEditingController controller;

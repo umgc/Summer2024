@@ -131,7 +131,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                                 assessmentName: assessmentName,
                                 numberOfAssessments: int.parse(numOfStudents),
                                 topic: subjectDescription,
-                                courseId: selectedCourse?['id'] ?? 0,
+                                courseId: selectedCourse['id'] ?? 0,
                               ),
                             ),
                           );
