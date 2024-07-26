@@ -121,7 +121,7 @@ class Home extends StatelessWidget {
               Navigator.pushNamed(context, '/Search');
               break;
             case 2:
-              Navigator.pushNamed(context, '/knowledge_base');
+              Navigator.pushNamed(context, '/document_upload');
               break;
             default:
               break;
