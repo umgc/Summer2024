@@ -50,7 +50,8 @@ Future<Response> _compilerHandler(Request req) async {
         }
       // If unit test file was not found, we are at submission file
       } else {
-        //studentFileName = contents[i+2].substring(contents[i+2].indexOf('filename="') + 10, contents[i+2].length - 2);
+
+        //Get name of student-code submitted file
         studentFileName = contents[i+2].split('"')[1];
         //Read code-portion of payload up to the next boundary
         for(var j = i + 4; j < contents.length; j++) {
