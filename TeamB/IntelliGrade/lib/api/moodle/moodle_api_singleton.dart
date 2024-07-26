@@ -63,7 +63,7 @@ class MoodleApiSingleton {
   Future<void> importQuiz(String courseid, String quizXml) async {
     if (_userToken == null) throw 'User not logged in to Moodle';
 
-    final http.Response response = await http.get(Uri.parse(
+    final http.Response response = await http.post(Uri.parse(
       '$serverUrl$_userToken$jsonFormat&wsfunction=local_quizgen_import_questions&courseid=$courseid&questionxml=$quizXml'
     ));
     if (response.statusCode != 200) {
