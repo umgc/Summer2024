@@ -45,9 +45,14 @@ class MoodleApiSingleton {
     _userToken = data['token'];
   }
 
+  // Log out of Moodle by deleting the stored user token.
+  void logout() {
+    _userToken = null;
+  }
+
   // Get list of courses.
   Future<List<Course>> getCourses() async {
-    if (_userToken == null) throw 'User not logged in to Moodle';
+    if (_userToken == null) throw StateError('User not logged in to Moodle');
 
     final response = await http.get(Uri.parse(
         '$serverUrl$_userToken$jsonFormat&wsfunction=core_course_get_courses'
@@ -61,7 +66,7 @@ class MoodleApiSingleton {
 
   // Import XML quiz into the specified course. Returns a list of IDs for newly imported questions.
   Future<void> importQuiz(String courseid, String quizXml) async {
-    if (_userToken == null) throw 'User not logged in to Moodle';
+    if (_userToken == null) throw StateError('User not logged in to Moodle');
 
     final http.Response response = await http.post(Uri.parse(
       '$serverUrl$_userToken$jsonFormat&wsfunction=local_quizgen_import_questions&courseid=$courseid&questionxml=$quizXml'
@@ -72,11 +77,5 @@ class MoodleApiSingleton {
     if (response.body.contains('error')) {
       throw HttpException(response.body);
     }
-    // List<dynamic> jsonList = jsonDecode(response.body) as List;
-    // List<String> qidList = [];
-    // for (String qid in jsonList) {
-    //   qidList.add(qid);
-    // }
-    // return qidList;
   }
 }
