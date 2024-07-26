@@ -67,19 +67,19 @@ class LlmApi {
     RegExp exp = RegExp(quizRegExp);
     String respNoNewlines = resp.replaceAll('\n', '');
     Iterable<RegExpMatch> matches = exp.allMatches(respNoNewlines);
-     List<String> parsedResp = [];
+    List<String> parsedResp = [];
 
     print("Parsing the query response - matches: $matches");
 
     for (final m in matches) {
-    if (m.group(0) != null) {
-      parsedResp.add(m.group(0)!);
+      if (m.group(0) != null) {
+        parsedResp.add(m.group(0)!);
 
-      print("This is a match : ${m.group(0)}");
-      print("Number of groups in the match: ${m.groupCount}");
-      print("parsedResp : $parsedResp");
+        print("This is a match : ${m.group(0)}");
+        print("Number of groups in the match: ${m.groupCount}");
+        print("parsedResp : $parsedResp");
+      }
     }
-  }
 
     return parsedResp;
   }

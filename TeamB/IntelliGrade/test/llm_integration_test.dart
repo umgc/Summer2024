@@ -11,12 +11,13 @@ Future main() async {
   // set to true to test full integration (costs money for LLM)
   bool fullTest = true;
 
-  // load env
+  // load env for flutter
   // await dotenv.load(fileName: 'assets/.env');
   // print('PERPLEXITY_API_KEY=${dotenv.env['PERPLEXITY_API_KEY']}');
 
+  // load env for dart
   final env = DotEnv(includePlatformEnvironment: true)..load();
-  final apiKey = /* env['OPENAI_API_KEY']; */ env['PERPLEXITY_API_KEY'];
+  final apiKey = env['PERPLEXITY_API_KEY'];
   print('PERPLEXITY_API_KEY=$apiKey');
 
   // test LLM connection
@@ -30,15 +31,6 @@ Future main() async {
 
   // test fully integrated path !!! warning: costs money!
   else {
-    // String prompt = PromptEngine.generatePrompt(AssignmentForm(
-    //     questionType: QuestionType.multichoice,
-    //     subject: 'Computer Science',
-    //     topic: 'Java',
-    //     gradeLevel: 'Freshman',
-    //     title: 'Title',
-    //     questionCount: 3,
-    //     maximumGrade: 50));
-
     String prompt = PromptEngine.generatePrompt(AssignmentForm(
         questionType: QuestionType.coding,
         subject: 'Data Types',
@@ -56,39 +48,51 @@ Future main() async {
     final llm = LlmApi(/* dotenv.env['PERPLEXITY_API_KEY'] */ apiKey!);
     final String llmResp = await llm.postToLlm(prompt);
     List<String> parsedResp = llm.parseQueryResponse(llmResp);
-    String xmlStr;
+    String xmlStr = "";
+    Quiz quiz = Quiz();
     try {
-      xmlStr = parsedResp[0].replaceAll(RegExp(r"\\n"), "");
+      for (var resp in parsedResp) {
+        xmlStr = resp.replaceAll(RegExp(r"\\n"), "");
+
+        print('parsedXml: $xmlStr');
+
+        print('\nConvert to Object...\n');
+        var tempQuiz = Quiz.fromXmlString(xmlStr);
+        quiz.description = tempQuiz.description;
+        quiz.name = tempQuiz.name;
+        for (var question in tempQuiz.questionList) {
+          quiz.questionList.add(question);
+        }
+        print(quiz);
+      }
+
+      var moodleApi = MoodleApiSingleton();
+      print('Login Test');
+      print('--------------------');
+      try {
+        await moodleApi.login('tzhu', 'Good4TeamB!');
+        print('Login successful!');
+      } catch (e) {
+        print(e);
+      }
+
+      print('\nImport quiz test');
+      print('--------------------');
+      try {
+        String courseId = '2';
+        String reconvertedXml =
+            XmlConverter.convertQuizToXml(quiz).toXmlString();
+        print('Reconverted XML: $reconvertedXml');
+        await moodleApi.importQuiz(courseId, reconvertedXml);
+        print('Questions successfully imported!');
+      } catch (e) {
+        print(e);
+      }
+      // }
+      // xmlStr = parsedResp[0].replaceAll(RegExp(r"\\n"), "");
     } catch (e) {
       print('Unable to parse out XML string: $e');
       exit(1);
-    }
-    print('parsedXml: $xmlStr');
-
-    print('\nConvert to Object...\n');
-    Quiz quiz = Quiz.fromXmlString(xmlStr);
-    print(quiz);
-
-    var moodleApi = MoodleApiSingleton();
-    print('Login Test');
-    print('--------------------');
-    try {
-      await moodleApi.login('tzhu', 'Good4TeamB!');
-      print('Login successful!');
-    } catch (e) {
-      print(e);
-    }
-
-    print('\nImport quiz test');
-    print('--------------------');
-    try {
-      String courseId = '2';
-      String reconvertedXml = XmlConverter.convertQuizToXml(quiz).toXmlString();
-      print('Reconverted XML: $reconvertedXml');
-      await moodleApi.importQuiz(courseId, reconvertedXml);
-      print('Questions successfully imported!');
-    } catch (e) {
-      print(e);
     }
   }
 }

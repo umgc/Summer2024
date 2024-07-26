@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intelligrade/controller/main_controller.dart';
-import 'package:intelligrade/controller/model/beans.dart' show AssignmentForm, Course, QuestionType;
+import 'package:intelligrade/controller/model/beans.dart'
+    show AssignmentForm, Course, QuestionType;
 import 'package:intelligrade/ui/header.dart';
 
 class CreatePage extends StatefulWidget {
@@ -15,7 +16,9 @@ class _CreatePageState extends State<CreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppHeader(title: "Create Exam",),
+      appBar: const AppHeader(
+        title: "Create Exam",
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Center(
@@ -204,7 +207,8 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
               ),
               TextField(
                 controller: _topicController,
-                decoration: const InputDecoration(labelText: 'Descriptive Topic'),
+                decoration:
+                    const InputDecoration(labelText: 'Descriptive Topic'),
                 maxLines: 3,
               ),
               if (_selectedSubject == 'Computer Science')

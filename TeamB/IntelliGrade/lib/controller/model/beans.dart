@@ -13,6 +13,18 @@ class XmlConsts {
   static const answer = 'answer';
   static const fraction = 'fraction';
   static const feedback = 'feedback';
+  static const generalfeedback = 'generalfeedback';
+  static const attachmentsrequired = 'attachmentsrequired';
+  static const rubric = 'rubric';
+  static const responseformat = 'responseformat';
+  static const responserequired = 'responserequired';
+  static const defaultgrade = 'defaultgrade';
+  static const criteria = 'rubric_criteria';
+  static const criterion = 'criterion';
+  static const levels = 'levels';
+  static const level = 'level';
+  static const score = 'score';
+  static const definition = 'definition';
 
   // not tags but useful constants
   static const multichoice = 'multichoice';
@@ -37,20 +49,21 @@ class Quiz {
     Quiz quiz = Quiz();
     final document = XmlDocument.parse(xmlStr);
     final quizElement = document.getElement(XmlConsts.quiz);
-    if (quizElement != null) {
-      quiz.name = quizElement
-          .getElement(XmlConsts.name)
-          ?.getElement(XmlConsts.text)
-          ?.innerText;
-      quiz.description =
-          quizElement.getElement(XmlConsts.description)?.innerText;
-      for (XmlElement questionElement
-          in quizElement.findElements(XmlConsts.question)) {
-        if (questionElement.getAttribute(XmlConsts.type) == 'category') {
-          continue; // Skip category type questions
-        }
-        quiz.questionList.add(Question.fromXml(questionElement));
+
+    quiz.name = quizElement
+        ?.getElement(XmlConsts.name)
+        ?.getElement(XmlConsts.text)
+        ?.innerText;
+
+    quiz.description =
+        quizElement!.getElement(XmlConsts.description)?.innerText;
+
+    for (XmlElement questionElement
+        in quizElement.findElements(XmlConsts.question)) {
+      if (questionElement.getAttribute(XmlConsts.type) == 'category') {
+        continue; // Skip category type questions
       }
+      quiz.questionList.add(Question.fromXml(questionElement));
     }
     return quiz;
   }
@@ -69,17 +82,120 @@ class Quiz {
   }
 }
 
+// class Rubric {}
+
+class RubricCriteria {
+  List<RubricCriterion> criteria = <RubricCriterion>[];
+
+  // Simple constructor. criteria param is optional
+  RubricCriteria([List<RubricCriterion>? criteria]);
+
+  // XML factory constructor
+  factory RubricCriteria.fromXml(XmlElement criteriaElement) {
+    RubricCriteria rubricCriteria = RubricCriteria();
+
+    for (XmlElement criterionElement
+        in criteriaElement.findElements(XmlConsts.criteria).toList()) {
+      rubricCriteria.criteria.add(RubricCriterion.fromXml(criterionElement));
+    }
+    return rubricCriteria;
+  }
+
+  @override
+  String toString() {
+    final sb = StringBuffer();
+    // sb.write(answerText);
+    // sb.write('  <= ($fraction%)');
+    // if (feedbackText != null) {
+    //   sb.write(' - $feedbackText');
+    // }
+    return sb.toString();
+  }
+}
+
+class RubricCriterion {
+  String description;
+  List<CriterionLevel> criterionLevels = <CriterionLevel>[];
+
+  // Simple constructor. criterionLevels param is optional
+  RubricCriterion(this.description, [List<CriterionLevel>? criterionLevels]);
+
+  // XML factory constructor
+  factory RubricCriterion.fromXml(XmlElement criterionElement) {
+    RubricCriterion rubricCriterion = RubricCriterion(criterionElement
+            .getElement(XmlConsts.description)
+            ?.getElement(XmlConsts.text)
+            ?.innerText ??
+        'UNKNOWN');
+
+    for (XmlElement levelElement
+        in criterionElement.findElements(XmlConsts.levels).toList()) {
+      rubricCriterion.criterionLevels.add(CriterionLevel.fromXml(levelElement));
+    }
+    return rubricCriterion;
+  }
+
+  @override
+  String toString() {
+    final sb = StringBuffer();
+    // sb.write(answerText);
+    // sb.write('  <= ($fraction%)');
+    // if (feedbackText != null) {
+    //   sb.write(' - $feedbackText');
+    // }
+    return sb.toString();
+  }
+}
+
+class CriterionLevel {
+  String definition;
+  String score;
+
+  // Simple constructor.
+  CriterionLevel(this.definition, this.score);
+
+  // XML factory constructor
+  factory CriterionLevel.fromXml(XmlElement levelElement) {
+    return CriterionLevel(
+        levelElement
+                .getElement(XmlConsts.definition)
+                ?.getElement(XmlConsts.text)
+                ?.innerText ??
+            'UNKNOWN',
+        levelElement.getElement(XmlConsts.score)?.innerText ?? 'UNKNOWN');
+  }
+
+  @override
+  String toString() {
+    final sb = StringBuffer();
+    // sb.write(answerText);
+    // sb.write('  <= ($fraction%)');
+    // if (feedbackText != null) {
+    //   sb.write(' - $feedbackText');
+    // }
+    return sb.toString();
+  }
+}
+
 // Abstract class that represents a single question.
 class Question {
   String name; // question name - required.
   String
       type; // question type (multichoice, truefalse, shortanswer, essay) - required.
   String questionText; // question text - required.
+  String generalFeedback;
+  String defaultgrade;
+  String? responseformat;
+  String? responserequired;
+  String? attachmentsrequired;
+  String description;
   List<Answer> answerList =
       <Answer>[]; // list of answers. Not needed for essay.
 
   // Simple constructor. The answerList param is optional.
-  Question(this.name, this.type, this.questionText, [List<Answer>? answerList])
+  Question(this.name, this.type, this.questionText, this.generalFeedback,
+      this.defaultgrade, this.description,
+      [List<Answer>? answerList])
       : answerList = answerList ?? [];
 
   // XML factory constructor
@@ -96,7 +212,33 @@ class Question {
               ?.getElement(XmlConsts.text)
               ?.innerText ??
           'UNKNOWN',
+      questionElement
+              .getElement(XmlConsts.generalfeedback)
+              ?.getElement(XmlConsts.text)
+              ?.innerText ??
+          'UNKNOWN',
+      questionElement.getElement(XmlConsts.defaultgrade)?.innerText ?? '100',
+      questionElement
+              .getElement(XmlConsts.description)
+              ?.getElement(XmlConsts.text)
+              ?.innerText ??
+          '',
     );
+
+    var respformat = questionElement.getElement(XmlConsts.responseformat);
+    if (respformat != null) {
+      question.responseformat = respformat.innerText;
+    }
+    var resprequired = questionElement.getElement(XmlConsts.responserequired);
+    if (resprequired != null) {
+      question.responserequired = resprequired.innerText;
+    }
+    var attachrequired =
+        questionElement.getElement(XmlConsts.attachmentsrequired);
+    if (attachrequired != null) {
+      question.attachmentsrequired = attachrequired.innerText;
+    }
+
     for (XmlElement answerElement
         in questionElement.findElements(XmlConsts.answer).toList()) {
       question.answerList.add(Answer.fromXml(answerElement));
