@@ -10,9 +10,13 @@ void main() {
       controller = TextEditingController();
     });
 
-    Future<List<String>> fakeDropdownFunction(String optionName) async {
+    Future<List<Map<String, dynamic>>> fakeDropdownFunction(String optionName) async {
       if (optionName == 'Course') {
-        return ['Select Course', 'Course 1', 'Course 2'];
+        return [
+          {'id': 0, 'fullname': 'Select Course'},
+          {'id': 1, 'fullname': 'Course 1'},
+          {'id': 2, 'fullname': 'Course 2'},
+        ];
       } else {
         throw ArgumentError.value(optionName);
       }
@@ -25,16 +29,20 @@ void main() {
             isDisabled: false,
             controller: controller,
             dropdownTitle: "Course",
-            options: ['Select Course', 'Course 1', 'Course 2'],
+            options: [
+              {'id': 0, 'fullname': 'Select Course'},
+              {'id': 1, 'fullname': 'Course 1'},
+              {'id': 2, 'fullname': 'Course 2'},
+            ],
           ),
         ),
       );
       await tester.pumpWidget(app);
-      expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      expect(find.byType(DropdownButtonFormField<Map<String, dynamic>>), findsOneWidget);
+      await tester.tap(find.byType(DropdownButtonFormField<Map<String, dynamic>>));
       await tester.pumpAndSettle();
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'), findsOneWidget);
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 2'), findsOneWidget);
+      expect(find.widgetWithText(DropdownMenuItem<Map<String, dynamic>>, 'Course 1'), findsOneWidget);
+      expect(find.widgetWithText(DropdownMenuItem<Map<String, dynamic>>, 'Course 2'), findsOneWidget);
     });
 
     testWidgets('renders list correctly when disabled', (tester) async {
@@ -44,16 +52,20 @@ void main() {
             isDisabled: true,
             controller: controller,
             dropdownTitle: "Course",
-            options: ['Select Course', 'Course 1', 'Course 2'],
+            options: [
+              {'id': 0, 'fullname': 'Select Course'},
+              {'id': 1, 'fullname': 'Course 1'},
+              {'id': 2, 'fullname': 'Course 2'},
+            ],
           ),
         ),
       );
       await tester.pumpWidget(app);
-      expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      expect(find.byType(DropdownButtonFormField<Map<String, dynamic>>), findsOneWidget);
+      await tester.tap(find.byType(DropdownButtonFormField<Map<String, dynamic>>));
       await tester.pumpAndSettle();
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'), findsNothing);
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 2'), findsNothing);
+      expect(find.widgetWithText(DropdownMenuItem<Map<String, dynamic>>, 'Course 1'), findsNothing);
+      expect(find.widgetWithText(DropdownMenuItem<Map<String, dynamic>>, 'Course 2'), findsNothing);
     });
   });
 }
