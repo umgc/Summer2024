@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/login': (context) => const LoginPage(),
             '/submitcodeforgrading': (context) => SubmitCodeScreen(),
-            '/grading': (context) => const Grading(),
+            '/grading': (context) => const GradingPage(),
             '/create': (context) => const CreatePage(),
             '/viewExams': (context) => const ViewExamPage(),
             '/settings': (context) =>

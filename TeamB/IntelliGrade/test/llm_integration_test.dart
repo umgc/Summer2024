@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dotenv/dotenv.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intelligrade/api/llm/llm_api.dart';
 import 'package:intelligrade/api/llm/prompt_engine.dart';
 import 'package:intelligrade/api/moodle/moodle_api_singleton.dart';
@@ -12,12 +12,14 @@ Future main() async {
   bool fullTest = true;
 
   // load env for flutter
-  // await dotenv.load(fileName: 'assets/.env');
-  // print('PERPLEXITY_API_KEY=${dotenv.env['PERPLEXITY_API_KEY']}');
+  await dotenv.load(fileName: 'assets/.env');
+  final apiKey = dotenv.env['PERPLEXITY_API_KEY'];
 
   // load env for dart
-  final env = DotEnv(includePlatformEnvironment: true)..load();
-  final apiKey = env['PERPLEXITY_API_KEY'];
+  await dotenv.load(fileName: 'assets/.env');
+  // final env = DotEnv(includePlatformEnvironment: true)..load();
+  // final apiKey = env['PERPLEXITY_API_KEY'];
+
   print('PERPLEXITY_API_KEY=$apiKey');
 
   // test LLM connection
@@ -45,7 +47,7 @@ Future main() async {
         codingLanguage: "Java"));
 
     print('Generated prompt: $prompt');
-    final llm = LlmApi(/* dotenv.env['PERPLEXITY_API_KEY'] */ apiKey!);
+    final llm = LlmApi(apiKey!);
     final String llmResp = await llm.postToLlm(prompt);
     List<String> parsedResp = llm.parseQueryResponse(llmResp);
     String xmlStr = "";

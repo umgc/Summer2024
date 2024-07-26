@@ -5,6 +5,9 @@ import 'beans.dart';
 // Static utility class for Moodle XML related functions.
 class XmlConverter {
 
+  static const cdata1 = '<![CDATA[';
+  static const cdata2 = ']]>';
+
   // Convert a populated Quiz object into an XML Document.
   //
   // To get the XML String, use XmlDocument.toXmlString()
@@ -23,14 +26,60 @@ class XmlConverter {
       });
       for (Question question in quiz.questionList) {
         builder.element(XmlConsts.question, nest: () {
+          // question type
           builder.attribute(XmlConsts.type, question.type);
+          // question name
           builder.element(XmlConsts.name, nest: () {
             builder.element(XmlConsts.text, nest: question.name);
           });
+          // question text
           builder.element(XmlConsts.questiontext, nest: () {
             builder.attribute(XmlConsts.format, XmlConsts.html);
-            builder.element(XmlConsts.text, nest: question.questionText);
+            builder.element(XmlConsts.text, nest: () {
+              builder.cdata(question.questionText);
+            });
           });
+          // general feedback
+          if (question.generalFeedback != null) {
+            builder.element(XmlConsts.generalfeedback, nest: () {
+              builder.attribute(XmlConsts.format, XmlConsts.html);
+              builder.element(XmlConsts.text, nest: () {
+                builder.cdata(question.generalFeedback!);
+              });
+            });
+          }
+          // default grade
+          if (question.defaultGrade != null) {
+            builder.element(XmlConsts.defaultgrade, nest: question.defaultGrade);
+          }
+          // response format
+          if (question.responseFormat != null) {
+            builder.element(XmlConsts.responseformat, nest: question.responseFormat);
+          }
+          // response required
+          if (question.responseRequired != null) {
+            builder.element(XmlConsts.responserequired, nest: question.responseRequired);
+          }
+          // attachments required
+          if (question.attachmentsRequired != null) {
+            builder.element(XmlConsts.attachmentsrequired, nest: question.attachmentsRequired);
+          }
+          // response template
+          if (question.responseTemplate != null) {
+            builder.element(XmlConsts.responsetemplate, nest: () {
+              builder.cdata(question.responseTemplate!);
+            });
+          }
+          // grader info
+          if (question.graderInfo != null) {
+            builder.element(XmlConsts.graderinfo, nest: () {
+              builder.attribute(XmlConsts.format, XmlConsts.html);
+              builder.element(XmlConsts.text, nest: () {
+                builder.cdata(question.graderInfo!);
+              });
+            });
+          }
+          // answers
           for (Answer answer in question.answerList) {
             builder.element(XmlConsts.answer, nest: () {
               builder.attribute(XmlConsts.fraction, answer.fraction);
@@ -47,17 +96,4 @@ class XmlConverter {
     });
     return builder.buildDocument();
   }
-
-
-// static Quiz convertQuizXmlToObject(String xml) {
-//   final obj_questions = <Question>[];
-//   final document = XmlDocument.parse(xml);
-//   final xml_questions = document.findElements('question').toList();
-//   for (XmlElement xml_question in xml_questions) {
-//     String? qType = xml_question.getAttribute('type');
-//     String? qName = xml_question.xpath('/name/text').;
-//     final xml_answers = xml_question.findElements('answer').toList();
-//   }
-//   final obj_quiz = Quiz(null, null);
-// }
 }
