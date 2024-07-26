@@ -13,6 +13,53 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
+  String? _selectedSubject;
+  String? _selectedGradeLevel;
+  QuestionType? _selectedAssignmentType;
+  String? _selectedCodingLanguage;
+  int _numQuestions = 1;
+  final TextEditingController _topicController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+
+  List<String> subjects = [
+    'Math',
+    'Chemistry',
+    'Biology',
+    'Computer Science',
+    'Literature',
+    'History',
+    'Language Arts',
+  ];
+  List<String> gradeLevels = ['Freshman', 'Sophomore', 'Junior', 'Senior'];
+  List<QuestionType> assignmentTypes = QuestionType.values;
+  List<String> codingLanguages = ['Python', 'Java', 'C++', 'Dart'];
+
+  List<Course> courses = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (MainController.isLoggedIn) {
+      MainController().getCourses().then((result) {
+        setState(() {
+          courses = result;
+        });
+      });
+    }
+  }
+
+  List<QuestionType> _filterAssignmentTypes() {
+    if (_selectedSubject != 'Computer Science') {
+      return QuestionType.values
+          .where((type) => type != QuestionType.coding)
+          .toList();
+    }
+    return QuestionType.values;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +147,15 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
     }
   }
 
+  List<QuestionType> _filterAssignmentTypes() {
+    if (_selectedSubject != 'Computer Science') {
+      return QuestionType.values
+          .where((type) => type != QuestionType.coding)
+          .toList();
+    }
+    return QuestionType.values;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -146,6 +202,8 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
                 onChanged: (value) {
                   setState(() {
                     _selectedSubject = value;
+                    _selectedAssignmentType =
+                        null; // Reset assignment type when subject changes
                   });
                 },
               ),
@@ -193,7 +251,7 @@ class _UiAssignmentFormState extends State<UiAssignmentForm> {
               DropdownButtonFormField<QuestionType>(
                 value: _selectedAssignmentType,
                 decoration: const InputDecoration(labelText: 'Question Type'),
-                items: assignmentTypes.map((type) {
+                items: _filterAssignmentTypes().map((type) {
                   return DropdownMenuItem(
                     value: type,
                     child: Text(type.displayName),
