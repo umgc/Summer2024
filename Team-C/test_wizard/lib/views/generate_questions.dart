@@ -354,6 +354,186 @@ class GenerateAssessmentsButton extends StatelessWidget {
 
     if (response.statusCode == 200) {
       print('Quiz added to Moodle successfully!');
+
+      // Import questions into the newly created quiz
+      final importResponse = await http.post(
+        Uri.parse(url),
+        body: {
+          'wsfunction': 'local_testplugin_import_questions_json',
+          'wstoken': token!,
+          'moodlewsrestformat': 'json',
+          'questionjson': jsonEncode({
+            "quiz": {
+              "question": [
+                {
+                  "type": "category",
+                  "category": {
+                    "text": "\$course\$/top/Default for Site Home"
+                  }
+                },
+                {
+                  "type": "multichoice",
+                  "name": {
+                    "text": "TestWizard Created MultiChoice Question"
+                  },
+                  "questiontext": {
+                    "format": "html",
+                    "text": "<p>Test Wizard Created Questions</p>"
+                  },
+                  "generalfeedback": {
+                    "format": "html",
+                    "text": ""
+                  },
+                  "defaultgrade": 1,
+                  "penalty": 0.3333333,
+                  "hidden": 0,
+                  "idnumber": "",
+                  "single": true,
+                  "shuffleanswers": true,
+                  "answernumbering": "abc",
+                  "showstandardinstruction": 0,
+                  "correctfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is correct.</p>"
+                  },
+                  "partiallycorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is partially correct.</p>"
+                  },
+                  "incorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is incorrect.</p>"
+                  },
+                  "shownumcorrect": {},
+                  "answer": [
+                    {
+                      "fraction": 100,
+                      "format": "html",
+                      "text": "<p>a1</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a2</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a3</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a4</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "category": {
+                    "text": "\$course\$/top/Default for Site Home"
+                  }
+                },
+                {
+                  "type": "multichoice",
+                  "name": {
+                    "text": "TestWizard Created MultiChoice Question 2"
+                  },
+                  "questiontext": {
+                    "format": "html",
+                    "text": "<p>Test Wizard Created Questions 2</p>"
+                  },
+                  "generalfeedback": {
+                    "format": "html",
+                    "text": ""
+                  },
+                  "defaultgrade": 1,
+                  "penalty": 0.3333333,
+                  "hidden": 0,
+                  "idnumber": "",
+                  "single": true,
+                  "shuffleanswers": true,
+                  "answernumbering": "abc",
+                  "showstandardinstruction": 0,
+                  "correctfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is correct.</p>"
+                  },
+                  "partiallycorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is partially correct.</p>"
+                  },
+                  "incorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is incorrect.</p>"
+                  },
+                  "shownumcorrect": {},
+                  "answer": [
+                    {
+                      "fraction": 100,
+                      "format": "html",
+                      "text": "<p>a1</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a2</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a3</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a4</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }),
+        },
+      );
+      // "[{"questionid":30},{"questionid":31}]"
+      if (importResponse.statusCode == 200) {
+        print('Questions imported successfully!');
+      } else {
+        print('Failed to import questions: ${importResponse.body}');
+      }
     } else {
       print('Failed to add quiz to Moodle: ${response.body}');
     }
