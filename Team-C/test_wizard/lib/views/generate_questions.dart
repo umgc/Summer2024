@@ -151,6 +151,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                   courseName: widget.courseName,
                                   moodleUrl: userProvider.moodleUrl ?? '', 
                                   token: userProvider.token ?? '',
+                                  topic: widget.topic, 
                                 );
                               },
                             ),
@@ -255,6 +256,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
   final String courseName;
   final String? moodleUrl;
   final String? token;
+  final String topic; 
 
   const GenerateAssessmentsButton({
     super.key,
@@ -267,6 +269,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
     required this.courseName,
     required this.moodleUrl, 
     required this.token,
+    required this.topic,
   });
 
   Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
@@ -317,7 +320,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
     return newAssessment;
   }
 
-  Future<void> addQuizToMoodle(String quizName, String intro, int courseId) async {
+  Future<void> addQuizToMoodle(String quizName, String topic, int courseId) async {
     if (moodleUrl == null || moodleUrl!.isEmpty) {
       print('Moodle URL is not provided.');
       return;
@@ -338,7 +341,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
         'wstoken': token!,
         'courseid': courseId.toString(),
         'name': quizName,
-        'intro': intro,
+        'intro': topic,
         'moodlewsrestformat': 'json',
       },
     );
@@ -465,7 +468,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 if (Provider.of<UserProvider>(context, listen: false).isLoggedInToMoodle) {
                   await addQuizToMoodle(
                     assessmentName,
-                    'This is a sample created programmatically.',
+                    topic,
                     5, // TODO: Replace with the appropriate course ID
                   );
                 }
