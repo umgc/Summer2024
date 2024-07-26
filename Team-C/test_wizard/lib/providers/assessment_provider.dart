@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/widgets.dart';
 import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/models/assessment_set.dart';
@@ -9,16 +7,23 @@ import 'package:test_wizard/models/saved_assessments.dart';
 class AssessmentProvider extends ChangeNotifier {
   /// Internal, private state of assessments in local storage.
   final SavedAssessments _savedAssessments = SavedAssessments();
-  Assessment _a = Assessment(0, 0);
-
+  Assessment _a = Assessment(0, 0, true);
 
   /// An unmodifiable view of the assessments.
-  UnmodifiableListView<AssessmentSet> get assessmentSets =>
-      UnmodifiableListView(_savedAssessments.assessmentSets);
+  List<AssessmentSet> get assessmentSets =>
+      _savedAssessments.assessmentSets;
 
-  UnmodifiableListView<Question> get questions {
-    return UnmodifiableListView(_a.questions);
+    /// An unmodifiable view of the assessments.
+  List<Assessment> getAssessmentsFromAssessmentSets(int assessmentSetIndex){
+    return _savedAssessments.assessmentSets[assessmentSetIndex].assessments;
   }
+
+      /// An unmodifiable view of the assessments.
+  Assessment getAssessmentFromAssessmentSet(int assessmentSetIndex, int assessmentIndex){
+    return _savedAssessments.assessmentSets[assessmentSetIndex].assessments[assessmentIndex];
+  }
+
+  List<Question> get questions => _a.questions;
 
   AssessmentProvider();
 
@@ -28,8 +33,8 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createAssessmentVersion(assessmentId, version){
-    _a = Assessment(assessmentId, version);
+  void createAssessmentVersion(int assessmentId, int version, bool isExampleAssessment){
+    _a = Assessment(assessmentId, version, isExampleAssessment);
     notifyListeners();
   }
 

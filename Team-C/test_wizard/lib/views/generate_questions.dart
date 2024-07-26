@@ -1,5 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
@@ -38,7 +43,6 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
   final QuestionGenerationDetail questionGenerationDetail =
       QuestionGenerationDetail();
 
-  String prompt = "";
   bool isMathQuiz = false;
   int id = 0;
 
@@ -130,40 +134,17 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               },
                               child: const Text('Add Question'),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  var typeMap =
-                                      assessment.getQuestionTypeCount();
-                                  int multipleChoiceCount =
-                                      typeMap['Multiple Choice']!;
-                                  int shortAnswerCount =
-                                      typeMap['Short Answer']!;
-                                  int essayCount = typeMap['Essay']!;
-                                  print(multipleChoiceCount);
-                                  print(shortAnswerCount);
-                                  print(essayCount);
-
-                                  questionGenerationDetail.prompt =
-                                      llmService.buildPrompt(
-                                          questionGenerationDetail
-                                              .numberOfAssessments,
-                                          questionGenerationDetail.topic);
-                                  textEditingController.text =
-                                      questionGenerationDetail.prompt;
-                                }
-                              },
-                              child: const Text('Generate Assessment'),
-                            ),
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: 'Generated Prompt will go here'),
-                              controller: textEditingController,
-                              onChanged: (value) {
-                                questionGenerationDetail.prompt = value;
-                              },
-                              minLines: 4,
-                              maxLines: 10,
+                            GenerateAssessmentsButton(
+                              formKey: _formKey,
+                              textEditingController: textEditingController,
+                              llmService: llmService,
+                              questionGenerationDetail:
+                                  questionGenerationDetail,
+                              assessmentProvider: assessment,
+                              assessmentName: widget.assessmentName,
+                              courseName: widget.courseName,
+                              exampleAssessmentSetIndex: 0,
+                              exampleAssessmentIndex: 0,
                             ),
                           ],
                         );
@@ -248,5 +229,202 @@ class AddedQuestion extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class GenerateAssessmentsButton extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final LLMService llmService;
+  final TextEditingController textEditingController;
+  final QuestionGenerationDetail questionGenerationDetail;
+  final AssessmentProvider assessmentProvider;
+  final String assessmentName;
+  final String courseName;
+  final int exampleAssessmentSetIndex;
+  final int exampleAssessmentIndex;
+
+  const GenerateAssessmentsButton({
+    super.key,
+    required this.formKey,
+    required this.textEditingController,
+    required this.llmService,
+    required this.questionGenerationDetail,
+    required this.assessmentProvider,
+    required this.assessmentName,
+    required this.courseName,
+    required this.exampleAssessmentSetIndex,
+    required this.exampleAssessmentIndex
+  });
+
+  Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
+    int questionId = 0; // same thing as assessmentId
+    // generate a new assessment from the extracted
+    List<dynamic>? multipleChoiceQuestions = output['multipleChoice'] ?? [];
+    List<dynamic>? shortAnswerQuestions = output['shortAnswer'] ?? [];
+    List<dynamic>? essayQuestions = output['essay'] ?? [];
+    Assessment newAssessment =
+        Assessment(id, id++, false); // increment assessmentId after using
+    if (multipleChoiceQuestions != null) {
+      for (var question in multipleChoiceQuestions) {
+        newAssessment.questions.add(Question(
+          points: 0,
+          questionId: questionId++, // increment after use
+          questionType: 'Multiple Choice',
+          questionText: question['QUESTION'] ?? '',
+          answer:
+              question['ANSWER'] != null ? question['ANSWER'].toString() : '',
+          answerOptions: question['OPTIONS'] != null
+              ? question['OPTIONS'].cast<String>()
+              : [],
+        ));
+      }
+    }
+    if (shortAnswerQuestions != null) {
+      for (var question in shortAnswerQuestions) {
+        newAssessment.questions.add(Question(
+          points: 0,
+          questionId: questionId++, // increment after use
+          questionType: 'Short Answer',
+          questionText: question['QUESTION'] ?? '',
+          answer: question['ANSWER'] ?? '',
+        ));
+      }
+    }
+    if (essayQuestions != null) {
+      for (var question in essayQuestions) {
+        newAssessment.questions.add(Question(
+          points: 0,
+          questionId: questionId++, // increment after use
+          questionType: 'Essay',
+          questionText: question['QUESTION'] ?? '',
+          rubric: question['RUBRIC'] is String ? question['RUBRIC'] : '',
+        ));
+      }
+    }
+    return newAssessment;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AssessmentProvider>(
+        builder: (context, savedAssessments, child) {
+      return Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(
+                    child: CircularProgressIndicator.adaptive(
+                      strokeWidth: 5,
+                    ),
+                  ),
+                );
+                // build the original prompt
+                // TODO we need a way to specify what saved assessment we want to provide as an example. Last two parameters.
+                questionGenerationDetail.prompt = llmService.buildPrompt(
+                    questionGenerationDetail.topic,
+                    assessmentProvider,
+                    questionGenerationDetail.isMathQuiz
+                    ,exampleAssessmentSetIndex,exampleAssessmentIndex);
+                // create the client and assessmentSet to add to
+                Client client = Client();
+                AssessmentSet assessmentSet = AssessmentSet(
+                    [],
+                    assessmentName,
+                    Course(
+                        0, courseName)); // course is always generated for now
+                // this gets incremented with each new assessment
+                int assessmentId = 0;
+                // manually check for error
+                bool wasError = false;
+                // check the count of requests because it might be stuck in an endless loop.
+                int requestCount = 0;
+                // while we don't have the right number, we need to request the llm for more assessments
+                while (assessmentSet.assessments.length <
+                    questionGenerationDetail.numberOfAssessments) {
+                  try {
+                    if (requestCount >
+                        questionGenerationDetail.numberOfAssessments + 1) {
+                      throw Exception('Endless Loop in LLM requests');
+                    }
+                    // make a request to the llm with the prompt
+                    Response res = await llmService.sendRequest(
+                        client, questionGenerationDetail.prompt);
+                    // on success
+                    if (res.statusCode == 200) {
+                      final finalResponse = res.body;
+                      String? output = finalResponse;
+                      // save the output to create thread behavior
+                      llmService.addMessage(output);
+                      // parse the whole output one assessment at a time
+                      while (output != null) {
+                        var (extractedAssessment, rest) =
+                            llmService.extractAssessment(output) ??
+                                (null, null);
+                        output = rest;
+
+                        if (extractedAssessment != null) {
+                          Assessment newAssessment = getAssessmentFromOutput(
+                              extractedAssessment, assessmentId++);
+                          assessmentSet.assessments.add(newAssessment);
+                        }
+                      }
+                      questionGenerationDetail.prompt =
+                          llmService.getMoreAssessmentsPrompt(assessmentProvider);
+                      requestCount++;
+                    } else {
+                      textEditingController.text =
+                          'Something went wrong with the request to Perplexity';
+                      wasError = true;
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                      break;
+                    }
+                  } catch (e) {
+                    textEditingController.text =
+                        'Something went wrong with parsing the returned data';
+                    wasError = true;
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                    print(e);
+                    break;
+                  }
+                }
+                // if we get here, we add the result set to state
+                // delete extra assessments if necessary
+                if (!wasError) {
+                  while (assessmentSet.assessments.length >
+                      questionGenerationDetail.numberOfAssessments) {
+                    assessmentSet.assessments.removeLast();
+                  }
+                  savedAssessments.addAssessmentSet(assessmentSet);
+                  // can't save to file using web browser
+                  if (!kIsWeb) {
+                    savedAssessments.saveAssessmentsToFile();
+                  }
+                  print('Success!');
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).popUntil(
+                        (route) => route.settings.name == '/dashboard');
+                  }
+                }
+              }
+            },
+            child: const Text('Generate Assessment'),
+          ),
+          TextField(
+            enabled: false,
+            style: const TextStyle(color: Colors.red),
+            controller: textEditingController,
+          )
+        ],
+      );
+    });
   }
 }

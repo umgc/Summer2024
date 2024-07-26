@@ -6,9 +6,62 @@ import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
+import 'package:test_wizard/providers/user_provider.dart';
+import 'package:logger/logger.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  LoginPageState createState() => LoginPageState();
+}
+
+class LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController(text: "http://localhost");
+  bool _loginError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial value for the URL field
+    _urlController.text = "http://localhost";
+  }
+
+  Future<void> _login(UserProvider userProvider) async {
+    var logger = Logger();
+    try {
+      await userProvider.loginToMoodle(
+        _usernameController.text,
+        _passwordController.text,
+        _urlController.text,
+      );
+      setState(() {
+        bool hasError = !userProvider.isLoggedInToMoodle;
+        _loginError = hasError;
+      });
+      if (!mounted) return;
+      if (userProvider.isLoggedInToMoodle) {
+        logger.i('Logged in successfully!');
+        logger.i('Token: ${userProvider.token}');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const TeacherDashboard(
+              status: 'logged in',
+            ),
+          ),
+        );
+      } else {
+        logger.i('Login failed.');
+      }
+    } catch (e) {
+      logger.i('Error: $e');
+      setState(() {
+        _loginError = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +114,84 @@ class LoginPage extends StatelessWidget {
                     width: 200,
                   ),
                   const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      labelStyle: TextStyle(
+                        color: _loginError ? Colors.red : Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.blue),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(
+                        color: _loginError ? Colors.red : Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.blue),
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    // initialValue: "http://localhost",
+                    controller: _urlController,
+                    decoration: InputDecoration(
+                      labelText: 'Moodle URL',
+                      labelStyle: TextStyle(
+                        color: _loginError ? Colors.red : Colors.grey,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: _loginError ? Colors.red : Colors.blue),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: _loginError,
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Invalid Username, Password, and/or URL',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Consumer<AssessmentProvider>(
                     builder: (context, savedAssessments, child) {
                       return ElevatedButton(
                         // for now this button populates the state with some sample data
                         // if the Moodle login button is pressed
-                        onPressed: () {
-                          AssessmentSet aSet = AssessmentSet([], 'Math Test',  Course(1, 'Geometry 101'));
-                          Assessment a = Assessment(1,1);
+                        onPressed: () async {
+                          AssessmentSet aSet = AssessmentSet(
+                              [], 'Math Test', Course(1, 'Geometry 101'));
+                          Assessment a = Assessment(1, 1, true);
                           a.questions = [
                             Question(
                               questionId: 1,
@@ -98,15 +221,9 @@ class LoginPage extends StatelessWidget {
                           aSet.assessments.add(a);
                           savedAssessments.addAssessmentSet(aSet);
                           savedAssessments.saveAssessmentsToFile();
-                          // Your OAuth login logic goes here
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              // to Teacher Dashboard with 'logged in' status for now
-                              builder: (context) => const TeacherDashboard(
-                                status: 'logged in',
-                              ),
-                            ),
-                          );
+                          // Login logic
+                          UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+                          await _login(userProvider);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff0072bb),
@@ -130,6 +247,7 @@ class LoginPage extends StatelessWidget {
                         MaterialPageRoute(
                           // to Teacher Dashboard with no info for now
                           builder: (context) => const TeacherDashboard(),
+                          settings: const RouteSettings(name: '/dashboard'),
                         ),
                       );
                     },
