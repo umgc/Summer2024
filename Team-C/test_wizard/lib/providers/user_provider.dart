@@ -27,15 +27,15 @@ class UserProvider extends ChangeNotifier {
       }
       notifyListeners();
       // Fetch all courses from Moodle
-      await fetchCourses();
+      await fetchCourses(moodleUrl);
     } else {
       throw Exception('Failed to login to Moodle');
     }
   }
 
-  Future<void> fetchCourses() async {
+  Future<void> fetchCourses(String moodleUrl) async {
     // Get courses from Moodle
-    final url = Uri.parse('http://localhost/webservice/rest/server.php?wstoken=$token&moodlewsrestformat=json&wsfunction=core_course_get_courses');
+    final url = Uri.parse('$moodleUrl/webservice/rest/server.php?wstoken=$token&moodlewsrestformat=json&wsfunction=core_course_get_courses');
     final response = await http.get(url);
     // If successful, set courses
     if (response.statusCode == 200) {
