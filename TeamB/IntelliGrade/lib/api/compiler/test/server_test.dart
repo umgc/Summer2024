@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
@@ -5,7 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   final port = '8080';
-  final host = 'http://0.0.0.0:$port';
+  final host = 'http://127.0.0.1:$port';
   late Process p;
 
   setUp(() async {
@@ -35,5 +36,20 @@ void main() {
   test('404', () async {
     final response = await get(Uri.parse('$host/foobar'));
     expect(response.statusCode, 404);
+  });
+
+  test('Compile', () async {
+    var request = MultipartRequest('POST', Uri.parse('http://127.0.0.1:8080/compile'));
+    request.files.add(await MultipartFile.fromPath('', '/home/ggaynor/dev/swen670/Summer2024/TeamB/IntelliGrade/lib/api/compiler/test/sample_math.dart'));
+    request.files.add(await MultipartFile.fromPath('', '/home/ggaynor/dev/swen670/Summer2024/TeamB/IntelliGrade/lib/api/compiler/test/sample_math_simple_test.dart'));
+
+    StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+
+    expect(response.stream.bytesToString(), 'Number of tests passed: 2 out of 3');
   });
 }
