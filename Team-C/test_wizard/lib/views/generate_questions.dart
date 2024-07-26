@@ -16,6 +16,10 @@ import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/providers/user_provider.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart'; 
+
+// Set up the logger
+final Logger logger = Logger('QuestionGenerateForm');
 
 class QuestionGenerateForm extends StatefulWidget {
   final String assessmentName;
@@ -328,12 +332,12 @@ class GenerateAssessmentsButton extends StatelessWidget {
 
   Future<void> addQuizToMoodle(String quizName, String topic, int courseId) async {
     if (moodleUrl == null || moodleUrl!.isEmpty) {
-      print('Moodle URL is not provided.');
+      logger.warning('Moodle URL is not provided.');
       return;
     }
 
     if (token == null || token!.isEmpty) {
-      print('Token is not provided.');
+      logger.warning('Token is not provided.');
       return;
     }
 
@@ -357,7 +361,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
       );
 
       if (createQuizResponse.statusCode != 200) {
-        print('Failed to add quiz to Moodle: ${createQuizResponse.body}');
+        logger.severe('Failed to add quiz to Moodle: ${createQuizResponse.body}');
         return;
       }
 
@@ -365,11 +369,11 @@ class GenerateAssessmentsButton extends StatelessWidget {
       final quizId = createQuizResponseBody['quizid'];
 
       if (quizId == null) {
-        print('Quiz ID not found in response.');
+        logger.warning('Quiz ID not found in response.');
         return;
       }
 
-      print('Quiz added to Moodle successfully! Quiz ID: $quizId');
+      logger.info('Quiz added to Moodle successfully! Quiz ID: $quizId');
 
       // Import questions
       final importResponse = await http.post(
@@ -540,7 +544,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
       );
 
       if (importResponse.statusCode != 200) {
-        print('Failed to import questions: ${importResponse.body}');
+        logger.severe('Failed to import questions: ${importResponse.body}');
         return;
       }
 
@@ -548,11 +552,11 @@ class GenerateAssessmentsButton extends StatelessWidget {
       final questionIds = importResponseBody.map((question) => question['questionid']).toList();
 
       if (questionIds == null || questionIds.isEmpty) {
-        print('Question IDs not found in response.');
+        logger.warning('Question IDs not found in response.');
         return;
       }
 
-      print('Questions imported successfully! Question IDs: $questionIds');
+      logger.info('Questions imported successfully! Question IDs: $questionIds');
 
       // Add each question to the quiz
       for (final questionId in questionIds) {
@@ -568,14 +572,14 @@ class GenerateAssessmentsButton extends StatelessWidget {
         );
 
         if (addQuestionResponse.statusCode != 200) {
-          print('Failed to add question $questionId to quiz: ${addQuestionResponse.body}');
+          logger.severe('Failed to add question $questionId to quiz: ${addQuestionResponse.body}');
           return;
         }
       }
 
-      print('All questions added to quiz successfully!');
+      logger.info('All questions added to quiz successfully!');
     } catch (e) {
-      print('Error adding quiz to Moodle: $e');
+      logger.severe('Error adding quiz to Moodle: $e');
     }
   }
 
@@ -664,7 +668,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     if (context.mounted) {
                       Navigator.of(context).pop();
                     }
-                    print(e);
+                    logger.severe(e.toString());
                     break;
                   }
                 }
@@ -680,7 +684,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   if (!kIsWeb) {
                     savedAssessments.saveAssessmentsToFile();
                   }
-                  print('Success!');
+                  logger.info('Success!');
                   if (context.mounted) {
                     Navigator.of(context).pop();
                     Navigator.of(context).popUntil(
@@ -689,7 +693,6 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 }
               }
               // add quiz to Moodle
-              // if (!mounted) return;
               try {
                 if (Provider.of<UserProvider>(context, listen: false).isLoggedInToMoodle) {
                   await addQuizToMoodle(
@@ -699,7 +702,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   );
                 }
               } catch (e) {
-                print('Error adding quiz to Moodle: $e');
+                logger.severe('Error adding quiz to Moodle: $e');
               }
             },
             child: const Text('Generate Assessment'),
