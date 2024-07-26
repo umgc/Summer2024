@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intelligrade/ui/create_page.dart';
 import 'package:intelligrade/ui/setting_page.dart';
+import 'package:intelligrade/ui/submit_code_for_grading.dart';
 import 'package:intelligrade/ui/view_exam_page.dart';
 import 'package:intelligrade/ui/grading_page.dart';
 import 'package:intelligrade/ui/login_page.dart';
@@ -11,18 +12,16 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget
-{
+class MyApp extends StatelessWidget {
   MyApp({super.key});
-  final ValueNotifier<ThemeMode> _themeModeNotifier = ValueNotifier(ThemeMode.light);
+  final ValueNotifier<ThemeMode> _themeModeNotifier =
+      ValueNotifier(ThemeMode.light);
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: _themeModeNotifier,
-      builder: (context, themeMode, child)
-      {
+      builder: (context, themeMode, child) {
         return MaterialApp(
           title: 'Launching Page',
           theme: ThemeData(
@@ -32,13 +31,14 @@ class MyApp extends StatelessWidget
           darkTheme: ThemeData.dark(),
           themeMode: themeMode,
           home: const LoginPage(),
-          routes:
-          {
+          routes: {
             '/login': (context) => const LoginPage(),
+            '/submitcodeforgrading': (context) => SubmitCodeScreen(),
             '/grading': (context) => const Grading(),
             '/create': (context) => const CreatePage(),
             '/viewExams': (context) => const ViewExamPage(),
-            '/settings': (context) => Setting(themeModeNotifier: _themeModeNotifier)
+            '/settings': (context) =>
+                Setting(themeModeNotifier: _themeModeNotifier)
           },
         );
       },
