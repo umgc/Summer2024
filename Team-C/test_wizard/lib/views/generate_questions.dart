@@ -338,28 +338,44 @@ class GenerateAssessmentsButton extends StatelessWidget {
     }
 
     final url = '$moodleUrl/webservice/rest/server.php';
-    final function = 'local_testplugin_create_quiz';
-    
-    final response = await http.post(
-      Uri.parse(url),
-      body: {
-        'wsfunction': function,
-        'wstoken': token!,
-        'courseid': courseId.toString(),
-        'name': quizName,
-        'intro': topic,
-        'moodlewsrestformat': 'json',
-      },
-    );
+    final createQuizFunction = 'local_testplugin_create_quiz';
+    final importQuestionsFunction = 'local_testplugin_import_questions_json';
+    final addQuestionToQuizFunction = 'local_testplugin_add_question_to_quiz';
 
-    if (response.statusCode == 200) {
-      print('Quiz added to Moodle successfully!');
+    try {
+      // Create quiz
+      final createQuizResponse = await http.post(
+        Uri.parse(url),
+        body: {
+          'wsfunction': createQuizFunction,
+          'wstoken': token!,
+          'courseid': courseId.toString(),
+          'name': quizName,
+          'intro': topic,
+          'moodlewsrestformat': 'json',
+        },
+      );
 
-      // Import questions into the newly created quiz
+      if (createQuizResponse.statusCode != 200) {
+        print('Failed to add quiz to Moodle: ${createQuizResponse.body}');
+        return;
+      }
+
+      final createQuizResponseBody = jsonDecode(createQuizResponse.body);
+      final quizId = createQuizResponseBody['quizid'];
+
+      if (quizId == null) {
+        print('Quiz ID not found in response.');
+        return;
+      }
+
+      print('Quiz added to Moodle successfully! Quiz ID: $quizId');
+
+      // Import questions
       final importResponse = await http.post(
         Uri.parse(url),
         body: {
-          'wsfunction': 'local_testplugin_import_questions_json',
+          'wsfunction': importQuestionsFunction,
           'wstoken': token!,
           'moodlewsrestformat': 'json',
           'questionjson': jsonEncode({
@@ -445,12 +461,6 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   ]
                 },
                 {
-                  "type": "category",
-                  "category": {
-                    "text": "\$course\$/top/Default for Site Home"
-                  }
-                },
-                {
                   "type": "multichoice",
                   "name": {
                     "text": "TestWizard Created MultiChoice Question 2"
@@ -528,14 +538,44 @@ class GenerateAssessmentsButton extends StatelessWidget {
           }),
         },
       );
-      // "[{"questionid":30},{"questionid":31}]"
-      if (importResponse.statusCode == 200) {
-        print('Questions imported successfully!');
-      } else {
+
+      if (importResponse.statusCode != 200) {
         print('Failed to import questions: ${importResponse.body}');
+        return;
       }
-    } else {
-      print('Failed to add quiz to Moodle: ${response.body}');
+
+      final importResponseBody = jsonDecode(importResponse.body);
+      final questionIds = importResponseBody.map((question) => question['questionid']).toList();
+
+      if (questionIds == null || questionIds.isEmpty) {
+        print('Question IDs not found in response.');
+        return;
+      }
+
+      print('Questions imported successfully! Question IDs: $questionIds');
+
+      // Add each question to the quiz
+      for (final questionId in questionIds) {
+        final addQuestionResponse = await http.post(
+          Uri.parse(url),
+          body: {
+            'wsfunction': addQuestionToQuizFunction,
+            'wstoken': token!,
+            'moodlewsrestformat': 'json',
+            'questionid': questionId.toString(),
+            'quizid': quizId.toString(),
+          },
+        );
+
+        if (addQuestionResponse.statusCode != 200) {
+          print('Failed to add question $questionId to quiz: ${addQuestionResponse.body}');
+          return;
+        }
+      }
+
+      print('All questions added to quiz successfully!');
+    } catch (e) {
+      print('Error adding quiz to Moodle: $e');
     }
   }
 
