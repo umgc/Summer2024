@@ -9,6 +9,7 @@ import 'package:google_speech/google_speech.dart';
 import 'package:mindinsync/BottomNavigation.dart';
 import 'package:mindinsync/Drawer.dart';
 import 'package:mindinsync/KnowledgeService.dart';
+import 'package:mindinsync/StorageService.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_stream/sound_stream.dart';
@@ -43,6 +44,7 @@ class _PromptScreenState extends State<PromptScreen> {
   void initState() {
     super.initState();
     knowledge = KnowledgeService();
+    tran_store = StorageService();
     _recorder.initialize();
     loadKey();
     loadKnowledge();
@@ -86,9 +88,17 @@ class _PromptScreenState extends State<PromptScreen> {
     facts.then((value) {
       var inventory =  knowledge.getInventory();
       inventory.then((inventory){
+      var transcripts = tran_store.getLatestTranscript();
+      transcripts.then((transcripts){
+      var past_transcripts = "";
+      for(var i = 0; i < transcripts.length; i++){
+        past_transcripts += (transcripts[i]).toString() + "\n";
+      }
+      //print(past_transcripts);
       promptStart += knowledge.knowledgeLoaded + "}";
       promptStart += " and the following inventory data {" + inventory + "}";  
-      print(promptStart);
+      promptStart += " and the following transcribed conversations recorded by the user " + past_transcripts;
+     // print(promptStart);
       messages = [
         OpenAIChatCompletionChoiceMessageModel(
           content: [
@@ -99,6 +109,7 @@ class _PromptScreenState extends State<PromptScreen> {
           role: OpenAIChatMessageRole.assistant,
         ),
       ];
+      });
       });
     });
   }
@@ -261,8 +272,11 @@ class _PromptScreenState extends State<PromptScreen> {
     setTranscription();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Ask MindAI a question!'),
-        backgroundColor: Colors.blue[300],      
+        centerTitle: true,
+        backgroundColor: Colors.blue[300],    
+        foregroundColor: Colors.indigo[800],  
       ),
       body: ListView(
         padding: const EdgeInsets.all(8),
@@ -344,7 +358,7 @@ class _PromptScreenState extends State<PromptScreen> {
               break;
             case 2:
               stopRecording();
-              Navigator.pushNamed(context, '/knowledge_base');
+              Navigator.pushNamed(context, '/document_upload');
               break;
             default:
               break;

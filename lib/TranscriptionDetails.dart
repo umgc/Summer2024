@@ -43,8 +43,10 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(transcription[0]['transcript_name']),
+        appBar: AppBar(         
+          title: FittedBox(
+            fit: BoxFit.fill,
+            child: Text(transcription[0]['transcript_name'])),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Summary'),
@@ -56,8 +58,8 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
         body: TabBarView(
           children: [
             Center(
-            child: Container(  
-              height: 100 ,          
+                child: Container(
+              height: 100,
               constraints: BoxConstraints(maxHeight: 100),
               margin: EdgeInsets.all(5),
               padding: EdgeInsets.all(10),
@@ -126,26 +128,27 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
       var index = 0;
       var found = false;
       transcript = transcriptbasic.split(":");
-      for (int i = 1; i < transcript.length-1; i++) {
+      for (int i = 1; i < transcript.length - 1; i++) {
         for (int j = 0; j < speakers.length; j++) {
           if (transcript[i].endsWith(speakers[j])) {
             found = true;
             index = transcript[i].indexOf(speakers[j]);
-            tempscript = transcript[i].substring(0, index-2);
+            tempscript = transcript[i].substring(0, index - 2);
             transcript[i - 1] += ": " + tempscript;
             transcript[i] = transcript[i].substring(index);
           }
         }
         index = transcript[i].lastIndexOf(" ");
-        if(!found && index > 1){         
-          tempscript = transcript[i].substring(0, index-2);
+        if (!found && index > 1) {
+          tempscript = transcript[i].substring(0, index - 2);
           transcript[i - 1] += ": " + tempscript;
           transcript[i] = transcript[i].substring(index);
         }
         found = false;
       }
-    transcript[transcript.length-2] += ": " + transcript[transcript.length-1];
-    transcript.length = transcript.length-1;
+      transcript[transcript.length - 2] +=
+          ": " + transcript[transcript.length - 1];
+      transcript.length = transcript.length - 1;
       summary = transcription[0]['summarization'];
       setState(() {});
     }

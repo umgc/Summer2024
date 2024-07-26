@@ -45,7 +45,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
     await Future.delayed(Duration(seconds: 4));
     await _stopRecording();
-    print("Check here");
+    Navigator.pop(context);
+    //print("Check here");
   }
 
   Future<void> _stopRecording() async {

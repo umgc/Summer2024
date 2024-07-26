@@ -72,6 +72,7 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         title: const Text('Search Past Conversations'),
         backgroundColor: Colors.blue[300],
+        foregroundColor: Colors.indigo[800],
       ),
       body: ListTileTheme(
         contentPadding: const EdgeInsets.all(5),
@@ -159,7 +160,7 @@ class _SearchState extends State<Search> {
               Navigator.pushNamed(context, '/Search');
               break;
             case 2:
-              Navigator.pushNamed(context, '/knowledge_base');
+              Navigator.pushNamed(context, '/document_upload');
               break;
             default:
               break;

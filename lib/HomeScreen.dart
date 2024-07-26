@@ -20,6 +20,7 @@ class Home extends StatelessWidget {
         title: const Text("MindInSYNC"),
         centerTitle: true,
         backgroundColor: Colors.blue[300],
+        foregroundColor: Colors.indigo[800],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

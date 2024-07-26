@@ -33,7 +33,7 @@ class DBHelper {
   Future<List<Map<String, dynamic>>> getConversations(int userId) async {
     final conn = await getConnection();
     final results = await conn.query(
-      'SELECT * FROM conversations WHERE user_id = ?',
+      'SELECT * FROM conversations WHERE user_id = ? LIMIT 20',
       [userId],
     );
 

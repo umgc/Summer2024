@@ -113,7 +113,7 @@ Future<String> getUserName(String email) async {
     //var stream = _getAudioStream('register.wav');
     var data = await rootBundle.load('assets/register.wav');
     var started = false;
-
+  
     _audioStream = BehaviorSubject<List<int>>();
     _audioStreamSubscription = _recorder.audioStream.listen((event) {
       if (started == false) {
@@ -255,8 +255,11 @@ Future<String> getUserName(String email) async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Record a Conversation'),
+        centerTitle: true,
         backgroundColor: Colors.blue[300],
+        foregroundColor: Colors.indigo[800],
       ),
       body: ListView(
         padding: const EdgeInsets.all(8),
@@ -313,7 +316,7 @@ Future<String> getUserName(String email) async {
               break;
             case 2:
               stopRecording();
-              Navigator.pushNamed(context, '/knowledge_base');
+              Navigator.pushNamed(context, '/document_upload');
               break;
             default:
               break;

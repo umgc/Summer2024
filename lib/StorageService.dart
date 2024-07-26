@@ -81,7 +81,13 @@ class StorageService {
   // Retrieve all text files from the database
   Future<List<Map<String, dynamic>>> getTranscripts() async {
     Database db = await database;
-    return await db.rawQuery('SELECT * FROM transcripts');
+    return await db.rawQuery('SELECT * FROM transcripts ORDER BY created_at DESC');
+  }
+
+ // Retrieve all text files from the database
+  Future<List<Map<String, dynamic>>> getLatestTranscript() async {
+    Database db = await database;
+    return await db.rawQuery('SELECT transcript_content FROM transcripts ORDER BY created_at DESC LIMIT 10');
   }
 
   // Retrieve all text files from the database

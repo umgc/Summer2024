@@ -80,6 +80,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     // Save the user's name and email
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     DBHelper db = DBHelper();
     final name = _nameController.text.replaceAll(" ","_");
     final email = _emailController.text;
 
@@ -97,6 +99,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: const Text('Edit Profile'),
         backgroundColor: Colors.blue[300],
+        foregroundColor: Colors.indigo[800],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -154,7 +157,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Navigator.pushNamed(context, '/Search');
               break;
             case 2:
-              Navigator.pushNamed(context, '/knowledge_base');
+              Navigator.pushNamed(context, '/document_upload');
               break;
             default:
               break;

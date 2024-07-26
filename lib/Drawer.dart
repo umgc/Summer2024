@@ -68,14 +68,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.library_books),
-            title: Text('Knowledge Base'),
-            onTap: () {
-              print(userID);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
             leading: const Icon(Icons.file_upload),
             title: const Text('Upload file'),
             onTap: () {

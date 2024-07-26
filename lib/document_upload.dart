@@ -73,6 +73,8 @@ class _DocumentUploadState extends State<DocumentUpload> {
     String? email = prefs.getString("userEmail");
     String userId = await db.getUserId(email!);
     knowledge.setKnowledge(content, userID);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('File Uploaded Succesfully!')));
   }
 
   void removeKnowledge(content) async {
@@ -80,6 +82,8 @@ class _DocumentUploadState extends State<DocumentUpload> {
     String? email = prefs.getString("userEmail");
     String userId = await db.getUserId(email!);
     knowledge.removeKnowledge(content, userID);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('File Deleted!')));
   }
 
   @override
@@ -88,6 +92,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
       appBar: AppBar(
         title: const Text('Document Upload'),
         backgroundColor: Colors.blue[300],
+        foregroundColor: Colors.indigo[800],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -149,7 +154,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
               Navigator.pushNamed(context, '/Search');
               break;
             case 2:
-              Navigator.pushNamed(context, '/knowledge_base');
+              
               break;
             default:
               break;
