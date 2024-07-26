@@ -47,9 +47,9 @@ class LoginPageState extends State<LoginPage> {
         logger.i('Token: ${userProvider.token}');
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const TeacherDashboard(
-              status: 'logged in',
-            ),
+            // to Teacher Dashboard with no info for now
+            builder: (context) => const TeacherDashboard(status: 'logged in'),
+            settings: const RouteSettings(name: '/dashboard'),
           ),
         );
       } else {

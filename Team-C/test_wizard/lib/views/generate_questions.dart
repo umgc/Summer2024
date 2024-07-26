@@ -413,6 +413,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     Navigator.of(context).popUntil(
                         (route) => route.settings.name == '/dashboard');
                   }
+                  
                 }
               }
             },
