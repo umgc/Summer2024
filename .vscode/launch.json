@@ -28,7 +28,8 @@
       "name": "test_wizard",
       "cwd": "Team-C\\test_wizard",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "flutterMode": "debug"
     },
     {
       "name": "test_wizard_macos",

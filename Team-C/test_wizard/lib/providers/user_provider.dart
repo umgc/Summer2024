@@ -17,7 +17,7 @@ class UserProvider extends ChangeNotifier {
     if (username == "" || password == "" || moodleUrl == "") {
       throw Exception('Username, password and URL are required');
     }
-    final url = Uri.parse('$moodleUrl/login/token.php?username=$username&password=$password&service=moodle_mobile_app');
+    final url = Uri.parse('$moodleUrl/login/token.php?username=$username&password=$password&service=api');
     final response = await http.get(url);
     // If successful, set token and logged in flag
     if (response.statusCode == 200) {
