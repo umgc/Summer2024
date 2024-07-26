@@ -57,7 +57,7 @@ jobs:
         run: cd Team-C/test_wizard && flutter test
 
   integration_test:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -77,4 +77,7 @@ jobs:
       - name: Install dependencies
         run: cd Team-C/test_wizard && flutter pub get
       - name: Run Tests
-        run: cd Team-C/test_wizard && flutter test integration_tests/integration_test.dart -d linux
+        uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 14'
+      - run: cd Team-C/test_wizard && flutter test integration_tests/integration_test.dart
