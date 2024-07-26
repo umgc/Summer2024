@@ -11,6 +11,11 @@ import 'package:test_wizard/widgets/edit_prompt.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 class ModifyTestView extends StatelessWidget {
   final String screenTitle;
@@ -131,6 +136,259 @@ class ButtonContainer extends StatelessWidget {
     );
   }
 
+  Future<void> addQuizToMoodle(String quizName, String topic, int courseId, String moodleUrl, String token) async {
+    if (moodleUrl.isEmpty) {
+      logger.w('Moodle URL is not provided.');
+      return;
+    }
+
+    if (token.isEmpty) {
+      logger.w('Token is not provided.');
+      return;
+    }
+
+    final url = '$moodleUrl/webservice/rest/server.php';
+    final createQuizFunction = 'local_testplugin_create_quiz';
+    final importQuestionsFunction = 'local_testplugin_import_questions_json';
+    final addQuestionToQuizFunction = 'local_testplugin_add_question_to_quiz';
+
+    try {
+      // Create quiz
+      final createQuizResponse = await http.post(
+        Uri.parse(url),
+        body: {
+          'wsfunction': createQuizFunction,
+          'wstoken': token,
+          'courseid': courseId.toString(),
+          'name': quizName,
+          'intro': topic,
+          'moodlewsrestformat': 'json',
+        },
+      );
+
+      if (createQuizResponse.statusCode != 200) {
+        logger.e('Failed to add quiz to Moodle: ${createQuizResponse.body}');
+        return;
+      }
+
+      final createQuizResponseBody = jsonDecode(createQuizResponse.body);
+      final quizId = createQuizResponseBody['quizid'];
+
+      if (quizId == null) {
+        logger.w('Quiz ID not found in response.');
+        return;
+      }
+
+      logger.i('Quiz added to Moodle successfully! Quiz ID: $quizId');
+
+      // Import questions
+      final importResponse = await http.post(
+        Uri.parse(url),
+        body: {
+          'wsfunction': importQuestionsFunction,
+          'wstoken': token,
+          'moodlewsrestformat': 'json',
+          'questionjson': jsonEncode({
+            "quiz": {
+              "question": [
+                {
+                  "type": "category",
+                  "category": {
+                    "text": "\$course\$/top/Default for Site Home"
+                  }
+                },
+                {
+                  "type": "multichoice",
+                  "name": {
+                    "text": "TestWizard Created MultiChoice Question"
+                  },
+                  "questiontext": {
+                    "format": "html",
+                    "text": "<p>Test Wizard Created Questions</p>"
+                  },
+                  "generalfeedback": {
+                    "format": "html",
+                    "text": ""
+                  },
+                  "defaultgrade": 1,
+                  "penalty": 0.3333333,
+                  "hidden": 0,
+                  "idnumber": "",
+                  "single": true,
+                  "shuffleanswers": true,
+                  "answernumbering": "abc",
+                  "showstandardinstruction": 0,
+                  "correctfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is correct.</p>"
+                  },
+                  "partiallycorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is partially correct.</p>"
+                  },
+                  "incorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is incorrect.</p>"
+                  },
+                  "shownumcorrect": {},
+                  "answer": [
+                    {
+                      "fraction": 100,
+                      "format": "html",
+                      "text": "<p>a1</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a2</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a3</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a4</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "multichoice",
+                  "name": {
+                    "text": "TestWizard Created MultiChoice Question 2"
+                  },
+                  "questiontext": {
+                    "format": "html",
+                    "text": "<p>Test Wizard Created Questions 2</p>"
+                  },
+                  "generalfeedback": {
+                    "format": "html",
+                    "text": ""
+                  },
+                  "defaultgrade": 1,
+                  "penalty": 0.3333333,
+                  "hidden": 0,
+                  "idnumber": "",
+                  "single": true,
+                  "shuffleanswers": true,
+                  "answernumbering": "abc",
+                  "showstandardinstruction": 0,
+                  "correctfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is correct.</p>"
+                  },
+                  "partiallycorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is partially correct.</p>"
+                  },
+                  "incorrectfeedback": {
+                    "format": "html",
+                    "text": "<p>Your answer is incorrect.</p>"
+                  },
+                  "shownumcorrect": {},
+                  "answer": [
+                    {
+                      "fraction": 100,
+                      "format": "html",
+                      "text": "<p>a1</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a2</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a3</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    },
+                    {
+                      "fraction": 0,
+                      "format": "html",
+                      "text": "<p>a4</p>",
+                      "feedback": {
+                        "format": "html",
+                        "text": ""
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }),
+        },
+      );
+
+      if (importResponse.statusCode != 200) {
+        logger.e('Failed to import questions: ${importResponse.body}');
+        return;
+      }
+
+      final importResponseBody = jsonDecode(importResponse.body);
+      final questionIds = importResponseBody.map((question) => question['questionid']).toList();
+
+      if (questionIds == null || questionIds.isEmpty) {
+        logger.w('Question IDs not found in response.');
+        return;
+      }
+
+      logger.i('Questions imported successfully! Question IDs: $questionIds');
+
+      // Add each question to the quiz
+      for (final questionId in questionIds) {
+        final addQuestionResponse = await http.post(
+          Uri.parse(url),
+          body: {
+            'wsfunction': addQuestionToQuizFunction,
+            'wstoken': token,
+            'moodlewsrestformat': 'json',
+            'questionid': questionId.toString(),
+            'quizid': quizId.toString(),
+          },
+        );
+
+        if (addQuestionResponse.statusCode != 200) {
+          logger.e('Failed to add question $questionId to quiz: ${addQuestionResponse.body}');
+          return;
+        }
+      }
+
+      logger.i('All questions added to quiz successfully!');
+    } catch (e) {
+      logger.e('Error adding quiz to Moodle: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -150,7 +408,16 @@ class ButtonContainer extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              final questionAnswerProvider = Provider.of<QuestionAnswerProvider>(context, listen: false);
+              final assessmentName = "Assessment Name";
+              final topic = "Topic";
+              final courseId = 5; 
+              final moodleUrl = "http://localhost"; 
+              final token = "e1744c2b49d8354b357acc09411e7fb6";
+
+              await addQuizToMoodle(assessmentName, topic, courseId, moodleUrl, token);
+            },
             child: const Text('Save'),
           ),
           const SizedBox(width: 10),
