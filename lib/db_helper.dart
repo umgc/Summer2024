@@ -131,5 +131,26 @@ class DBHelper {
 
     await conn.close();
     return emailExists;
+    ;
+  }
+
+  void setUserEmail(String id, String email) async {
+    final conn = await getConnection();
+
+    // Execute the query
+    var results = await conn
+        .query('UPDATE User SET email = \'$email\' WHERE userid = $id');
+
+    await conn.close();
+  }
+
+  void setUserName(String id, String name) async {
+    final conn = await getConnection();
+
+    // Execute the query
+    var results = await conn
+        .query('UPDATE User SET firstname = \'$name\' WHERE userid = $id');
+
+    await conn.close();
   }
 }

@@ -3,6 +3,7 @@ import 'package:mindinsync/BottomNavigation.dart';
 import 'package:mindinsync/Drawer.dart';
 import 'package:mindinsync/StorageService.dart';
 import 'package:search_page/search_page.dart';
+import 'package:date_field/date_field.dart';
 
 /// This is a very simple class, used to
 /// demo the `SearchPage` package
@@ -21,7 +22,6 @@ class Transcript implements Comparable<Transcript> {
   List<String> keywords = [];
   int id = 0;
   String date = "";
-
   Transcript(this.name, this.keywords, this.id, this.date);
 
   int compareTo(Transcript other) => name.compareTo(other.name);
@@ -31,7 +31,6 @@ void main() => runApp(const Search());
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
-
   @override
   _SearchState createState() => _SearchState();
 }
@@ -41,6 +40,9 @@ var scripts;
 class _SearchState extends State<Search> {
   var tran_store;
   var transcriptValues = [];
+  var backupTranscripts = [];
+  var selectedDate;
+  var stringDate = 'MM/DD';
 
   @override
   void initState() {
@@ -59,11 +61,35 @@ class _SearchState extends State<Search> {
           scripts[i]['keywords'].split(", "),
           scripts[i]['transcript_id'],
           scripts[i]['created_at']);
+          //print(scripts[i]['created_at'].split(" ")[0]);
       //transcriptValues.add(transcript);
       setState(() {
         transcriptValues.add(transcript);
       });
     }
+   // backupTranscripts= []..addAll(transcriptValues);
+    for(var i = 0; i < transcriptValues.length; i++){
+      backupTranscripts.add(transcriptValues[i]);
+    }
+  }
+
+  void filterTranscript(String date){
+      //loadTranscripts();
+      transcriptValues = backupTranscripts;
+      var filteredtranscriptValues = [];
+      for(Transcript tran in transcriptValues){
+       // print(date);
+       // print(tran.date.split(" ")[0]);
+        if(date == tran.date.split(" ")[0]){
+          filteredtranscriptValues.add(tran);
+        }
+        else{
+         // print(tran.date);
+        }
+        //transcriptValues.clear();
+        transcriptValues = filteredtranscriptValues;
+        setState(() {   });
+      }
   }
 
   @override
@@ -73,6 +99,21 @@ class _SearchState extends State<Search> {
         title: const Text('Search Past Conversations'),
         backgroundColor: Colors.blue[300],
         foregroundColor: Colors.indigo[800],
+        leading:  DateTimeField(
+          decoration: const InputDecoration(
+            labelText: 'Enter Date',
+            helperText: '  MM/DD',
+          ),
+          value: selectedDate,
+          mode: DateTimeFieldPickerMode.date,
+          onChanged: (DateTime? value) {
+            setState(() {              
+              selectedDate = value;
+              //print(selectedDate.toString().split(" ")[0]);
+              filterTranscript(value.toString().split(" ")[0]);
+            });
+          },
+        ),
       ),
       body: ListTileTheme(
         contentPadding: const EdgeInsets.all(5),
@@ -105,7 +146,7 @@ class _SearchState extends State<Search> {
                     }));
           },
         ),
-      ),
+      ),     
       floatingActionButton: FloatingActionButton(
         tooltip: 'Search transcripts',
         onPressed: () => showSearch(
