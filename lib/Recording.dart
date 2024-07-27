@@ -228,14 +228,16 @@ Future<String> getUserName(String email) async {
           dt.minute.toString() +
           dt.second.toString() +
           '.txt';
-      tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
-      await tran_process.processTranscription(
+      var insert = tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
+      insert.then((value){
+       tran_process.processTranscription(
           transcriptArray.toString(), file_name);
-      var scripts = await tran_store.getTranscripts();
-      for (int i = 0; i < scripts.length; i++) {
-        print(scripts[i]['keywords']);
-        print(scripts[i]['transcript_content']);
-      }
+      //var scripts = await tran_store.getTranscripts();
+     // for (int i = 0; i < scripts.length; i++) {
+      //  print(scripts[i]['keywords']);
+      //  print(scripts[i]['transcript_content']);
+    //  }
+      });
     }
   }
 

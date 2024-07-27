@@ -216,7 +216,7 @@ class _PromptScreenState extends State<PromptScreen> {
     );
 
     OpenAIChatCompletionModel results = await OpenAI.instance.chat
-        .create(model: "gpt-4o-mini", messages: messages, maxTokens: 60);
+        .create(model: "gpt-4o-mini", messages: messages, maxTokens: 150);
     final mindResponse = results.choices[0].message.content!.first.text;
     messages.add(
       OpenAIChatCompletionChoiceMessageModel(
