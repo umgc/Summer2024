@@ -98,7 +98,8 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         title: const Text('Search Past Conversations'),
         backgroundColor: Colors.blue[300],
-        foregroundColor: Colors.indigo[800],
+        centerTitle: true,
+        foregroundColor: Colors.black,
         leading:  DateTimeField(
           decoration: const InputDecoration(
             labelText: 'Enter Date',

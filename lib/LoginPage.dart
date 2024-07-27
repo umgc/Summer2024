@@ -45,12 +45,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('MindInSync'),
-        backgroundColor: Colors.blue[300],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('MindInSync'),
+      //   centerTitle: true,
+        
+      //   backgroundColor: Colors.white,
+      // ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey, // Assign the global key to the Form
           onChanged: () {
@@ -62,6 +64,20 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Text(
+                'MindInSYNC',
+                style: TextStyle(
+                  fontSize: 52,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 55, 139, 223),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Image.asset(
+                'assets/images/mind.jpg', 
+                height: 150,
+              ),
+              const SizedBox(height: 16),
+              const Text(
                 'Login',
                 style: TextStyle(
                   fontSize: 32,
@@ -69,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(labelText: 'Email Address'),

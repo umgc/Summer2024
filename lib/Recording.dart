@@ -259,7 +259,7 @@ Future<String> getUserName(String email) async {
         title: const Text('Record a Conversation'),
         centerTitle: true,
         backgroundColor: Colors.blue[300],
-        foregroundColor: Colors.indigo[800],
+        foregroundColor: Colors.black,
       ),
       body: ListView(
         padding: const EdgeInsets.all(8),

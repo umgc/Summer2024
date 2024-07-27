@@ -92,7 +92,8 @@ class _DocumentUploadState extends State<DocumentUpload> {
       appBar: AppBar(
         title: const Text('Document Upload'),
         backgroundColor: Colors.blue[300],
-        foregroundColor: Colors.indigo[800],
+        centerTitle: true,
+        foregroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

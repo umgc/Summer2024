@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
         title: const Text("MindInSYNC"),
         centerTitle: true,
         backgroundColor: Colors.blue[300],
-        foregroundColor: Colors.indigo[800],
+        foregroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -150,7 +150,7 @@ class Home extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: Colors.blue[900]),
+            Icon(icon, size: 50, color: Colors.grey[800]),
             const SizedBox(height: 10),
             Text(label, style: const TextStyle(fontSize: 16)),
           ],

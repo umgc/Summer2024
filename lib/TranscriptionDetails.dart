@@ -46,7 +46,10 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
         appBar: AppBar(         
           title: FittedBox(
             fit: BoxFit.fill,
-            child: Text(transcription[0]['transcript_name'])),
+            child: Text(transcription[0]['transcript_name'])
+            ),
+            backgroundColor: Colors.blue[300],
+        centerTitle: true,
           bottom: TabBar(
             tabs: [
               Tab(text: 'Summary'),
