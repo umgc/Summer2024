@@ -1,9 +1,9 @@
 // lib/widgets/qrow.dart
 import 'package:flutter/material.dart';
-import 'package:test_wizard/models/question_answer_model.dart';
+import 'package:test_wizard/models/question.dart';
 
 class QRow extends StatelessWidget {
-  final QuestionAnswer questionAnswer;
+  final Question question;
   final VoidCallback onEditQuestion;
   final VoidCallback onRegenerateQuestion;
   final VoidCallback onDeleteQuestion;
@@ -11,7 +11,7 @@ class QRow extends StatelessWidget {
 
   const QRow({
     super.key,
-    required this.questionAnswer,
+    required this.question,
     required this.onEditQuestion,
     required this.onRegenerateQuestion,
     required this.onDeleteQuestion,
@@ -26,7 +26,7 @@ class QRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(questionAnswer.questionText),
+              Text(question.questionText),
               Row(
                 children: [
                   IconButton(
@@ -50,7 +50,7 @@ class QRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(questionAnswer.answerText),
+              Text(question.answer ?? 'no answer'),
               IconButton(
                 onPressed: onEditAnswer,
                 icon: const Icon(Icons.edit),

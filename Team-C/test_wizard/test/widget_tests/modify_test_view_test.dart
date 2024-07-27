@@ -14,6 +14,8 @@ void main() {
           home: ModifyTestView(
             screenTitle: 'Test Title',
             assessmentId: '1',
+            assessmentIndex: 1,
+            assessmentSetIndex: 1,
           ),
         ),
       ),

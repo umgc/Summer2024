@@ -15,11 +15,15 @@ import 'package:printing/printing.dart';
 class ModifyTestView extends StatelessWidget {
   final String screenTitle;
   final String assessmentId;
+  final int assessmentIndex;
+  final int assessmentSetIndex;
 
   const ModifyTestView({
     super.key,
     required this.screenTitle,
     required this.assessmentId,
+    required this.assessmentIndex,
+    required this.assessmentSetIndex
   });
 
   @override
@@ -35,7 +39,7 @@ class ModifyTestView extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               const ColumnHeaderRow(),
-              QSet(assessmentId: assessmentId),
+              QSet(assessmentId: assessmentId, assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex),
               const ButtonContainer(),
               const EditPrompt(),
               const DeletedQuestions(),
