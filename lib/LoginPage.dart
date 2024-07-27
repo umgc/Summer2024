@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mindinsync/registerPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mindinsync/db_helper.dart';
 
@@ -112,9 +113,20 @@ class _LoginPageState extends State<LoginPage> {
               // ],
               // ),
               const SizedBox(height: 16),
-              ElevatedButton(
+              ElevatedButton.icon(
+                icon: const Icon(Icons.login),
+                label: const Text('Login'),
                 onPressed: _isButtonActive ? _login : null,
-                child: const Text('Login'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                child: const Text('Create an account?'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                  );
+                },
               ),
             ],
           ),
