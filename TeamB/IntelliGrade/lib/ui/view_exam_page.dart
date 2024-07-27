@@ -4,6 +4,8 @@ import 'package:intelligrade/ui/header.dart';
 import 'package:intelligrade/controller/main_controller.dart';
 import 'package:intelligrade/controller/model/beans.dart';
 
+import '../controller/html_converter.dart';
+
 class ViewExamPage extends StatefulWidget {
   const ViewExamPage({super.key});
   static MainController controller = MainController();
@@ -71,7 +73,7 @@ class _ViewExamPageState extends State<ViewExamPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Question ${i + 1}: ${quiz.questionList[i].questionText}',
+                                'Question ${i + 1}: ${HtmlConverter.convert(quiz.questionList[i].questionText)}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                             const SizedBox(height: 10),

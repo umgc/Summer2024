@@ -47,7 +47,7 @@ class PromptEngine {
       'students of the English-speaking language.  '
       'The question type should be essay.  '
       // 'Be specific about [rubriccriteria].  '
-      'The assignments are worth [maxgrade] points. '
+      // 'The assignments are worth [maxgrade] points. '
       'Make a rubric in the <generalfeedback> tag. '
       'Create a code template in the <responsetemplate> tag. '
       'Create a unit test to run the code template in the <graderinfo> tag.';

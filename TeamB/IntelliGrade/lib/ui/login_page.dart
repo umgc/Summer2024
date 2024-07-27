@@ -44,6 +44,17 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(
+              'Welcome to IntelliGrade!',
+              style: TextStyle(
+                fontSize: 24
+              )
+            ),
+            const SizedBox(height: 40.0),
+            Text(
+              'Please enter your Moodle credentials.'
+            ),
+            const SizedBox(height: 26.0),
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(

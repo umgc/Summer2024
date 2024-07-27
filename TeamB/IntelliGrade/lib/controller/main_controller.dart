@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:intelligrade/api/compiler_module/compiler_api_service.dart';
 import 'package:intelligrade/api/llm/llm_api.dart';
 import 'package:intelligrade/api/llm/prompt_engine.dart';
 import 'package:intelligrade/api/moodle/moodle_api_singleton.dart';
+import 'package:intelligrade/controller/html_converter.dart';
 import 'package:intelligrade/controller/model/beans.dart';
 import 'package:intelligrade/controller/model/xml_converter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -97,7 +99,7 @@ class MainController {
         // Question text
         widgets.add(
           pw.Text(
-            'Question $questionNumber: ${question.questionText}',
+            'Question $questionNumber: ${HtmlConverter.convert(question.questionText)}',
             style: const pw.TextStyle(fontSize: 16),
           ),
         );
@@ -223,9 +225,17 @@ class MainController {
     }
   }
 
-  String complieCodeAndGetOutput(String code) {
-    // Handle compiling logic
-    return '';
+  Future<String> compileCodeAndGetOutput(
+      String studentFileName,
+      Uint8List studentFileBytes,
+      String gradingFileName,
+      Uint8List gradingFileBytes) async {
+    return await CompilerApiService.compileAndGrade(
+        studentFileName: studentFileName,
+        studentFileBytes: studentFileBytes,
+        gradingFileName: gradingFileName,
+        gradingFileBytes: gradingFileBytes
+    );
   }
 
   Future<bool> loginToMoodle(String username, String password) async {
@@ -253,6 +263,9 @@ class MainController {
     var moodleApi = MoodleApiSingleton();
     try {
       List<Course> courses = await moodleApi.getCourses();
+      if (courses.isNotEmpty) {
+        courses.removeAt(0); // first course is always "Moodle" - no need to show it
+      }
       return courses;
     } catch (e) {
       if (kDebugMode) {
