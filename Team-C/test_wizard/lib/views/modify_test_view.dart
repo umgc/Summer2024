@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/qset.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
@@ -13,14 +15,23 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 class ModifyTestView extends StatelessWidget {
+  final Assessment assessment;
   final String screenTitle;
   final String assessmentId;
+  final int assessmentIndex;
+  final int assessmentSetIndex;
 
-  const ModifyTestView({
+  ModifyTestView({
     super.key,
     required this.screenTitle,
     required this.assessmentId,
+    required this.assessmentIndex,
+    required this.assessmentSetIndex,
+    required this.assessment
   });
+
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +46,8 @@ class ModifyTestView extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               const ColumnHeaderRow(),
-              QSet(assessmentId: assessmentId),
-              const ButtonContainer(),
+              QSet(assessmentId: assessmentId, assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex),
+              ButtonContainer(assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex, assessment:assessment ),
               const EditPrompt(),
               const DeletedQuestions(),
             ],
@@ -63,15 +74,24 @@ class ColumnHeaderRow extends StatelessWidget {
             child: ColumnHeader(headerText: 'Answer'),
           ),
         ),
-        Expanded(child: ColumnHeader(headerText: 'Previous Question')),
+        //Expanded(child: ColumnHeader(headerText: 'Previous Question')),
       ],
     );
   }
 }
 
 class ButtonContainer extends StatelessWidget {
-  const ButtonContainer({super.key});
-
+  final Assessment assessment;
+  final int assessmentIndex;
+  final int assessmentSetIndex;
+  const ButtonContainer({
+    super.key,
+    required this.assessmentIndex,
+    required this.assessmentSetIndex,
+    required this.assessment
+  }
+  );
+  
   void _printQuestionsAndAnswers(BuildContext context) {
     final questions =
         Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
@@ -133,30 +153,39 @@ class ButtonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Wrap(
-        alignment: WrapAlignment.end,
-        runSpacing: 10,
-        children: [
-          ElevatedButton(
-            onPressed: () => _printQuestionsAndAnswers(context),
-            child: const Text('Print'),
+    return Consumer<AssessmentProvider>( 
+      builder: (context, assessmentProvider, child){
+        return Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: Wrap(
+            alignment: WrapAlignment.end,
+            runSpacing: 10,
+            children: [
+              ElevatedButton(
+                onPressed: () => _printQuestionsAndAnswers(context),
+                child: const Text('Print'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () => _printQuestionsOnly(context),
+                child: const Text('Print Questions Only'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: (){
+                  assessmentProvider.updateAssessment(assessmentSetIndex, assessmentIndex, assessment);
+                  assessmentProvider.saveAssessmentsToFile();
+                }
+
+                 ,
+                child: const Text('Save'),
+              ),
+              const SizedBox(width: 10),
+              const CancelButton(),
+            ],
           ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () => _printQuestionsOnly(context),
-            child: const Text('Print Questions Only'),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Save'),
-          ),
-          const SizedBox(width: 10),
-          const CancelButton(),
-        ],
-      ),
+        );
+      }
     );
   }
 }

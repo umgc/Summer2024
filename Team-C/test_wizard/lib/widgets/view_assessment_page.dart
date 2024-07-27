@@ -51,6 +51,9 @@ class ViewTestState extends State<ViewAssessmentPage> {
                                 screenTitle:
                                     '${widget.assessmentName} ${assessment.assessmentVersion}',
                                 assessmentId: widget.assessmentId,
+                                assessmentIndex: assessmentProvider.getAssessmentsFromAssessmentSets(widget.assessmentSetIndex).indexOf(assessment),
+                                assessmentSetIndex: widget.assessmentSetIndex,
+                                assessment: assessment
                               ),
                             ),
                           );

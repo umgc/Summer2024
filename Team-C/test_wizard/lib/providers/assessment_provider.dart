@@ -51,6 +51,16 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //updates assessment
+  void updateAssessment(int assessmentSetIndex, int assessmentIndex, Assessment updatedAssessment){
+    if(assessmentSetIndex < _savedAssessments.assessmentSets.length){
+      if(assessmentIndex < _savedAssessments.assessmentSets[assessmentSetIndex].assessments.length){
+        _savedAssessments.assessmentSets[assessmentSetIndex].assessments[assessmentIndex] = updatedAssessment;
+      }
+    }
+    notifyListeners();
+  }
+
   /// Removes all assessments from the list.
   void removeAll() {
     _savedAssessments.assessmentSets.clear();
@@ -89,6 +99,8 @@ class AssessmentProvider extends ChangeNotifier {
     ).toList();
     notifyListeners();
   }
+
+  
 
   void removeQuestion(int id) {
     int foundIndex = a.questions.indexWhere((q) => q.questionId == id);

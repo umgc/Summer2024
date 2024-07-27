@@ -17,7 +17,7 @@ class Assessment {
   List<Question> questions = [];
 
   Assessment(this.assessmentId, this.assessmentVersion, this.isExampleAssessment);
-
+  
   factory Assessment.fromJson(Map<String, dynamic> json) =>
       _$AssessmentFromJson(json);
   Map<String, dynamic> toJson() => _$AssessmentToJson(this);
