@@ -28,6 +28,7 @@ class MainController {
   Future<bool> createAssessments(AssignmentForm userForm) async {
     try {
       var queryPrompt = PromptEngine.generatePrompt(userForm);
+      print(queryPrompt);
       final String llmResp = await llm.postToLlm(queryPrompt);
       final List<String> parsedXmlList = llm.parseQueryResponse(llmResp);
       for (var xml in parsedXmlList) {

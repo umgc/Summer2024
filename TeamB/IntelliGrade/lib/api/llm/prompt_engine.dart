@@ -40,7 +40,7 @@ class PromptEngine {
   //     'each assignment when ran against test dataset.  ';
 
   static const prompt_quizgen_code =
-      'Generate [numassignments] coding assignments in XML format '
+      'Generate [numquestions] coding assignments in XML format '
       'that is compatible with Moodle XML import.  The assignments are to be on the subject of '
       '[subject], should be related to [topic], and the programming language should be [codinglanguage]. '
       'The assignments should be the same level of difficulty for college [gradelevel] '
@@ -50,7 +50,7 @@ class PromptEngine {
       // 'The assignments are worth [maxgrade] points. '
       'Make a rubric in the <generalfeedback> tag. '
       'Create a code template in the <responsetemplate> tag. '
-      'Create a unit test to run the code template in the <graderinfo> tag.';
+      'Create a unit test to run the code template in the <graderinfo> tag. ';
 
   static const prompt_quizgen_xmlonly =
       'Provide only the XML in your response.  ';
