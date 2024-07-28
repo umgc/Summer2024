@@ -1,5 +1,5 @@
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligrade/ui/header.dart';
 
@@ -17,8 +17,6 @@ class GradingPage extends StatefulWidget {
 
 class _GradingPageState extends State<GradingPage> {
 
-  // final TextEditingController _studentFileController = TextEditingController();
-  // final TextEditingController _gradingFileController = TextEditingController();
   Course? _selectedCourse;
   String? _selectedExam;
   String? _selectedStudent;
@@ -46,10 +44,12 @@ class _GradingPageState extends State<GradingPage> {
   }
 
   Future<String> _compileAndGrade() async {
-    print(_studentFileName);
-    print(_studentFileBytes);
-    print(_gradingFileName);
-    print(_gradingFileBytes);
+    if (kDebugMode) {
+      print(_studentFileName);    
+      print(_studentFileBytes);
+      print(_gradingFileName);
+      print(_gradingFileBytes);
+    }
     if (!readyForUpload()) return 'Invalid files';
     String output;
     try {
@@ -93,16 +93,6 @@ class _GradingPageState extends State<GradingPage> {
         );
       },
     );
-    // if (_selectedExam == null || _codeController.text.isEmpty) {
-    //   setState(() {
-    //     _statusMessage = 'Please select an exam and enter your code.';
-    //   });
-    //   return;
-    // }
-    // // Simulate submission process
-    // setState(() {
-    //   _statusMessage = 'Code submitted successfully for grading!';
-    // });
   }
 
   @override
@@ -135,7 +125,7 @@ class _GradingPageState extends State<GradingPage> {
         title: 'Compile and Grade Code',
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -231,21 +221,6 @@ class _GradingPageState extends State<GradingPage> {
                 ),
               ],
             ),
-            // Row(
-            //     children: [
-            //       TextField(
-            //         controller: _gradingFileController,
-            //         decoration: const InputDecoration(labelText: 'Upload test driver file'),
-            //         maxLines: 1,
-            //       ),
-            //       ElevatedButton(
-            //           onPressed: () async {
-            //             pickFile(_gradingFileController);
-            //           },
-            //           child: Text('Browse...')
-            //       ),
-            //     ],
-            // ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async{
@@ -254,10 +229,6 @@ class _GradingPageState extends State<GradingPage> {
               },
               child: const Text('Compile and Grade'),
             ),
-            // Text(
-            //   _statusMessage,
-            //   style: TextStyle(color: Colors.red),
-            // ),
           ],
         ),
       ),
