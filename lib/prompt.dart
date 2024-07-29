@@ -267,7 +267,7 @@ class _PromptScreenState extends State<PromptScreen> {
       }
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     setTranscription();
     return Scaffold(
@@ -278,70 +278,87 @@ class _PromptScreenState extends State<PromptScreen> {
         backgroundColor: Colors.blue[300],    
         foregroundColor: Colors.black,  
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(8),
-        children: <Widget>[
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[300],
-                foregroundColor: Colors.black87,
-                elevation: 0,
-                side: const BorderSide(
-                    width: 2, // the thickness
-                    color: Colors.grey // the color of the border
-                    )),
-            onPressed: recognizing ? stopRecording : streamingRecognize,
-            child: recognizing
-                ? const Text('Listening')
-                : const Text('Ask a question with your voice'),
-          ),
-          TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.question_answer),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                hintText: 'Or type out your question for MindAI',
-              ),
-              onSubmitted: (String value) {
-                // Navigator.push(context, PromptScreen());
-                recognizeFinished = true;
-                transcriptArray.add(value);
-                setState(() {});
-                promptLLM(value);
-              }),
-          const Text(
-              'MindAI may sometimes provide innacurate information, please exercise caution'),
-          if (recognizeFinished)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: new ListView.builder(
-                  physics: ScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  reverse: true,
-                  itemCount: transcriptArray.length,
-                  itemBuilder: (BuildContext ctxt, int Index) {
-                    return new GestureDetector(
-                        onTap: () {
-                          toggleTTS(
-                              transcriptArray[Index].replaceAll("MindAI:", ""));
-                        },
-                        child: new Container(
-                          margin: EdgeInsets.all(5),
-                          padding: EdgeInsets.all(10),
-                          //color: Colors.amber[600],
-                          decoration: BoxDecoration(
-                            color: (Index % 2 == 1)
-                                ? Colors.grey[300]
-                                : Colors.green[100],
-                            borderRadius: BorderRadius.circular(20),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(8),
+              children: <Widget>[
+                if (recognizeFinished)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ListView.builder(
+                      physics: ScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      reverse: false,
+                      itemCount: transcriptArray.length,
+                      itemBuilder: (BuildContext ctxt, int Index) {
+                        return GestureDetector(
+                          onTap: () {
+                            toggleTTS(
+                                transcriptArray[Index].replaceAll("MindAI:", ""));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: (Index % 2 == 1)
+                                  ? Colors.grey[300]
+                                  : Colors.green[100],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(transcriptArray[Index]),
                           ),
-                          child: Text(transcriptArray[Index]),
-                        ));
-                  }),
-            )
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[300],
+                        foregroundColor: Colors.black87,
+                        elevation: 0,
+                        side: const BorderSide(
+                            width: 2, // the thickness
+                            color: Colors.grey // the color of the border
+                        )),
+                    onPressed: recognizing ? stopRecording : streamingRecognize,
+                    child: recognizing
+                        ? const Text('Listening')
+                        : const Text('Ask a question with your voice'),
+                  ),
+                ),
+                TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.question_answer),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      hintText: 'Or type out your question for MindAI',
+                    ),
+                    onSubmitted: (String value) {
+                      recognizeFinished = true;
+                      transcriptArray.add(value);
+                      setState(() {});
+                      promptLLM(value);
+                    }),
+                const Text(
+                    'MindAI may sometimes provide innacurate information, please exercise caution'),
+              ],
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavBar(

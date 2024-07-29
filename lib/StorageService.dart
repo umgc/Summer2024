@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 import 'dart:io';
 
 class StorageService {
@@ -58,10 +59,17 @@ class StorageService {
   // Insert a text file into the database
   Future<int> insertTranscriptFile(String name, String content) async {
     Database db = await database;
-    return await db.insert('transcripts', {
-      'transcript_name': name,
-      'transcript_content': content,
-    });
+    DateTime now = DateTime.now();
+    String localTime = DateFormat('MM-dd-yyyy HH:mm:ss').format(now);
+    return await db.insert(
+      'transcripts',
+      {
+        'transcript_name': name,
+        'transcript_content': content,
+        'created_at': localTime,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future updateTranscriptFile(
