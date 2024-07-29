@@ -30,7 +30,9 @@ class _ViewExamPageState extends State<ViewExamPage> {
       quizzes = ViewExamPage.controller.listAllAssessments();
       setState(() {});
     } catch (e) {
-      print('Error fetching quizzes: $e');
+      if (kDebugMode) {
+        print('Error fetching quizzes: $e');
+      }
       quizzes = [];
     }
   }
@@ -41,78 +43,175 @@ class _ViewExamPageState extends State<ViewExamPage> {
   }
 
   void _showQuizDetails(Quiz quiz) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(quiz.name ?? 'Quiz Details'),
-              content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton.icon(
-                          icon: const Icon(Icons.edit, color: Colors.black),
-                          label: const Text('Edit'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _editQuiz(quiz);
-                          },
-                        ),
-                      ],
-                    ),
-                    for (int i = 0; i < quiz.questionList.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Question ${i + 1}: ${HtmlConverter.convert(quiz.questionList[i].questionText)}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 10),
-                            for (int j = 0;
-                                j < quiz.questionList[i].answerList.length;
-                                j++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  '${String.fromCharCode('a'.codeUnitAt(0) + j)}) ${quiz.questionList[i].answerList[j].answerText}',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: quiz.questionList[i].answerList[j]
-                                                  .fraction ==
-                                              '100'
-                                          ? Colors.green
-                                          : Colors.red),
-                                ),
-                              ),
-                          ],
+  List<int> selectedQuestions = [];
+  bool regenerateMode = false;
+  bool isRegenerating = false;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text(quiz.name ?? 'Quiz Details'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.edit, color: Colors.black),
+                        label: const Text('Edit'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _editQuiz(quiz);
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.refresh, color: Colors.black),
+                        label: const Text('Regenerate Questions'),
+                        onPressed: !regenerateMode
+                            ? () {
+                                setState(() {
+                                  regenerateMode = true;
+                                });
+                              }
+                            : selectedQuestions.isEmpty
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      isRegenerating = true;
+                                    });
+                                    bool result = await ViewExamPage.controller
+                                        .regenerateQuestions(
+                                            selectedQuestions, quiz);
+                                    setState(() {
+                                      isRegenerating = false;
+                                      regenerateMode = false;
+                                      selectedQuestions.clear();
+                                    });
+                                    if (result) {
+                                      _fetchQuizzes(); // Refresh quiz list
+                                      Navigator.of(context).pop();
+                                      _showQuizDetails(quiz);
+                                    }
+                                  },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.resolveWith<
+                              Color>((Set<WidgetState> states) {
+                            if (states.contains(WidgetState.disabled)) {
+                              return const Color.fromARGB(255, 220, 220, 220);
+                            }
+                            return const Color.fromARGB(255, 212, 236, 255);
+                          }),
                         ),
                       ),
-                  ],
-                ),
+                      if (regenerateMode) const SizedBox(width: 8),
+                      if (regenerateMode)
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.cancel, color: Colors.black),
+                          label: const Text('Cancel Regenerate'),
+                          onPressed: () {
+                            setState(() {
+                              regenerateMode = false;
+                              selectedQuestions.clear();
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 255, 124, 115),
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (regenerateMode)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16.0),
+                      child: Text(
+                        'Select questions to regenerate:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  for (int i = 0; i < quiz.questionList.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (regenerateMode)
+                                Checkbox(
+                                  value: selectedQuestions.contains(i),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        selectedQuestions.add(i);
+                                      } else {
+                                        selectedQuestions.remove(i);
+                                      }
+                                    });
+                                  },
+                                ),
+                              Expanded(
+                                child: Text(
+                                  'Question ${i + 1}: ${HtmlConverter.convert(quiz.questionList[i].questionText)}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              if (isRegenerating &&
+                                  selectedQuestions.contains(i))
+                                const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          for (int j = 0;
+                              j < quiz.questionList[i].answerList.length;
+                              j++)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                '${String.fromCharCode('a'.codeUnitAt(0) + j)}) ${quiz.questionList[i].answerList[j].answerText}',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: quiz.questionList[i].answerList[j]
+                                                .fraction ==
+                                            '100'
+                                        ? Colors.green
+                                        : Colors.red),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Close'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
 
   void _editQuiz(Quiz quiz) async {
     List<List<TextEditingController>> controllers =
@@ -182,9 +281,10 @@ class _ViewExamPageState extends State<ViewExamPage> {
               child: const Text('Save'),
               onPressed: () async {
                 try {
-                  ViewExamPage.controller.updateFileLocally(quiz);
-                  Navigator.of(context).pop();
+                  ViewExamPage.controller.updateFileLocally(quiz);                  
                   _fetchQuizzes(); // Refresh quiz list
+                  Navigator.of(context).pop();
+                  _showQuizDetails(quiz);
                 } catch (e) {
                   if (kDebugMode) {
                     print('Error updating quiz: $e');
@@ -196,6 +296,7 @@ class _ViewExamPageState extends State<ViewExamPage> {
               child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
+                _showQuizDetails(quiz);
               },
             ),
           ],
@@ -314,7 +415,7 @@ class _ViewExamPageState extends State<ViewExamPage> {
                   const Text('No saved exams yet.'),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/create');
+                      Navigator.pushReplacementNamed(context, '/create');
                     },
                     child: const Text('Create Exam'),
                   ),

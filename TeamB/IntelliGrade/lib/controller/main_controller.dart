@@ -26,32 +26,52 @@ class MainController {
   final ValueNotifier<bool> isUserLoggedInNotifier = ValueNotifier(false);
 
   Future<bool> createAssessments(AssignmentForm userForm) async {
-    try {
-      var queryPrompt = PromptEngine.generatePrompt(userForm);
+    var queryPrompt = PromptEngine.generatePrompt(userForm);
+    if (kDebugMode) {
       print(queryPrompt);
-      final String llmResp = await llm.postToLlm(queryPrompt);
+    }
+    Quiz quiz = await generateQuiz(queryPrompt, userForm.title);
+    saveFileLocally(quiz);
+    return true;
+  }
+
+  Future<Quiz> generateQuiz(String prompt, String title) async {
+    try {
+      final String llmResp = await llm.postToLlm(prompt);
       final List<String> parsedXmlList = llm.parseQueryResponse(llmResp);
       for (var xml in parsedXmlList) {
         var quiz = Quiz.fromXmlString(xml);
-        quiz.name = userForm.title;
+        quiz.name = title;
         quiz.description =
             DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-        saveFileLocally(quiz);
+        quiz.promptUsed = prompt;
+        return quiz;
       }
-      return true;
     } catch (e) {
-      // Handle any errors
+      throw Exception('Error generating quiz: $e');
+    }
+    throw Exception('Error generating quiz');
+  }
+
+  Future<bool> regenerateQuestions(
+      List<int> questionsToRegenerate, Quiz quiz) async {
+    try {
+      String propmt =
+      'The following query was used to generate a quiz. Please regenerate a new quiz following the same instuctions, but replace question(s) ${questionsToRegenerate.map((q) => q + 1).join(", ")} with different questions.\n\n'
+      'Prompt: ${quiz.promptUsed}\n\n'
+      'Quiz generated: ${XmlConverter.convertQuizToXml(quiz).toXmlString()}\n\n';      
+      Quiz newQuiz = await generateQuiz(propmt, quiz.name ?? '');
+      for (var i in questionsToRegenerate) {
+        quiz.questionList[questionsToRegenerate[i]] = newQuiz.questionList[questionsToRegenerate[i]];
+      }
+      updateFileLocally(quiz);
+    } catch (e) {
       if (kDebugMode) {
-        print('Error creating assessments: $e');
+        print('Error regenerating questions: $e');
       }
       return false;
     }
-  }
-
-  void gradeAssessment() {
-    //TODO:
-    //will use compiler to compile code and get output
-    // Handle grading logic
+    return true;
   }
 
   void saveFileLocally(Quiz quiz) {
@@ -235,8 +255,7 @@ class MainController {
         studentFileName: studentFileName,
         studentFileBytes: studentFileBytes,
         gradingFileName: gradingFileName,
-        gradingFileBytes: gradingFileBytes
-    );
+        gradingFileBytes: gradingFileBytes);
   }
 
   Future<bool> loginToMoodle(String username, String password) async {
@@ -265,7 +284,8 @@ class MainController {
     try {
       List<Course> courses = await moodleApi.getCourses();
       if (courses.isNotEmpty) {
-        courses.removeAt(0); // first course is always "Moodle" - no need to show it
+        courses.removeAt(
+            0); // first course is always "Moodle" - no need to show it
       }
       return courses;
     } catch (e) {

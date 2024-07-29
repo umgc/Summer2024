@@ -93,6 +93,7 @@ class XmlConverter {
           }
         });
       }
+      builder.element(XmlConsts.promptUsed, nest: quiz.promptUsed);
     });
     return builder.buildDocument();
   }

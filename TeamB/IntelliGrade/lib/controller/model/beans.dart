@@ -27,6 +27,7 @@ class XmlConsts {
   // static const definition = 'definition';
   static const responsetemplate = 'responsetemplate';
   static const graderinfo = 'graderinfo';
+  static const promptUsed = 'promptused';
 
 
   // not tags but useful constants
@@ -42,6 +43,7 @@ class Quiz {
   String? name; // quiz name - optional.
   String? description; // quiz description - optional.
   List<Question> questionList = <Question>[]; // list of questions on the quiz.
+  String? promptUsed;
 
   // Constructor with all optional params.
   Quiz({this.name, this.description, List<Question>? questionList})
@@ -68,6 +70,7 @@ class Quiz {
       }
       quiz.questionList.add(Question.fromXml(questionElement));
     }
+    quiz.promptUsed = quizElement.getElement(XmlConsts.promptUsed)?.innerText;
     return quiz;
   }
 

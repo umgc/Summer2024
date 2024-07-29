@@ -13,15 +13,6 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
-  String? _selectedSubject;
-  String? _selectedGradeLevel;
-  QuestionType? _selectedAssignmentType;
-  String? _selectedCodingLanguage;
-  int _numQuestions = 1;
-  final TextEditingController _topicController = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
-  bool _isLoading = false;
-  final _formKey = GlobalKey<FormState>();
 
   List<String> subjects = [
     'Math',
@@ -49,15 +40,6 @@ class _CreatePageState extends State<CreatePage> {
         });
       });
     }
-  }
-
-  List<QuestionType> _filterAssignmentTypes() {
-    if (_selectedSubject != 'Computer Science') {
-      return QuestionType.values
-          .where((type) => type != QuestionType.coding)
-          .toList();
-    }
-    return QuestionType.values;
   }
 
   @override
