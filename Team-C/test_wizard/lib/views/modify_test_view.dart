@@ -25,9 +25,6 @@ class ModifyTestView extends StatelessWidget {
     super.key,
     required this.screenTitle,
     required this.assessmentId,
-    required this.assessmentIndex,
-    required this.assessmentSetIndex,
-    required this.assessment
   });
 
   
@@ -46,8 +43,8 @@ class ModifyTestView extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               const ColumnHeaderRow(),
-              QSet(assessmentId: assessmentId, assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex),
-              ButtonContainer(assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex, assessment:assessment ),
+              QSet(assessmentId: assessmentId),
+              const ButtonContainer(),
               const EditPrompt(),
               const DeletedQuestions(),
             ],

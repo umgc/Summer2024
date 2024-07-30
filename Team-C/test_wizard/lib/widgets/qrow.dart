@@ -1,8 +1,10 @@
 // lib/widgets/qrow.dart
 import 'package:flutter/material.dart';
 import 'package:test_wizard/models/question.dart';
+import 'package:test_wizard/models/question.dart';
 
 class QRow extends StatelessWidget {
+  final Question question;
   final Question question;
   final VoidCallback onEditQuestion;
   final VoidCallback onRegenerateQuestion;
@@ -11,6 +13,7 @@ class QRow extends StatelessWidget {
   
   const QRow({
     super.key,
+    required this.question,
     required this.question,
     required this.onEditQuestion,
     required this.onRegenerateQuestion,
