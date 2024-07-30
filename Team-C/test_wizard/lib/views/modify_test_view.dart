@@ -25,6 +25,9 @@ class ModifyTestView extends StatelessWidget {
     super.key,
     required this.screenTitle,
     required this.assessmentId,
+    required this.assessmentIndex,
+    required this.assessmentSetIndex,
+    required this.assessment
   });
 
   
@@ -43,8 +46,8 @@ class ModifyTestView extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               const ColumnHeaderRow(),
-              QSet(assessmentId: assessmentId),
-              const ButtonContainer(),
+              QSet(assessmentId: assessmentId, assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex),
+              ButtonContainer(assessmentIndex: assessmentIndex, assessmentSetIndex: assessmentSetIndex, assessment:assessment ),
               const EditPrompt(),
               const DeletedQuestions(),
             ],
@@ -172,13 +175,15 @@ class ButtonContainer extends StatelessWidget {
                 onPressed: (){
                   assessmentProvider.updateAssessment(assessmentSetIndex, assessmentIndex, assessment);
                   assessmentProvider.saveAssessmentsToFile();
+                  
                 }
 
                  ,
                 child: const Text('Save'),
               ),
               const SizedBox(width: 10),
-              const CancelButton(),
+              const CancelButton(//need to find a way to load assessments from file that were loaded into state during editing. 
+              ),
             ],
           ),
         );
