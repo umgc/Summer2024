@@ -61,7 +61,7 @@ class MainController {
       'Prompt: ${quiz.promptUsed}\n\n'
       'Quiz generated: ${XmlConverter.convertQuizToXml(quiz).toXmlString()}\n\n';      
       Quiz newQuiz = await generateQuiz(propmt, quiz.name ?? '');
-      for (var i in questionsToRegenerate) {
+      for (var i = 0; i < questionsToRegenerate.length; i++) {
         quiz.questionList[questionsToRegenerate[i]] = newQuiz.questionList[questionsToRegenerate[i]];
       }
       updateFileLocally(quiz);
