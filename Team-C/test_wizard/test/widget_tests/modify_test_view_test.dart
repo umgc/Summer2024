@@ -8,7 +8,6 @@ import 'package:test_wizard/widgets/deleted_questions.dart'; // Add this import
 
 void main() {
   testWidgets('ModifyTestView has a title and message', (WidgetTester tester) async {
-    final Assessment tempAssessment= Assessment(1,1,false);
     await tester.pumpWidget(
       ChangeNotifierProvider(
         create: (_) => QuestionAnswerProvider(),
@@ -18,7 +17,7 @@ void main() {
             assessmentId: '1',
             assessmentIndex: 1,
             assessmentSetIndex: 1,
-            assessment: tempAssessment
+            assessment: Assessment(1,1,false)
           ),
         ),
       ),
