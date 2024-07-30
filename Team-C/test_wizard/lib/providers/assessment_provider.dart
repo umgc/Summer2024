@@ -38,7 +38,7 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //adds assessment to assessmentSet
+  //updates Assessment
   void updateAssessment(int assessmentSetIndex, int assessmentIndex, Assessment updatedAssessment){
     if(assessmentSetIndex < _savedAssessments.assessmentSets.length){
       if(assessmentIndex < _savedAssessments.assessmentSets[assessmentSetIndex].assessments.length){
@@ -61,15 +61,8 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //updates assessment
-  void updateAssessment(int assessmentSetIndex, int assessmentIndex, Assessment updatedAssessment){
-    if(assessmentSetIndex < _savedAssessments.assessmentSets.length){
-      if(assessmentIndex < _savedAssessments.assessmentSets[assessmentSetIndex].assessments.length){
-        _savedAssessments.assessmentSets[assessmentSetIndex].assessments[assessmentIndex] = updatedAssessment;
-      }
-    }
-    notifyListeners();
-  }
+
+  
 
   /// Removes all assessments from the list.
   void removeAll() {
