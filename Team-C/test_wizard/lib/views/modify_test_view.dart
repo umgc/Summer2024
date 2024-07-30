@@ -182,8 +182,7 @@ class ButtonContainer extends StatelessWidget {
                 child: const Text('Save'),
               ),
               const SizedBox(width: 10),
-              const CancelButton(//need to find a way to load assessments from file that were loaded into state during editing. 
-              ),
+              const CancelButton(),
             ],
           ),
         );
