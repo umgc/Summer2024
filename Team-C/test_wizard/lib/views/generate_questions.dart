@@ -204,16 +204,16 @@ class AddedQuestion extends StatelessWidget {
                 child: Text('Essay'),
               ),
             ],
-            onChanged: (value) =>
-                assessmentProvider.updateQuestion(id: question.questionId, newType: value),
+            onChanged: (value) => assessmentProvider.updateQuestion(
+                id: question.questionId, newType: value),
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: TextFormField(
             controller: controller,
-            onChanged: (value) =>
-                assessmentProvider.updateQuestion(id: question.questionId, newText: value),
+            onChanged: (value) => assessmentProvider.updateQuestion(
+                id: question.questionId, newText: value),
             decoration: const InputDecoration(
               hintText: 'What is 2 + 2?',
               border: OutlineInputBorder(),
@@ -224,7 +224,8 @@ class AddedQuestion extends StatelessWidget {
         const SizedBox(width: 10),
         IconButton(
           style: IconButton.styleFrom(backgroundColor: Colors.amber),
-          onPressed: () => assessmentProvider.removeQuestion(question.questionId),
+          onPressed: () =>
+              assessmentProvider.removeQuestion(question.questionId),
           icon: const Icon(Icons.delete),
         ),
       ],
@@ -243,18 +244,17 @@ class GenerateAssessmentsButton extends StatelessWidget {
   final int exampleAssessmentSetIndex;
   final int exampleAssessmentIndex;
 
-  const GenerateAssessmentsButton({
-    super.key,
-    required this.formKey,
-    required this.textEditingController,
-    required this.llmService,
-    required this.questionGenerationDetail,
-    required this.assessmentProvider,
-    required this.assessmentName,
-    required this.courseName,
-    required this.exampleAssessmentSetIndex,
-    required this.exampleAssessmentIndex
-  });
+  const GenerateAssessmentsButton(
+      {super.key,
+      required this.formKey,
+      required this.textEditingController,
+      required this.llmService,
+      required this.questionGenerationDetail,
+      required this.assessmentProvider,
+      required this.assessmentName,
+      required this.courseName,
+      required this.exampleAssessmentSetIndex,
+      required this.exampleAssessmentIndex});
 
   Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
     int questionId = 0; // same thing as assessmentId
@@ -262,8 +262,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
     List<dynamic>? multipleChoiceQuestions = output['multipleChoice'] ?? [];
     List<dynamic>? shortAnswerQuestions = output['shortAnswer'] ?? [];
     List<dynamic>? essayQuestions = output['essay'] ?? [];
-    Assessment newAssessment =
-        Assessment(id, id++, false); // increment assessmentId after using
+    Assessment newAssessment = Assessment(id++, id,
+        false); // increment assessmentId after using so that version isn't 0 indexed
     if (multipleChoiceQuestions != null) {
       for (var question in multipleChoiceQuestions) {
         newAssessment.questions.add(Question(
@@ -327,8 +327,9 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 questionGenerationDetail.prompt = llmService.buildPrompt(
                     questionGenerationDetail.topic,
                     assessmentProvider,
-                    questionGenerationDetail.isMathQuiz
-                    ,exampleAssessmentSetIndex,exampleAssessmentIndex);
+                    questionGenerationDetail.isMathQuiz,
+                    exampleAssessmentSetIndex,
+                    exampleAssessmentIndex);
                 // create the client and assessmentSet to add to
                 Client client = Client();
                 AssessmentSet assessmentSet = AssessmentSet(
@@ -372,8 +373,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
                           assessmentSet.assessments.add(newAssessment);
                         }
                       }
-                      questionGenerationDetail.prompt =
-                          llmService.getMoreAssessmentsPrompt(assessmentProvider);
+                      questionGenerationDetail.prompt = llmService
+                          .getMoreAssessmentsPrompt(assessmentProvider);
                       requestCount++;
                     } else {
                       textEditingController.text =
@@ -413,7 +414,6 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     Navigator.of(context).popUntil(
                         (route) => route.settings.name == '/dashboard');
                   }
-                  
                 }
               }
             },
