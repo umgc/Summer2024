@@ -5,8 +5,10 @@ import 'package:test_wizard/widgets/view_assessment_page.dart';
 class CreateViewTest extends StatelessWidget {
   final String assessmentName;
   final String courseName;
+  final int assessmentSetIndex;
   const CreateViewTest({
     super.key,
+    required this.assessmentSetIndex,
     required this.assessmentName,
     required this.courseName,
   });
@@ -22,6 +24,7 @@ class CreateViewTest extends StatelessWidget {
         className: courseName,
       ),
       body: ViewAssessmentPage(
+        assessmentSetIndex: assessmentSetIndex,
         assessmentName: assessmentName,
         course: courseName,
         assessmentId: 'MQ1V1',

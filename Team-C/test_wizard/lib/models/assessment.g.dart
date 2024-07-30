@@ -9,6 +9,7 @@ part of 'assessment.dart';
 Assessment _$AssessmentFromJson(Map<String, dynamic> json) => Assessment(
       (json['assessmentId'] as num).toInt(),
       (json['assessmentVersion'] as num).toInt(),
+      json['isExampleAssessment'] as bool,
     )..questions = (json['questions'] as List<dynamic>)
         .map((e) => Question.fromJson(e as Map<String, dynamic>))
         .toList();
@@ -17,5 +18,6 @@ Map<String, dynamic> _$AssessmentToJson(Assessment instance) =>
     <String, dynamic>{
       'assessmentId': instance.assessmentId,
       'assessmentVersion': instance.assessmentVersion,
+      'isExampleAssessment': instance.isExampleAssessment,
       'questions': instance.questions.map((e) => e.toJson()).toList(),
     };

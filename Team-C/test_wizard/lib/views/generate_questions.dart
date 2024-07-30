@@ -8,7 +8,6 @@ import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
-import 'package:test_wizard/providers/assessment_state.dart';
 import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
@@ -67,8 +66,8 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
     Size screenSize = MediaQuery.of(context).size;
     return ChangeNotifierProvider(
       create: (context) {
-        var state = AssessmentState(assessmentId: 0, version: 0);
-        state.add(Question(
+        var state = AssessmentProvider();
+        state.addQuestion(Question(
           points: 0,
           questionId: id++,
           questionText: '',
@@ -92,7 +91,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                   alignment: Alignment.topCenter,
                   child: SizedBox(
                     width: screenSize.width * 0.9,
-                    child: Consumer<AssessmentState>(
+                    child: Consumer<AssessmentProvider>(
                       builder: (context, assessment, child) {
                         return Column(
                           children: <Widget>[
@@ -101,7 +100,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                 return Column(children: [
                                   AddedQuestion(
                                     question: question,
-                                    assessment: assessment,
+                                    assessmentProvider: assessment,
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -126,7 +125,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                assessment.add(Question(
+                                assessment.addQuestion(Question(
                                   questionId: id++,
                                   points: 0,
                                   questionText: '',
@@ -141,9 +140,11 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               llmService: llmService,
                               questionGenerationDetail:
                                   questionGenerationDetail,
-                              assessment: assessment,
+                              assessmentProvider: assessment,
                               assessmentName: widget.assessmentName,
                               courseName: widget.courseName,
+                              exampleAssessmentSetIndex: 0,
+                              exampleAssessmentIndex: 0,
                             ),
                           ],
                         );
@@ -161,19 +162,19 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
 }
 
 class AddedQuestion extends StatelessWidget {
-  final AssessmentState assessment;
+  final AssessmentProvider assessmentProvider;
   final Question question;
   final TextEditingController controller;
 
   AddedQuestion({
     super.key,
     required this.question,
-    required this.assessment,
+    required this.assessmentProvider,
   }) : controller = TextEditingController.fromValue(
           TextEditingValue(
             text: question.questionText,
             selection: TextSelection.collapsed(
-              offset: assessment.cursorPos,
+              offset: question.questionText.length,
             ),
           ),
         );
@@ -185,39 +186,34 @@ class AddedQuestion extends StatelessWidget {
         SizedBox(
           width: 175,
           child: DropdownButtonFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+            value: question.questionType,
+            items: const [
+              DropdownMenuItem(
+                value: 'Multiple Choice',
+                child: Text('Multiple Choice'),
               ),
-              value: question.questionType,
-              items: const [
-                DropdownMenuItem(
-                  value: 'Multiple Choice',
-                  child: Text('Multiple Choice'),
-                ),
-                DropdownMenuItem(
-                  value: 'Short Answer',
-                  child: Text('Short Answer'),
-                ),
-                DropdownMenuItem(
-                  value: 'Essay',
-                  child: Text('Essay'),
-                ),
-              ],
-              onChanged: (value) {
-                int newPos = controller.selection.baseOffset;
-                assessment.update(
-                    id: question.questionId, newType: value, newPos: newPos);
-              }),
+              DropdownMenuItem(
+                value: 'Short Answer',
+                child: Text('Short Answer'),
+              ),
+              DropdownMenuItem(
+                value: 'Essay',
+                child: Text('Essay'),
+              ),
+            ],
+            onChanged: (value) => assessmentProvider.updateQuestion(
+                id: question.questionId, newType: value),
+          ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: TextFormField(
             controller: controller,
-            onChanged: (value) {
-              int newPos = controller.selection.baseOffset;
-              assessment.update(
-                  id: question.questionId, newText: value, newPos: newPos);
-            },
+            onChanged: (value) => assessmentProvider.updateQuestion(
+                id: question.questionId, newText: value),
             decoration: const InputDecoration(
               hintText: 'What is 2 + 2?',
               border: OutlineInputBorder(),
@@ -228,7 +224,8 @@ class AddedQuestion extends StatelessWidget {
         const SizedBox(width: 10),
         IconButton(
           style: IconButton.styleFrom(backgroundColor: Colors.amber),
-          onPressed: () => assessment.remove(question.questionId),
+          onPressed: () =>
+              assessmentProvider.removeQuestion(question.questionId),
           icon: const Icon(Icons.delete),
         ),
       ],
@@ -241,20 +238,23 @@ class GenerateAssessmentsButton extends StatelessWidget {
   final LLMService llmService;
   final TextEditingController textEditingController;
   final QuestionGenerationDetail questionGenerationDetail;
-  final AssessmentState assessment;
+  final AssessmentProvider assessmentProvider;
   final String assessmentName;
   final String courseName;
+  final int exampleAssessmentSetIndex;
+  final int exampleAssessmentIndex;
 
-  const GenerateAssessmentsButton({
-    super.key,
-    required this.formKey,
-    required this.textEditingController,
-    required this.llmService,
-    required this.questionGenerationDetail,
-    required this.assessment,
-    required this.assessmentName,
-    required this.courseName,
-  });
+  const GenerateAssessmentsButton(
+      {super.key,
+      required this.formKey,
+      required this.textEditingController,
+      required this.llmService,
+      required this.questionGenerationDetail,
+      required this.assessmentProvider,
+      required this.assessmentName,
+      required this.courseName,
+      required this.exampleAssessmentSetIndex,
+      required this.exampleAssessmentIndex});
 
   Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
     int questionId = 0; // same thing as assessmentId
@@ -262,8 +262,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
     List<dynamic>? multipleChoiceQuestions = output['multipleChoice'] ?? [];
     List<dynamic>? shortAnswerQuestions = output['shortAnswer'] ?? [];
     List<dynamic>? essayQuestions = output['essay'] ?? [];
-    Assessment newAssessment =
-        Assessment(id, id++); // increment assessmentId after using
+    Assessment newAssessment = Assessment(id++, id,
+        false); // increment assessmentId after using so that version isn't 0 indexed
     if (multipleChoiceQuestions != null) {
       for (var question in multipleChoiceQuestions) {
         newAssessment.questions.add(Question(
@@ -323,13 +323,16 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   ),
                 );
                 // build the original prompt
+                // TODO we need a way to specify what saved assessment we want to provide as an example. Last two parameters.
                 questionGenerationDetail.prompt = llmService.buildPrompt(
                     questionGenerationDetail.topic,
-                    assessment,
-                    questionGenerationDetail.isMathQuiz);
-                // create the client and resultSet to add to
+                    assessmentProvider,
+                    questionGenerationDetail.isMathQuiz,
+                    exampleAssessmentSetIndex,
+                    exampleAssessmentIndex);
+                // create the client and assessmentSet to add to
                 Client client = Client();
-                AssessmentSet resultSet = AssessmentSet(
+                AssessmentSet assessmentSet = AssessmentSet(
                     [],
                     assessmentName,
                     Course(
@@ -341,7 +344,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 // check the count of requests because it might be stuck in an endless loop.
                 int requestCount = 0;
                 // while we don't have the right number, we need to request the llm for more assessments
-                while (resultSet.assessments.length <
+                while (assessmentSet.assessments.length <
                     questionGenerationDetail.numberOfAssessments) {
                   try {
                     if (requestCount >
@@ -367,11 +370,11 @@ class GenerateAssessmentsButton extends StatelessWidget {
                         if (extractedAssessment != null) {
                           Assessment newAssessment = getAssessmentFromOutput(
                               extractedAssessment, assessmentId++);
-                          resultSet.assessments.add(newAssessment);
+                          assessmentSet.assessments.add(newAssessment);
                         }
                       }
-                      questionGenerationDetail.prompt =
-                          llmService.getMoreAssessmentsPrompt(assessment);
+                      questionGenerationDetail.prompt = llmService
+                          .getMoreAssessmentsPrompt(assessmentProvider);
                       requestCount++;
                     } else {
                       textEditingController.text =
@@ -396,11 +399,11 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 // if we get here, we add the result set to state
                 // delete extra assessments if necessary
                 if (!wasError) {
-                  while (resultSet.assessments.length >
+                  while (assessmentSet.assessments.length >
                       questionGenerationDetail.numberOfAssessments) {
-                    resultSet.assessments.removeLast();
+                    assessmentSet.assessments.removeLast();
                   }
-                  savedAssessments.add(resultSet);
+                  savedAssessments.addAssessmentSet(assessmentSet);
                   // can't save to file using web browser
                   if (!kIsWeb) {
                     savedAssessments.saveAssessmentsToFile();
@@ -411,7 +414,6 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     Navigator.of(context).popUntil(
                         (route) => route.settings.name == '/dashboard');
                   }
-                  
                 }
               }
             },

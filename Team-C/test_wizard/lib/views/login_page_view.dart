@@ -191,7 +191,7 @@ class LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           AssessmentSet aSet = AssessmentSet(
                               [], 'Math Test', Course(1, 'Geometry 101'));
-                          Assessment a = Assessment(1, 1);
+                          Assessment a = Assessment(1, 1, true);
                           a.questions = [
                             Question(
                               questionId: 1,
@@ -219,7 +219,7 @@ class LoginPageState extends State<LoginPage> {
                             ),
                           ];
                           aSet.assessments.add(a);
-                          savedAssessments.add(aSet);
+                          savedAssessments.addAssessmentSet(aSet);
                           savedAssessments.saveAssessmentsToFile();
                           // Login logic
                           UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);

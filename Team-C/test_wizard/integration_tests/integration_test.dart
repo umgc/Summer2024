@@ -34,7 +34,7 @@ void main() {
 
         // set up an assessment set for the app to find
         AssessmentSet newSet = AssessmentSet(
-            [Assessment(0, 0)], 'Math Test', Course(0, 'Geometry 101'));
+            [Assessment(0, 0, false)], 'Math Test', Course(0, 'Geometry 101'));
         SavedAssessments saved = SavedAssessments();
         saved.assessmentSets = [newSet];
         saved.saveAssessmentsToFile();

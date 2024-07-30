@@ -166,6 +166,7 @@ class AssessmentTable extends StatelessWidget {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => CreateViewTest(
+                                      assessmentSetIndex: filteredAssessments.indexOf(assessment),
                                       assessmentName: assessment.assessmentName,
                                       courseName:
                                           assessment.course?.courseName ?? '',

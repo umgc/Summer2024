@@ -1,10 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import 'package:test_wizard/models/assessment.dart';
-import 'package:test_wizard/providers/assessment_state.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 
 class LLMService {
   final String _url = 'https://api.perplexity.ai/chat/completions';
@@ -19,42 +18,24 @@ class LLMService {
 
   LLMService();
 
-  String _getAssessmentAsJson(Assessment assessment) {
-    JsonEncoder encoder = const JsonEncoder();
-    var map = {"multipleChoice": [], "shortAnswer": [], "essay": []};
-    for (var question in assessment.questions) {
-      switch (question.questionType) {
-        case "Multiple Choice":
-          map['multipleChoice']!.add({"QUESTION": question.questionText});
-          break;
-        case "Short Answer":
-          map['shortAnswer']!.add({"QUESTION": question.questionText});
-          break;
-        case "Essay":
-          map['essay']!.add({"QUESTION": question.questionText});
-          break;
-        default:
-          continue;
-      }
-    }
-    try {
-      String json = encoder.convert(map);
-      return json;
-    } catch (e) {
-      return '';
-    }
-  }
-
   String buildPrompt(
     String topic,
-    AssessmentState state,
+    AssessmentProvider assessmentProvider,
     bool isMathQuiz,
+    int exampleAssessmentSetIndex,
+    int exampleAssessmentIndex
   ) {
-    var typeMap = state.getQuestionTypeCount();
+    var typeMap = assessmentProvider.getQuestionTypeCount();
+    Assessment exampleAssessment = assessmentProvider.getAssessmentFromAssessmentSet(exampleAssessmentSetIndex, exampleAssessmentIndex);
     int multipleChoiceCount = typeMap['Multiple Choice']!;
     int shortAnswerCount = typeMap['Short Answer']!;
     int essayCount = typeMap['Essay']!;
     int totalCount = multipleChoiceCount + shortAnswerCount + essayCount;
+
+    if(exampleAssessment.assessmentId == -1){
+      exampleAssessment = assessmentProvider.a;
+    }
+
     return '''${isMathQuiz ? 'The focus of this assessment is math. ' : ''}Please generate as many complete assessments as you can with $totalCount questions each based on the following assessment. This assessment is about the subject $topic. Each assessment should be very similar to the original assessment and include $multipleChoiceCount multiple choice questions, 0 math questions, $shortAnswerCount short answer questions and $essayCount essay questions. Essay questions should instead include a grading rubric. Provide each assessment formatted as its own json. 
 Use in the following format for short answer and math questions:
 QUESTION NUMBER:
@@ -76,7 +57,7 @@ QUESTION:
 RUBRIC:
 
 Check your answers to ensure they are correct. Do not provide the work checking in your response but edit the JSON with the correct answer if you find errors. Do not include any questions that are copied directly from the internet. None of the assessments should contain exact copies of the assessments provided in this prompt. Only return assessments that include all $totalCount questions.
-    ${_getAssessmentAsJson(state.assessment)}''';
+    ${exampleAssessment.getAssessmentAsJson()}''';
   }
 
   Future<http.Response> sendRequest(http.Client httpClient, String prompt) {
@@ -112,8 +93,8 @@ Check your answers to ensure they are correct. Do not provide the work checking 
     }
   }
 
-  String getMoreAssessmentsPrompt(AssessmentState state) {
-    var typeMap = state.getQuestionTypeCount();
+  String getMoreAssessmentsPrompt(AssessmentProvider assessmentProvider) {
+    var typeMap = assessmentProvider.getQuestionTypeCount();
     int multipleChoiceCount = typeMap['Multiple Choice']!;
     int shortAnswerCount = typeMap['Short Answer']!;
     int essayCount = typeMap['Essay']!;
