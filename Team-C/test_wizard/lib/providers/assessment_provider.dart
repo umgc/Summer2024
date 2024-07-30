@@ -38,6 +38,16 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //adds assessment to assessmentSet
+  void updateAssessment(int assessmentSetIndex, int assessmentIndex, Assessment updatedAssessment){
+    if(assessmentSetIndex < _savedAssessments.assessmentSets.length){
+      if(assessmentIndex < _savedAssessments.assessmentSets[assessmentSetIndex].assessments.length){
+        _savedAssessments.assessmentSets[assessmentSetIndex].assessments[assessmentIndex] = updatedAssessment;
+      }
+    }
+    notifyListeners();
+  }
+
   void createAssessmentVersion(int assessmentId, int version, bool isExampleAssessment){
     a = Assessment(assessmentId, version, isExampleAssessment);
     notifyListeners();
