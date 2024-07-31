@@ -41,6 +41,7 @@ factory KnowledgeService() {
   }
 
   void setKnowledge(String str, userID) {
+    str = str.replaceAll('\'', '\'\'');
     db.getConnection().then((conn) {
       // This needs to grab the stored user ID to set it appropriatly.
       String sql =
@@ -52,6 +53,7 @@ factory KnowledgeService() {
   
 
    void removeKnowledge(String str, userID) {
+    str = str.replaceAll('\'', '\'\'');
     db.getConnection().then((conn) {
       // This needs to grab the stored user ID to set it appropriatly.
       String sql =
