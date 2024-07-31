@@ -19,7 +19,7 @@ void testConversion(String xml) {
 
   print('\nObject to XML:');
   print('-----------------');
-  String convertedXml = XmlConverter.convertQuizToXml(quiz).toXmlString();
+  String convertedXml = XmlConverter.convertQuizToXml(quiz, true).toXmlString();
   print(convertedXml);
 
   print('\nXML back to Object:');

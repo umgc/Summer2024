@@ -1,3 +1,4 @@
+import 'package:intelligrade/controller/html_converter.dart';
 import 'package:xml/xml.dart';
 
 import 'beans.dart';
@@ -11,7 +12,8 @@ class XmlConverter {
   // Convert a populated Quiz object into an XML Document.
   //
   // To get the XML String, use XmlDocument.toXmlString()
-  static XmlDocument convertQuizToXml(Quiz quiz) {
+  static XmlDocument convertQuizToXml(Quiz quiz, [bool? toMoodle]) {
+    bool convertForMoodle = toMoodle ?? false;
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0" encoding="UTF-8"');
     builder.element(XmlConsts.quiz, nest: () {
@@ -30,7 +32,11 @@ class XmlConverter {
           builder.attribute(XmlConsts.type, question.type);
           // question name
           builder.element(XmlConsts.name, nest: () {
-            builder.element(XmlConsts.text, nest: question.name);
+            if (convertForMoodle) {
+              builder.element(XmlConsts.text, nest: getShortenedDesc(question.questionText));
+            } else {
+              builder.element(XmlConsts.text, nest: question.name);
+            }
           });
           // question text
           builder.element(XmlConsts.questiontext, nest: () {
@@ -96,5 +102,16 @@ class XmlConverter {
       builder.element(XmlConsts.promptUsed, nest: quiz.promptUsed);
     });
     return builder.buildDocument();
+  }
+
+  static String getShortenedDesc(String description) {
+    int charLimit = 30;
+    String desc = HtmlConverter.convert(description.trim());
+    desc = desc.replaceAll('\n', '');
+    if (desc.length <= charLimit) return desc;
+    desc = desc.substring(0, charLimit);
+    desc = desc.substring(0, desc.lastIndexOf(' '));
+    desc = "$desc...";
+    return desc;
   }
 }

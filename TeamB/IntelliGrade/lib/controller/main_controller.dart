@@ -230,7 +230,7 @@ class MainController {
     if (!isLoggedIn) {
       throw Exception('User is not logged in.');
     }
-    String xml = XmlConverter.convertQuizToXml(quiz).toString();
+    String xml = XmlConverter.convertQuizToXml(quiz, true).toString();
     var moodleApi = MoodleApiSingleton();
     try {
       await moodleApi.importQuiz(courseId, xml);
