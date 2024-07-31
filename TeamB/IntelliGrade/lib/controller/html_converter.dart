@@ -8,6 +8,9 @@ class HtmlConverter {
         .replaceAll('</li>', '\n')
         .replaceAll('<ul>', '\n')
         .replaceAll('</ul>', '\n')
-        .replaceAll('<.*>', '');
+        .replaceAll('<i>', '')
+        .replaceAll('</i>', '')
+        .replaceAll('<b>', '')
+        .replaceAll('</b>', '');
   }
 }

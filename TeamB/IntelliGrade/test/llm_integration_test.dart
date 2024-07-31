@@ -83,7 +83,7 @@ Future main() async {
       try {
         String courseId = '2';
         String reconvertedXml =
-            XmlConverter.convertQuizToXml(quiz).toXmlString();
+            XmlConverter.convertQuizToXml(quiz, true).toXmlString();
         print('Reconverted XML: $reconvertedXml');
         await moodleApi.importQuiz(courseId, reconvertedXml);
         print('Questions successfully imported!');
