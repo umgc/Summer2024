@@ -1,7 +1,7 @@
 import 'package:http/http.dart';
 
 void main() async {
-  var request = MultipartRequest('POST', Uri.parse('http://127.0.0.1:8080/compile'));
+  var request = MultipartRequest('POST', Uri.parse('http://3.143.209.60:8080/compile'));
   request.files.add(await MultipartFile.fromPath('sample_math.dart', '/home/ggaynor/dev/swen670/Summer2024/TeamB/compiler/test/compiler_test_files/with_unit_test/ggaynor_sample_math.dart'));
   request.files.add(await MultipartFile.fromPath('sample_math.dart', '/home/ggaynor/dev/swen670/Summer2024/TeamB/compiler/test/compiler_test_files/with_unit_test/tzhu_sample_math.dart'));
   request.files.add(await MultipartFile.fromPath('sample_math.dart', '/home/ggaynor/dev/swen670/Summer2024/TeamB/compiler/test/compiler_test_files/with_unit_test/ebennett_sample_math.dart'));

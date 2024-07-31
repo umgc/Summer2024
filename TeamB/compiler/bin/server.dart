@@ -29,14 +29,12 @@ Future<Response> _compilerHandler(Request req) async {
 
   //Set http boundary, file counter, and file variables
   final boundary = '--dart-http-boundary';
-  //final boundary = '------------';
   int fileIncrement = 0;
   int fileCount = 0;
   List<String> testFile = [];
   List<Map<String, String>> studentFiles = [];
   String studentFileName = '';
   String fileName = '';
-  
 
   // Look for number of boundaries set
   for(var k = 0; k < contents.length; k++) {
@@ -49,7 +47,7 @@ Future<Response> _compilerHandler(Request req) async {
     // Checking if at boundary of response, and if both files have been read
     if(contents[i].startsWith(boundary) && fileIncrement < fileCount - 1) {
       // Looking for unit test file
-      if(contents[i+2].contains('_test.dart')) { //// CHANGE THIS BACK TO I+2
+      if(contents[i+2].contains('_test.dart')) { 
         //Read code-portion of payload up to the next boundary
         for(var j = i + 4; j < contents.length; j++) {
           // If boundary was reached, set j to list length to terminate loop
@@ -63,8 +61,8 @@ Future<Response> _compilerHandler(Request req) async {
       // If unit test file was not found, we are at submission file
       } else {
         //Get name of student-code submitted file
-        fileName = contents[i+2].split('"')[1]; //// CHANGE THIS BACK TO I+2
-        studentFileName = contents[i+2].split('"')[3]; //// CHANGE THIS BACK TO I+2
+        fileName = contents[i+2].split('"')[1]; 
+        studentFileName = contents[i+2].split('"')[3]; 
         List<String> submissionFile = [];
         //Read code-portion of payload up to the next boundary
         for(var j = i + 4; j < contents.length; j++) {
