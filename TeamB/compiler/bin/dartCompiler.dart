@@ -9,25 +9,25 @@ import 'dart:io';
 }*/
 
 class DartCompiler {
-  Future<String> getOutput(String testCode, studentCode, studentFileName) async {
+  Future<String> getOutput(String testCode, List<Map<String, String>> studentFiles, String fileName) async {
 
-    //Timer(const Duration(seconds: 10), handleTimeout);
+    var results = '';
     final testFileName = '/app/bin/unit_test.dart';
     var testFile = await File(testFileName).writeAsString(testCode);
 
-    studentFileName = '/app/bin/$studentFileName';
-    var studentFile = await File(studentFileName).writeAsString(studentCode);
-    
-    var testResult = Process.runSync('dart', [testFileName]);
+    fileName = '/app/bin/$fileName';
 
-    if(testResult.exitCode != 0) {
-      return testResult.stderr + '\n';
-    } else {
-      return testResult.stdout;
+    for(int i = 0; i < studentFiles.length; i++) {
+      var studentFile = await File(fileName).writeAsString(studentFiles[i].values.first, mode: FileMode.writeOnly);
+      var testResults = await Process.run('dart', [testFileName]);
+
+      if(testResults.exitCode != 0) {
+        results = results + studentFiles[i].keys.first.split('_')[0] + ': ' + testResults.stderr + '\n';
+      } else {
+        results = results + studentFiles[i].keys.first.split('_')[0] + ': ' + testResults.stdout + '\n';
+      }
     }
-  }
 
-  void handleTimeout() {
-    throw 'Time Exceeded';
+    return results;
   }
 }
