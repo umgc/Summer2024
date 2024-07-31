@@ -130,7 +130,7 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
       var tempscript;
       var index = 0;
       var found = false;
-      transcript = transcriptbasic.split(":");
+      transcript = transcriptbasic.split(": ");
       for (int i = 1; i < transcript.length - 1; i++) {
         for (int j = 0; j < speakers.length; j++) {
           if (transcript[i].endsWith(speakers[j])) {
