@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:test_wizard/views/assessment_results_view.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
@@ -8,6 +12,7 @@ class ViewAssessmentPage extends StatefulWidget {
   final String assessmentName;
   final String course;
   final String assessmentId;
+
   const ViewAssessmentPage({
     super.key,
     required this.assessmentName,
@@ -33,6 +38,31 @@ class ViewTestState extends State<ViewAssessmentPage> {
       'status': 'Not Started'
     },
   ];
+
+  String topic = '';
+  int courseId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAssessmentData();
+  }
+
+  Future<void> _loadAssessmentData() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/assessments.txt');
+      final fileContent = await file.readAsString();
+      final jsonData = jsonDecode(fileContent);
+
+      setState(() {
+        topic = jsonData['assessmentSets'][0]['assessments'][0]['topic'] ?? 'Default Topic';
+        courseId = jsonData['assessmentSets'][0]['course']['courseId'] ?? 0;
+      });
+    } catch (e) {
+      print('Error reading file: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +106,8 @@ class ViewTestState extends State<ViewAssessmentPage> {
                                     '${widget.assessmentName} ${test['version']}',
                                 assessmentId: widget.assessmentId,
                                 assessmentName: widget.assessmentName,
-                                topic: 'Your topic here',
-                                courseId: 5, 
+                                topic: topic,
+                                courseId: courseId,
                               ),
                             ),
                           );
