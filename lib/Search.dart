@@ -79,7 +79,7 @@ class _SearchState extends State<Search> {
       var filteredtranscriptValues = [];
       for(Transcript tran in transcriptValues){
        // print(date);
-       // print(tran.date.split(" ")[0]);
+        //print(tran.date.split(" ")[0]);
         if(date == tran.date.split(" ")[0]){
           filteredtranscriptValues.add(tran);
         }

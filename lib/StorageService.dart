@@ -60,7 +60,7 @@ class StorageService {
   Future<int> insertTranscriptFile(String name, String content) async {
     Database db = await database;
     DateTime now = DateTime.now();
-    String localTime = DateFormat('MM-dd-yyyy HH:mm:ss').format(now);
+    String localTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     return await db.insert(
       'transcripts',
       {
