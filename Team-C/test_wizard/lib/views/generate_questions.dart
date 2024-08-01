@@ -258,52 +258,61 @@ class GenerateAssessmentsButton extends StatelessWidget {
       required this.exampleAssessmentSetIndex,
       required this.exampleAssessmentIndex});
 
-  Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
+  List<Assessment> getAssessmentFromOutput(List<Map<String, dynamic>> output, int id) {
     int questionId = 0; // same thing as assessmentId
     // generate a new assessment from the extracted
-    List<dynamic>? multipleChoiceQuestions = output['multipleChoice'] ?? [];
-    List<dynamic>? shortAnswerQuestions = output['shortAnswer'] ?? [];
-    List<dynamic>? essayQuestions = output['essay'] ?? [];
-    Assessment newAssessment = Assessment(id++, id,
-        false); // increment assessmentId after using so that version isn't 0 indexed
-    if (multipleChoiceQuestions != null) {
-      for (var question in multipleChoiceQuestions) {
-        newAssessment.questions.add(Question(
-          points: 0,
-          questionId: questionId++, // increment after use
-          questionType: 'Multiple Choice',
-          questionText: question['QUESTION'] ?? '',
-          answer:
-              question['ANSWER'] != null ? question['ANSWER'].toString() : '',
-          answerOptions: question['OPTIONS'] 
-              ? question['OPTIONS']
-              : [],
-        ));
-      }
-    }
-    if (shortAnswerQuestions != null) {
-      for (var question in shortAnswerQuestions) {
-        newAssessment.questions.add(Question(
-          points: 0,
-          questionId: questionId++, // increment after use
-          questionType: 'Short Answer',
-          questionText: question['QUESTION'] ?? '',
-          answer: question['ANSWER'] ?? '',
-        ));
-      }
-    }
-    if (essayQuestions != null) {
-      for (var question in essayQuestions) {
-        newAssessment.questions.add(Question(
-          points: 0,
-          questionId: questionId++, // increment after use
-          questionType: 'Essay',
-          questionText: question['QUESTION'] ?? '',
-          rubric: question['RUBRIC'] is String ? question['RUBRIC'] : '',
-        ));
-      }
-    }
-    return newAssessment;
+    List<Assessment> assessmentList = [];
+    List<dynamic> multipleChoiceQuestions = [];
+    List<dynamic> shortAnswerQuestions = [];
+    List<dynamic> essayQuestions = [];
+
+    //figure out position in object and how to get the list of questions in the question type.
+    output.forEach((assessment){
+      multipleChoiceQuestions = assessment['multipleChoice'] ?? [];
+      shortAnswerQuestions = assessment['shortAnswer'] ?? [];
+      essayQuestions = assessment['essay'] ?? [];
+      Assessment newAssessment = Assessment(id++, id,
+          false);
+    // increment assessmentId after using so that version isn't 0 indexed
+        if (multipleChoiceQuestions.isNotEmpty) {
+          for (var question in multipleChoiceQuestions) {
+            newAssessment.questions.add(Question(
+              points: 0,
+              questionId: questionId++, // increment after use
+              questionType: 'Multiple Choice',
+              questionText: question['QUESTION'] ?? '',
+              answer:
+                  question['ANSWER'] != null ? question['ANSWER'].toString() : '',
+              answerOptions: question['OPTIONS'].length > 0
+                  ? question['OPTIONS']
+                  : [],
+            ));
+          }
+        }
+        if (shortAnswerQuestions.isNotEmpty) {
+          for (var question in shortAnswerQuestions) {
+            newAssessment.questions.add(Question(
+              points: 0,
+              questionId: questionId++, // increment after use
+              questionType: 'Short Answer',
+              questionText: question['QUESTION'] ?? '',
+              answer: question['ANSWER'] ?? '',
+            ));
+          }
+        }
+        if (essayQuestions.isNotEmpty) {
+          for (var question in essayQuestions) {
+            newAssessment.questions.add(Question(
+              points: 0,
+              questionId: questionId++, // increment after use
+              questionType: 'Essay',
+              questionText: question['QUESTION'] ?? '',
+              rubric: question['RUBRIC'] is String ? question['RUBRIC'] : '',
+            ));
+          }
+        }
+    });
+    return assessmentList;
   }
 
   @override
@@ -368,15 +377,15 @@ class GenerateAssessmentsButton extends StatelessWidget {
                       llmService.addMessage(output);
                       // parse the whole output one assessment at a time
                       while (output != null) {
-                        var (extractedAssessment, rest) =
-                            llmService.extractAssessment(output) ??
+                        var (extractedAssessments, rest) =
+                            llmService.extractAssessments(output) ??
                                 (null, null);
                         output = rest;
 
-                        if (extractedAssessment != null) {
-                          Assessment newAssessment = getAssessmentFromOutput(
-                              extractedAssessment, assessmentId++);
-                          assessmentSet.assessments.add(newAssessment);
+                        if (extractedAssessments != null) {
+                          List<Assessment> newAssessments = getAssessmentFromOutput(
+                              extractedAssessments, assessmentId++);
+                          newAssessments.forEach((assessment){assessmentSet.assessments.add(assessment);});
                         }
                       }
                       questionGenerationDetail.prompt = llmService

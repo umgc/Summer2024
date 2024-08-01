@@ -21,8 +21,8 @@ void main() {
       String broken = 'This isnt json';
 
       final llm = LLMService();
-      var (expected, _) = llm.extractAssessment(testString) ?? (null, null);
-      var (expected2, _) = llm.extractAssessment(broken) ?? (null, null);
+      var (expected, _) = llm.extractAssessments(testString) ?? (null, null);
+      var (expected2, _) = llm.extractAssessments(broken) ?? (null, null);
       expect(expected, {"hello": "world"});
       expect(expected2, null);
     });
