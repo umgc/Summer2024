@@ -611,7 +611,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     [],
                     assessmentName,
                     Course(
-                        0, courseName)); // course is always generated for now
+                        courseId, courseName)); // course is always generated for now
                 // this gets incremented with each new assessment
                 int assessmentId = 0;
                 // manually check for error
