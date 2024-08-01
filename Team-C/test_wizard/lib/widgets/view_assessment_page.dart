@@ -55,10 +55,15 @@ class ViewTestState extends State<ViewAssessmentPage> {
       final fileContent = await file.readAsString();
       final jsonData = jsonDecode(fileContent);
 
-      setState(() {
-        topic = jsonData['assessmentSets'][0]['course']['topic'] ?? 'Default Topic';
-        courseId = jsonData['assessmentSets'][0]['course']['courseId'] ?? 0;
-      });
+      for (var assessmentSet in jsonData['assessmentSets']) {
+        if (assessmentSet['assessmentName'] == widget.assessmentName) {
+          setState(() {
+            topic = assessmentSet['course']['topic'] ?? 'Default Topic';
+            courseId = assessmentSet['course']['courseId'] ?? 0;
+          });
+          break;
+        }
+      }
     } catch (e) {
       print('Error reading file: $e');
     }
