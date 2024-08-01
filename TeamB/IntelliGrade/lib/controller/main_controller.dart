@@ -226,36 +226,28 @@ class MainController {
     html.window.localStorage.remove(filename);
   }
 
-  Future<bool> postAssessmentToMoodle(Quiz quiz, String courseId) async {
+  Future<void> postAssessmentToMoodle(Quiz quiz, String courseId) async {
     if (!isLoggedIn) {
       throw Exception('User is not logged in.');
     }
-    String xml = XmlConverter.convertQuizToXml(quiz, true).toString();
     var moodleApi = MoodleApiSingleton();
-    try {
-      await moodleApi.importQuiz(courseId, xml);
-      if (kDebugMode) {
-        print('Questions successfully imported!');
+    for (Quiz q in XmlConverter.splitQuiz(quiz)) {
+      String xml = XmlConverter.convertQuizToXml(q, true).toString();
+      try {
+        await moodleApi.importQuiz(courseId, xml);
+        if (kDebugMode) {
+          print('Questions successfully imported!');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
       }
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      return false;
     }
   }
 
-  Future<String> compileCodeAndGetOutput(
-      String studentFileName,
-      Uint8List studentFileBytes,
-      String gradingFileName,
-      Uint8List gradingFileBytes) async {
-    return await CompilerApiService.compileAndGrade(
-        studentFileName: studentFileName,
-        studentFileBytes: studentFileBytes,
-        gradingFileName: gradingFileName,
-        gradingFileBytes: gradingFileBytes);
+  Future<String> compileCodeAndGetOutput(List<FileNameAndBytes> files) async {
+    return await CompilerApiService.compileAndGrade(files);
   }
 
   Future<bool> loginToMoodle(String username, String password) async {

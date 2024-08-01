@@ -20,10 +20,12 @@ class _GradingPageState extends State<GradingPage> {
   Course? _selectedCourse;
   String? _selectedExam;
   String? _selectedStudent;
-  String? _studentFileName;
-  String? _gradingFileName;
-  Uint8List? _studentFileBytes;
-  Uint8List? _gradingFileBytes;
+  List<FileNameAndBytes> _studentFiles = [];
+  FileNameAndBytes? _gradingFile;
+  // List<String> _studentFileNamesDisplay = []; // names to display
+  // String? _gradingFileName;
+  // Uint8List? _gradingFileBytes;
+  // List<Uint8List> _studentFileBytesList = [];
 
   final List<String> _exams = [
     'Exam 1',
@@ -40,25 +42,19 @@ class _GradingPageState extends State<GradingPage> {
   List<Course> courses = [];
 
   bool readyForUpload() {
-    return _studentFileName != null && _studentFileBytes != null && _gradingFileName != null && _gradingFileBytes != null;
+    return _gradingFile != null && _studentFiles.isNotEmpty;
+    // return _studentFileName != null && _studentFileBytesList.isNotEmpty && _gradingFileName != null && _gradingFileBytes != null;
   }
 
   Future<String> _compileAndGrade() async {
     if (kDebugMode) {
-      print(_studentFileName);    
-      print(_studentFileBytes);
-      print(_gradingFileName);
-      print(_gradingFileBytes);
+      print(_gradingFile);
+      print(_studentFiles.join('\n'));
     }
     if (!readyForUpload()) return 'Invalid files';
     String output;
     try {
-      output = await MainController().compileCodeAndGetOutput(
-          _studentFileName!,
-          _studentFileBytes!,
-          _gradingFileName!,
-          _gradingFileBytes!
-      );
+      output = await MainController().compileCodeAndGetOutput(List.from(_studentFiles)..add(_gradingFile!));
       return output;
     } catch (e) {
       return e.toString();
@@ -105,16 +101,22 @@ class _GradingPageState extends State<GradingPage> {
   }
 
   Future<void> pickStudentFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
-    _studentFileName = result?.files.single.name ?? _studentFileName;
-    _studentFileBytes = result?.files.single.bytes ?? _studentFileBytes;
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
+    // _studentFileName = result?.files.single.name ?? _studentFileName;
+    // _studentFileBytes = result?.files.single.bytes ?? _studentFileBytes;
+    _studentFiles = result?.files.map((file) => FileNameAndBytes(file.name, file.bytes!)).toList() ?? _studentFiles;
+    // _studentFileBytesList = result?.files.map((file) => file.bytes!).toList() ?? [];
     setState((){});
   }
 
   Future<void> pickGradingFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false);
-    _gradingFileName = result?.files.single.name ?? _gradingFileName;
-    _gradingFileBytes = result?.files.single.bytes ?? _gradingFileBytes;
+    if (result != null) {
+      _gradingFile = FileNameAndBytes(result!.files.single.name, result!.files.single.bytes!);
+    }
+    // _gradingFileName = result?.files.single.name ?? _gradingFileName;
+    // _gradingFileBytes = result?.files.single.bytes ?? _gradingFileBytes;
+    // _studentFileName = _gradingFileName?.replaceAll('_test', '');
     setState((){});
   }
 
@@ -196,7 +198,7 @@ class _GradingPageState extends State<GradingPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                    _studentFileName ?? '',
+                    _studentFiles.map((file) => file.filename).toList().join(', '),
                     style: const TextStyle(
                         color: Colors.green
                     )
@@ -214,7 +216,7 @@ class _GradingPageState extends State<GradingPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                    _gradingFileName ?? '',
+                    _gradingFile?.filename ?? '',
                     style: const TextStyle(
                         color: Colors.green
                     )

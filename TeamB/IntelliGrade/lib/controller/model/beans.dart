@@ -1,4 +1,5 @@
 import 'package:xml/xml.dart';
+import 'dart:typed_data';
 
 // Tags and attributes used in Moodle XML. Useful for preventing typos.
 class XmlConsts {
@@ -15,16 +16,9 @@ class XmlConsts {
   static const feedback = 'feedback';
   static const generalfeedback = 'generalfeedback';
   static const attachmentsrequired = 'attachmentsrequired';
-  // static const rubric = 'rubric';
   static const responseformat = 'responseformat';
   static const responserequired = 'responserequired';
   static const defaultgrade = 'defaultgrade';
-  // static const criteria = 'rubric_criteria';
-  // static const criterion = 'criterion';
-  // static const levels = 'levels';
-  // static const level = 'level';
-  // static const score = 'score';
-  // static const definition = 'definition';
   static const responsetemplate = 'responsetemplate';
   static const graderinfo = 'graderinfo';
   static const promptUsed = 'promptused';
@@ -88,101 +82,6 @@ class Quiz {
   }
 }
 
-// class Rubric {}
-
-// class RubricCriteria {
-//   List<RubricCriterion> criteria = <RubricCriterion>[];
-//
-//   // Simple constructor. criteria param is optional
-//   RubricCriteria([List<RubricCriterion>? criteria]);
-//
-//   // XML factory constructor
-//   factory RubricCriteria.fromXml(XmlElement criteriaElement) {
-//     RubricCriteria rubricCriteria = RubricCriteria();
-//
-//     for (XmlElement criterionElement
-//         in criteriaElement.findElements(XmlConsts.criteria).toList()) {
-//       rubricCriteria.criteria.add(RubricCriterion.fromXml(criterionElement));
-//     }
-//     return rubricCriteria;
-//   }
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     // sb.write(answerText);
-//     // sb.write('  <= ($fraction%)');
-//     // if (feedbackText != null) {
-//     //   sb.write(' - $feedbackText');
-//     // }
-//     return sb.toString();
-//   }
-// }
-//
-// class RubricCriterion {
-//   String description;
-//   List<CriterionLevel> criterionLevels = <CriterionLevel>[];
-//
-//   // Simple constructor. criterionLevels param is optional
-//   RubricCriterion(this.description, [List<CriterionLevel>? criterionLevels]);
-//
-//   // XML factory constructor
-//   factory RubricCriterion.fromXml(XmlElement criterionElement) {
-//     RubricCriterion rubricCriterion = RubricCriterion(criterionElement
-//             .getElement(XmlConsts.description)
-//             ?.getElement(XmlConsts.text)
-//             ?.innerText ??
-//         'UNKNOWN');
-//
-//     for (XmlElement levelElement
-//         in criterionElement.findElements(XmlConsts.levels).toList()) {
-//       rubricCriterion.criterionLevels.add(CriterionLevel.fromXml(levelElement));
-//     }
-//     return rubricCriterion;
-//   }
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     // sb.write(answerText);
-//     // sb.write('  <= ($fraction%)');
-//     // if (feedbackText != null) {
-//     //   sb.write(' - $feedbackText');
-//     // }
-//     return sb.toString();
-//   }
-// }
-//
-// class CriterionLevel {
-//   String definition;
-//   String score;
-//
-//   // Simple constructor.
-//   CriterionLevel(this.definition, this.score);
-//
-//   // XML factory constructor
-//   factory CriterionLevel.fromXml(XmlElement levelElement) {
-//     return CriterionLevel(
-//         levelElement
-//                 .getElement(XmlConsts.definition)
-//                 ?.getElement(XmlConsts.text)
-//                 ?.innerText ??
-//             'UNKNOWN',
-//         levelElement.getElement(XmlConsts.score)?.innerText ?? 'UNKNOWN');
-//   }
-//
-//   @override
-//   String toString() {
-//     final sb = StringBuffer();
-//     // sb.write(answerText);
-//     // sb.write('  <= ($fraction%)');
-//     // if (feedbackText != null) {
-//     //   sb.write(' - $feedbackText');
-//     // }
-//     return sb.toString();
-//   }
-// }
-
 // Abstract class that represents a single question.
 class Question {
   String name; // question name - required.
@@ -240,20 +139,6 @@ class Question {
       responseTemplate: questionElement.getElement(XmlConsts.responsetemplate)?.innerText,
       graderInfo: questionElement.getElement(XmlConsts.graderinfo)?.getElement(XmlConsts.text)?.innerText,
     );
-
-    // var respformat = questionElement.getElement(XmlConsts.responseformat);
-    // if (respformat != null) {
-    //   question.responseformat = respformat.innerText;
-    // }
-    // var resprequired = questionElement.getElement(XmlConsts.responserequired);
-    // if (resprequired != null) {
-    //   question.responserequired = resprequired.innerText;
-    // }
-    // var attachrequired =
-    //     questionElement.getElement(XmlConsts.attachmentsrequired);
-    // if (attachrequired != null) {
-    //   question.attachmentsrequired = attachrequired.innerText;
-    // }
 
     for (XmlElement answerElement
         in questionElement.findElements(XmlConsts.answer).toList()) {
@@ -369,4 +254,17 @@ class AssignmentForm {
       this.assignmentCount,
       this.gradingCriteria,
       this.codingLanguage});
+}
+
+// Helper bean class for file uploading.
+class FileNameAndBytes {
+  final String filename;
+  final Uint8List bytes;
+
+  FileNameAndBytes(this.filename, this.bytes);
+
+  @override
+  String toString() {
+    return "$filename: ${bytes.lengthInBytes} bytes";
+  }
 }

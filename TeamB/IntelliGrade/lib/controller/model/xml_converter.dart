@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:intelligrade/controller/html_converter.dart';
 import 'package:xml/xml.dart';
 
@@ -113,5 +114,26 @@ class XmlConverter {
     desc = desc.substring(0, desc.lastIndexOf(' '));
     desc = "$desc...";
     return desc;
+  }
+
+  // Split a quiz into list of smaller quizzes
+  static List<Quiz> splitQuiz(Quiz quiz) {
+    int qperq;
+    switch (quiz.questionList.first.type) {
+      case 'essay':
+        qperq = 1;
+        break;
+      case 'multichoice':
+      case 'truefalse':
+      case 'shortanswer':
+      default:
+        qperq = 4;
+    }
+    List<List<Question>> splitQuizzes = quiz.questionList.slices(qperq).toList();
+    List<Quiz> quizList = [];
+    for (List<Question> q in splitQuizzes) {
+      quizList.add(Quiz(questionList: q));
+    }
+    return quizList;
   }
 }
