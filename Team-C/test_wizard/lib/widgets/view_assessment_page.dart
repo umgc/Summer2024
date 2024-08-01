@@ -56,7 +56,7 @@ class ViewTestState extends State<ViewAssessmentPage> {
       final jsonData = jsonDecode(fileContent);
 
       setState(() {
-        topic = jsonData['assessmentSets'][0]['assessments'][0]['topic'] ?? 'Default Topic';
+        topic = jsonData['assessmentSets'][0]['course']['topic'] ?? 'Default Topic';
         courseId = jsonData['assessmentSets'][0]['course']['courseId'] ?? 0;
       });
     } catch (e) {
