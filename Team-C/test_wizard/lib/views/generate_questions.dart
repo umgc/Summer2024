@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/models/assessment_set.dart';
@@ -8,6 +9,7 @@ import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
+import 'package:test_wizard/services/document_directory_service.dart';
 import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
@@ -273,8 +275,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
           questionText: question['QUESTION'] ?? '',
           answer:
               question['ANSWER'] != null ? question['ANSWER'].toString() : '',
-          answerOptions: question['OPTIONS'] != null
-              ? question['OPTIONS'].cast<String>()
+          answerOptions: question['OPTIONS'] 
+              ? question['OPTIONS']
               : [],
         ));
       }
@@ -306,6 +308,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger();
+    final DocumentDirectoryService dds=DocumentDirectoryService('VeryDescriptiveName');
     return Consumer<AssessmentProvider>(
         builder: (context, savedAssessments, child) {
       return Column(
@@ -357,6 +361,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     // on success
                     if (res.statusCode == 200) {
                       final finalResponse = res.body;
+                      logger.i(finalResponse);
+                      dds.writeToFile(finalResponse);
                       String? output = finalResponse;
                       // save the output to create thread behavior
                       llmService.addMessage(output);
@@ -392,7 +398,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     if (context.mounted) {
                       Navigator.of(context).pop();
                     }
-                    print(e);
+                    //print(e);
                     break;
                   }
                 }
@@ -408,7 +414,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   if (!kIsWeb) {
                     savedAssessments.saveAssessmentsToFile();
                   }
-                  print('Success!');
+                  //print('Success!');
                   if (context.mounted) {
                     Navigator.of(context).pop();
                     Navigator.of(context).popUntil(

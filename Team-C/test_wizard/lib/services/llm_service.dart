@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
+import 'package:test_wizard/services/document_directory_service.dart';
 
 class LLMService {
+  final DocumentDirectoryService dds=DocumentDirectoryService('VeryDescriptivePareseName');
   final String _url = 'https://api.perplexity.ai/chat/completions';
-  final String _apiKey = const String.fromEnvironment('API_KEY');
+  final String _apiKey = '';
   List<Map<String, String>> messages = [
     {
       'role': 'system',
@@ -36,7 +38,7 @@ class LLMService {
       exampleAssessment = assessmentProvider.a;
     }
 
-    return '''${isMathQuiz ? 'The focus of this assessment is math. ' : ''}Please generate as many complete assessments as you can with $totalCount questions each based on the following assessment. This assessment is about the subject $topic. Each assessment should be very similar to the original assessment and include $multipleChoiceCount multiple choice questions, 0 math questions, $shortAnswerCount short answer questions and $essayCount essay questions. Essay questions should instead include a grading rubric. Provide each assessment formatted as its own json. 
+    return '''${isMathQuiz ? 'The focus of this assessment is math. ' : ''}Please generate as many complete assessments as you can with $totalCount questions each based on the following assessment. This assessment is about the subject $topic. Each assessment should be very similar to the original assessment and include $multipleChoiceCount multiple choice questions, 0 math questions, $shortAnswerCount short answer questions and $essayCount essay questions. Essay questions should instead include a grading rubric. Provide each assessment formatted as its own json.
 Use in the following format for short answer and math questions:
 QUESTION NUMBER:
 TYPE:
@@ -85,6 +87,8 @@ Check your answers to ensure they are correct. Do not provide the work checking 
     // scrub the string to make it json decodable
     json = json.replaceAll('\\n', '');
     json = json.replaceAll('\\', '');
+    json = json.replaceAll('  ', '');
+    dds.writeToFile(json);
     // then extract and parse
     try {
       return (jsonDecode(json), input.substring(endIndex + 1));
@@ -95,9 +99,9 @@ Check your answers to ensure they are correct. Do not provide the work checking 
 
   String getMoreAssessmentsPrompt(AssessmentProvider assessmentProvider) {
     var typeMap = assessmentProvider.getQuestionTypeCount();
-    int multipleChoiceCount = typeMap['Multiple Choice']!;
-    int shortAnswerCount = typeMap['Short Answer']!;
-    int essayCount = typeMap['Essay']!;
+    int multipleChoiceCount = typeMap['multipleChoice']!;
+    int shortAnswerCount = typeMap['shortAnswer']!;
+    int essayCount = typeMap['essay']!;
     int totalCount = multipleChoiceCount + shortAnswerCount + essayCount;
     return 'Please generate as many complete assessments as you can with $totalCount questions each based on the previous assessments you sent me. Do not repeat questions. Do use the same format.';
   }

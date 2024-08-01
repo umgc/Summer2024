@@ -44,6 +44,7 @@ class Assessment {
     }
     try {
       String json = encoder.convert(map);
+      json = '[{$json}]';
       return json;
     } catch (e) {
       return '';
