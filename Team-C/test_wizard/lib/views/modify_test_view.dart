@@ -183,7 +183,7 @@ class ButtonContainer extends StatelessWidget {
               formattedQuestion = {
                 'type': 'multichoice',
                 'name': {
-                  'text': 'TestWizard Created MultiChoice Question',
+                  'text': 'TestWizard Created Multiple Choice Question',
                 },
                 'questiontext': {
                   'format': 'html',
@@ -233,35 +233,43 @@ class ButtonContainer extends StatelessWidget {
                     .toList(),
               };
             } else if (question['questionType'] == 'Short Answer') {
+
               formattedQuestion = {
-                'type': 'shortanswer',
-                'name': {
-                  'text': 'TestWizard Created ShortAnswer Question',
+                "type": "shortanswer",
+                "name": {
+                  "text": "TestWizard Created Short Answer Question"
                 },
-                'questiontext': {
-                  'format': 'html',
-                  'text': '<p>${question['questionText']}</p>',
+                "questiontext": {
+                  "format": "html",
+                  "text": '<p>${question['questionText']}</p>'
                 },
-                'generalfeedback': {
-                  'format': 'html',
-                  'text': '',
+                "generalfeedback": {
+                  "format": "html",
+                  "text": "<p>The answer is: ${question['answer']}</p>"
                 },
-                'defaultgrade': 1,
-                'penalty': 0.3333333,
-                'hidden': 0,
-                'idnumber': '',
-                'answer': question['answerOptions']
-                    .map((option) {
-                      return {
-                        'text': option,
-                        'fraction': option == question['answer'] ? 100 : 0,
-                        'feedback': {
-                          'format': 'html',
-                          'text': '',
-                        },
-                      };
-                    })
-                    .toList(),
+                "defaultgrade": 1.0000000,
+                "penalty": 0.3333333,
+                "hidden": 0,
+                "answer": [
+                  {
+                    "fraction": 100,
+                    "format": "moodle_auto_format",
+                    "text": question['answer'],
+                    "feedback": {
+                      "format": "html",
+                      "text": "<p>Correct!</p>"
+                    }
+                  },
+                  {
+                    "fraction": 0,
+                    "format": "moodle_auto_format",
+                    "text": "*",
+                    "feedback": {
+                      "format": "html",
+                      "text": "<p>Incorrect</p>"
+                    }
+                  }
+                ]
               };
             } else if (question['questionType'] == 'Essay') {
               formattedQuestion = {
