@@ -218,7 +218,6 @@ class ButtonContainer extends StatelessWidget {
                     .asMap()
                     .entries
                     .map((entry) {
-                      final index = entry.key;
                       final option = entry.value;
                       return {
                         'fraction': option == question['answer'] ? 100 : 0,
@@ -329,9 +328,9 @@ class ButtonContainer extends StatelessWidget {
     }
 
     final url = '${userProvider.moodleUrl}/webservice/rest/server.php';
-    final createQuizFunction = 'local_testplugin_create_quiz';
-    final importQuestionsFunction = 'local_testplugin_import_questions_json';
-    final addQuestionToQuizFunction = 'local_testplugin_add_question_to_quiz';
+    const createQuizFunction = 'local_testplugin_create_quiz';
+    const importQuestionsFunction = 'local_testplugin_import_questions_json';
+    const addQuestionToQuizFunction = 'local_testplugin_add_question_to_quiz';
 
     try {
       // Create quiz
@@ -391,7 +390,7 @@ class ButtonContainer extends StatelessWidget {
       final importResponseBody = jsonDecode(importResponse.body);
       final questionIds = (importResponseBody as List<dynamic>).map((question) => question['questionid']).toList();
 
-      if (questionIds == null || questionIds.isEmpty) {
+      if (questionIds.isEmpty) {
         logger.w('Question IDs not found in response.');
         return;
       }
@@ -443,7 +442,6 @@ class ButtonContainer extends StatelessWidget {
           const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () async {
-              final questionAnswerProvider = Provider.of<QuestionAnswerProvider>(context, listen: false);
               await addQuizToMoodle(context, assessmentName, topic, courseId);
             },
             child: const Text('Save'),

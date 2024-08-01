@@ -10,17 +10,17 @@ void main() {
       controller = TextEditingController();
     });
 
-    Future<List<Map<String, dynamic>>> fakeDropdownFunction(String optionName) async {
-      if (optionName == 'Course') {
-        return [
-          {'id': 0, 'fullname': 'Select Course'},
-          {'id': 1, 'fullname': 'Course 1'},
-          {'id': 2, 'fullname': 'Course 2'},
-        ];
-      } else {
-        throw ArgumentError.value(optionName);
-      }
-    }
+    // Future<List<Map<String, dynamic>>> fakeDropdownFunction(String optionName) async {
+    //   if (optionName == 'Course') {
+    //     return [
+    //       {'id': 0, 'fullname': 'Select Course'},
+    //       {'id': 1, 'fullname': 'Course 1'},
+    //       {'id': 2, 'fullname': 'Course 2'},
+    //     ];
+    //   } else {
+    //     throw ArgumentError.value(optionName);
+    //   }
+    // }
     
     testWidgets('renders list correctly when enabled', (tester) async {
       Widget app = MaterialApp(
@@ -29,7 +29,7 @@ void main() {
             isDisabled: false,
             controller: controller,
             dropdownTitle: "Course",
-            options: [
+            options: const [
               {'id': 0, 'fullname': 'Select Course'},
               {'id': 1, 'fullname': 'Course 1'},
               {'id': 2, 'fullname': 'Course 2'},
@@ -52,7 +52,7 @@ void main() {
             isDisabled: true,
             controller: controller,
             dropdownTitle: "Course",
-            options: [
+            options: const [
               {'id': 0, 'fullname': 'Select Course'},
               {'id': 1, 'fullname': 'Course 1'},
               {'id': 2, 'fullname': 'Course 2'},
