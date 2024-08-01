@@ -15,6 +15,7 @@ import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/providers/user_provider.dart';
 import 'package:logger/logger.dart';
+import 'package:test_wizard/views/teacher_dashboard_view.dart';
 
 final logger = Logger();
 
@@ -329,8 +330,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AssessmentProvider>(
-        builder: (context, savedAssessments, child) {
+    return Consumer2<AssessmentProvider, UserProvider>(
+        builder: (context, savedAssessments, userProvider, child) {
       return Column(
         children: [
           ElevatedButton(
@@ -431,8 +432,12 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   logger.i('Success!');
                   if (context.mounted) {
                     Navigator.of(context).pop();
-                    Navigator.of(context).popUntil(
-                        (route) => route.settings.name == '/dashboard');
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => TeacherDashboard(
+                              status: userProvider.isLoggedInToMoodle ? 'logged_in' : 'guest')),
+                      (Route<dynamic> route) => false,
+                    );
                   }
                 }
               }
