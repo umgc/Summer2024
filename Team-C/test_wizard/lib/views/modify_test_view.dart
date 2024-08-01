@@ -14,6 +14,7 @@ import 'package:printing/printing.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:logger/logger.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 
 final logger = Logger();
 
@@ -136,18 +137,20 @@ class ButtonContainer extends StatelessWidget {
     );
   }
 
-  Future<void> addQuizToMoodle(String quizName, String topic, int courseId, String moodleUrl, String token) async {
-    if (moodleUrl.isEmpty) {
+  Future<void> addQuizToMoodle(BuildContext context, String quizName, String topic, int courseId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    if (userProvider.moodleUrl == null) {
       logger.w('Moodle URL is not provided.');
       return;
     }
 
-    if (token.isEmpty) {
+    if (userProvider.token == null) {
       logger.w('Token is not provided.');
       return;
     }
 
-    final url = '$moodleUrl/webservice/rest/server.php';
+    final url = '${userProvider.moodleUrl}/webservice/rest/server.php';
     final createQuizFunction = 'local_testplugin_create_quiz';
     final importQuestionsFunction = 'local_testplugin_import_questions_json';
     final addQuestionToQuizFunction = 'local_testplugin_add_question_to_quiz';
@@ -158,7 +161,7 @@ class ButtonContainer extends StatelessWidget {
         Uri.parse(url),
         body: {
           'wsfunction': createQuizFunction,
-          'wstoken': token,
+          'wstoken': userProvider.token!,
           'courseid': courseId.toString(),
           'name': quizName,
           'intro': topic,
@@ -186,7 +189,7 @@ class ButtonContainer extends StatelessWidget {
         Uri.parse(url),
         body: {
           'wsfunction': importQuestionsFunction,
-          'wstoken': token,
+          'wstoken': userProvider.token!,
           'moodlewsrestformat': 'json',
           'questionjson': jsonEncode({
             "quiz": {
@@ -370,7 +373,7 @@ class ButtonContainer extends StatelessWidget {
           Uri.parse(url),
           body: {
             'wsfunction': addQuestionToQuizFunction,
-            'wstoken': token,
+            'wstoken': userProvider.token!,
             'moodlewsrestformat': 'json',
             'questionid': questionId.toString(),
             'quizid': quizId.toString(),
@@ -413,10 +416,8 @@ class ButtonContainer extends StatelessWidget {
               final assessmentName = "Assessment Name";
               final topic = "Topic";
               final courseId = 5; 
-              final moodleUrl = "http://localhost"; 
-              final token = "e1744c2b49d8354b357acc09411e7fb6";
 
-              await addQuizToMoodle(assessmentName, topic, courseId, moodleUrl, token);
+              await addQuizToMoodle(context, assessmentName, topic, courseId);
             },
             child: const Text('Save'),
           ),
