@@ -36,7 +36,7 @@ class ModifyTestView extends StatelessWidget {
               const SizedBox(height: 20),
               const ColumnHeaderRow(),
               QSet(assessmentId: assessmentId),
-              const ButtonContainer(),
+              ButtonContainer(screenTitle: screenTitle),
               const EditPrompt(),
               const DeletedQuestions(),
             ],
@@ -56,10 +56,10 @@ class ColumnHeaderRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(child: ColumnHeader(headerText: 'Question')),
-        Expanded(
+        Flexible(
+          fit: FlexFit.tight,
           child: Padding(
-            padding:
-                EdgeInsets.only(left: 24.0), // Adjust the padding as needed
+            padding: EdgeInsets.only(left: 120.0), // Adjust the padding as needed
             child: ColumnHeader(headerText: 'Answer'),
           ),
         ),
@@ -70,7 +70,9 @@ class ColumnHeaderRow extends StatelessWidget {
 }
 
 class ButtonContainer extends StatelessWidget {
-  const ButtonContainer({super.key});
+  final String screenTitle;
+
+  const ButtonContainer({super.key, required this.screenTitle});
 
   void _printQuestionsAndAnswers(BuildContext context) {
     final questions =
@@ -82,16 +84,20 @@ class ButtonContainer extends StatelessWidget {
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: questions.map((qa) {
-              return pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Text('Question: ${qa.questionText}'),
-                  pw.Text('Answer: ${qa.answerText}'),
-                  pw.SizedBox(height: 20),
-                ],
-              );
-            }).toList(),
+            children: [
+              pw.Text(screenTitle, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 20),
+              ...questions.map((qa) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Question: ${qa.questionText}'),
+                    pw.Text('Answer: ${qa.answerText}'),
+                    pw.SizedBox(height: 20),
+                  ],
+                );
+              }).toList(),
+            ],
           );
         },
       ),
@@ -112,15 +118,23 @@ class ButtonContainer extends StatelessWidget {
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: questions.map((qa) {
-              return pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Text('Question: ${qa.questionText}'),
-                  pw.SizedBox(height: 20),
-                ],
-              );
-            }).toList(),
+            children: [
+              pw.Text(screenTitle, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 20),
+              pw.Text('Student Name:', style: pw.TextStyle(fontSize: 18)),
+              pw.SizedBox(height: 20),
+              pw.Text('Date:', style: pw.TextStyle(fontSize: 18)),
+              pw.SizedBox(height: 60), 
+              ...questions.map((qa) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Question: ${qa.questionText}'),
+                    pw.SizedBox(height: 80), 
+                  ],
+                );
+              }).toList(),
+            ],
           );
         },
       ),
