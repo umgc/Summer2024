@@ -21,11 +21,17 @@ final logger = Logger();
 class ModifyTestView extends StatelessWidget {
   final String screenTitle;
   final String assessmentId;
+  final String assessmentName;
+  final String topic;
+  final int courseId;
 
   const ModifyTestView({
     super.key,
     required this.screenTitle,
     required this.assessmentId,
+    required this.assessmentName,
+    required this.topic,
+    required this.courseId,
   });
 
   @override
@@ -42,7 +48,11 @@ class ModifyTestView extends StatelessWidget {
               const SizedBox(height: 20),
               const ColumnHeaderRow(),
               QSet(assessmentId: assessmentId),
-              const ButtonContainer(),
+              ButtonContainer(
+                assessmentName: assessmentName,
+                topic: topic,
+                courseId: courseId,
+              ),
               const EditPrompt(),
               const DeletedQuestions(),
             ],
@@ -76,7 +86,16 @@ class ColumnHeaderRow extends StatelessWidget {
 }
 
 class ButtonContainer extends StatelessWidget {
-  const ButtonContainer({super.key});
+  final String assessmentName;
+  final String topic;
+  final int courseId;
+
+  const ButtonContainer({
+    super.key,
+    required this.assessmentName,
+    required this.topic,
+    required this.courseId,
+  });
 
   void _printQuestionsAndAnswers(BuildContext context) {
     final questions =
@@ -413,10 +432,6 @@ class ButtonContainer extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               final questionAnswerProvider = Provider.of<QuestionAnswerProvider>(context, listen: false);
-              final assessmentName = "Assessment Name";
-              final topic = "Topic";
-              final courseId = 5; 
-
               await addQuizToMoodle(context, assessmentName, topic, courseId);
             },
             child: const Text('Save'),

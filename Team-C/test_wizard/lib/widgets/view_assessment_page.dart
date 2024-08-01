@@ -75,6 +75,9 @@ class ViewTestState extends State<ViewAssessmentPage> {
                                 screenTitle:
                                     '${widget.assessmentName} ${test['version']}',
                                 assessmentId: widget.assessmentId,
+                                assessmentName: widget.assessmentName,
+                                topic: 'Your topic here',
+                                courseId: 5, 
                               ),
                             ),
                           );
