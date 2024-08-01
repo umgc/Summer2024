@@ -169,67 +169,69 @@ class ButtonContainer extends StatelessWidget {
     }
   }
 
-  Map<String, dynamic> _reformatAssessmentsJson(String assessmentsJson) {
+  Map<String, dynamic> _reformatAssessmentsJson(String assessmentsJson, String quizName) {
     final parsedJson = jsonDecode(assessmentsJson);
 
     final List<Map<String, dynamic>> questions = [];
 
     for (var assessmentSet in parsedJson['assessmentSets']) {
       for (var assessment in assessmentSet['assessments']) {
-        for (var question in assessment['questions']) {
-          final formattedQuestion = {
-            'type': 'multichoice',
-            'name': {
-              'text': 'TestWizard Created MultiChoice Question',
-            },
-            'questiontext': {
-              'format': 'html',
-              'text': '<p>${question['questionText']}</p>',
-            },
-            'generalfeedback': {
-              'format': 'html',
-              'text': '',
-            },
-            'defaultgrade': 1,
-            'penalty': 0.3333333,
-            'hidden': 0,
-            'idnumber': '',
-            'single': true,
-            'shuffleanswers': true,
-            'answernumbering': 'abc',
-            'showstandardinstruction': 0,
-            'correctfeedback': {
-              'format': 'html',
-              'text': '<p>Your answer is correct.</p>',
-            },
-            'partiallycorrectfeedback': {
-              'format': 'html',
-              'text': '<p>Your answer is partially correct.</p>',
-            },
-            'incorrectfeedback': {
-              'format': 'html',
-              'text': '<p>Your answer is incorrect.</p>',
-            },
-            'shownumcorrect': {},
-            'answer': question['answerOptions']
-                .asMap()
-                .entries
-                .map((entry) {
-                  final index = entry.key;
-                  final option = entry.value;
-                  return {
-                    'fraction': option == question['answer'] ? 100 : 0,
-                    'format': 'html',
-                    'text': '<p>$option</p>',
-                    'feedback': {
+        if (assessmentSet['assessmentName'] == quizName) {
+          for (var question in assessment['questions']) {
+            final formattedQuestion = {
+              'type': 'multichoice',
+              'name': {
+                'text': 'TestWizard Created MultiChoice Question',
+              },
+              'questiontext': {
+                'format': 'html',
+                'text': '<p>${question['questionText']}</p>',
+              },
+              'generalfeedback': {
+                'format': 'html',
+                'text': '',
+              },
+              'defaultgrade': 1,
+              'penalty': 0.3333333,
+              'hidden': 0,
+              'idnumber': '',
+              'single': true,
+              'shuffleanswers': true,
+              'answernumbering': 'abc',
+              'showstandardinstruction': 0,
+              'correctfeedback': {
+                'format': 'html',
+                'text': '<p>Your answer is correct.</p>',
+              },
+              'partiallycorrectfeedback': {
+                'format': 'html',
+                'text': '<p>Your answer is partially correct.</p>',
+              },
+              'incorrectfeedback': {
+                'format': 'html',
+                'text': '<p>Your answer is incorrect.</p>',
+              },
+              'shownumcorrect': {},
+              'answer': question['answerOptions']
+                  .asMap()
+                  .entries
+                  .map((entry) {
+                    final index = entry.key;
+                    final option = entry.value;
+                    return {
+                      'fraction': option == question['answer'] ? 100 : 0,
                       'format': 'html',
-                      'text': '',
-                    },
-                  };
-                })
-                .toList(),
-          };
-          questions.add(formattedQuestion);
+                      'text': '<p>$option</p>',
+                      'feedback': {
+                        'format': 'html',
+                        'text': '',
+                      },
+                    };
+                  })
+                  .toList(),
+            };
+            questions.add(formattedQuestion);
+          }
         }
       }
     }
@@ -304,7 +306,7 @@ class ButtonContainer extends StatelessWidget {
       }
 
       // Reformat assessmentsJson
-      final formattedAssessmentsJson = _reformatAssessmentsJson(assessmentsJson);
+      final formattedAssessmentsJson = _reformatAssessmentsJson(assessmentsJson, quizName);
 
       // Import questions
       final importResponse = await http.post(
