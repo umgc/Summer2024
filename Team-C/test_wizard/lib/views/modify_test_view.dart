@@ -13,6 +13,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:logger/logger.dart';
 import 'package:test_wizard/providers/user_provider.dart';
 
@@ -156,6 +158,97 @@ class ButtonContainer extends StatelessWidget {
     );
   }
 
+  Future<String> _loadAssessmentsJson() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/assessments.txt');
+      return await file.readAsString();
+    } catch (e) {
+      logger.e('Failed to read assessments file: $e');
+      return '';
+    }
+  }
+
+  Map<String, dynamic> _reformatAssessmentsJson(String assessmentsJson) {
+    final parsedJson = jsonDecode(assessmentsJson);
+
+    final List<Map<String, dynamic>> questions = [];
+
+    for (var assessmentSet in parsedJson['assessmentSets']) {
+      for (var assessment in assessmentSet['assessments']) {
+        for (var question in assessment['questions']) {
+          final formattedQuestion = {
+            'type': 'multichoice',
+            'name': {
+              'text': 'TestWizard Created MultiChoice Question',
+            },
+            'questiontext': {
+              'format': 'html',
+              'text': '<p>${question['questionText']}</p>',
+            },
+            'generalfeedback': {
+              'format': 'html',
+              'text': '',
+            },
+            'defaultgrade': 1,
+            'penalty': 0.3333333,
+            'hidden': 0,
+            'idnumber': '',
+            'single': true,
+            'shuffleanswers': true,
+            'answernumbering': 'abc',
+            'showstandardinstruction': 0,
+            'correctfeedback': {
+              'format': 'html',
+              'text': '<p>Your answer is correct.</p>',
+            },
+            'partiallycorrectfeedback': {
+              'format': 'html',
+              'text': '<p>Your answer is partially correct.</p>',
+            },
+            'incorrectfeedback': {
+              'format': 'html',
+              'text': '<p>Your answer is incorrect.</p>',
+            },
+            'shownumcorrect': {},
+            'answer': question['answerOptions']
+                .asMap()
+                .entries
+                .map((entry) {
+                  final index = entry.key;
+                  final option = entry.value;
+                  return {
+                    'fraction': option == question['answer'] ? 100 : 0,
+                    'format': 'html',
+                    'text': '<p>$option</p>',
+                    'feedback': {
+                      'format': 'html',
+                      'text': '',
+                    },
+                  };
+                })
+                .toList(),
+          };
+          questions.add(formattedQuestion);
+        }
+      }
+    }
+
+    return {
+      'quiz': {
+        'question': [
+          {
+            'type': 'category',
+            'category': {
+              'text': '\$course\$/top/Default for Site Home',
+            },
+          },
+          ...questions,
+        ],
+      },
+    };
+  }
+
   Future<void> addQuizToMoodle(BuildContext context, String quizName, String topic, int courseId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -203,6 +296,16 @@ class ButtonContainer extends StatelessWidget {
 
       logger.i('Quiz added to Moodle successfully! Quiz ID: $quizId');
 
+      // Load questions from assessments.txt
+      final assessmentsJson = await _loadAssessmentsJson();
+      if (assessmentsJson.isEmpty) {
+        logger.e('No assessments data found.');
+        return;
+      }
+
+      // Reformat assessmentsJson
+      final formattedAssessmentsJson = _reformatAssessmentsJson(assessmentsJson);
+
       // Import questions
       final importResponse = await http.post(
         Uri.parse(url),
@@ -210,164 +313,7 @@ class ButtonContainer extends StatelessWidget {
           'wsfunction': importQuestionsFunction,
           'wstoken': userProvider.token!,
           'moodlewsrestformat': 'json',
-          'questionjson': jsonEncode({
-            "quiz": {
-              "question": [
-                {
-                  "type": "category",
-                  "category": {
-                    "text": "\$course\$/top/Default for Site Home"
-                  }
-                },
-                {
-                  "type": "multichoice",
-                  "name": {
-                    "text": "TestWizard Created MultiChoice Question"
-                  },
-                  "questiontext": {
-                    "format": "html",
-                    "text": "<p>Test Wizard Created Questions</p>"
-                  },
-                  "generalfeedback": {
-                    "format": "html",
-                    "text": ""
-                  },
-                  "defaultgrade": 1,
-                  "penalty": 0.3333333,
-                  "hidden": 0,
-                  "idnumber": "",
-                  "single": true,
-                  "shuffleanswers": true,
-                  "answernumbering": "abc",
-                  "showstandardinstruction": 0,
-                  "correctfeedback": {
-                    "format": "html",
-                    "text": "<p>Your answer is correct.</p>"
-                  },
-                  "partiallycorrectfeedback": {
-                    "format": "html",
-                    "text": "<p>Your answer is partially correct.</p>"
-                  },
-                  "incorrectfeedback": {
-                    "format": "html",
-                    "text": "<p>Your answer is incorrect.</p>"
-                  },
-                  "shownumcorrect": {},
-                  "answer": [
-                    {
-                      "fraction": 100,
-                      "format": "html",
-                      "text": "<p>a1</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    },
-                    {
-                      "fraction": 0,
-                      "format": "html",
-                      "text": "<p>a2</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    },
-                    {
-                      "fraction": 0,
-                      "format": "html",
-                      "text": "<p>a3</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    },
-                    {
-                      "fraction": 0,
-                      "format": "html",
-                      "text": "<p>a4</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "multichoice",
-                  "name": {
-                    "text": "TestWizard Created MultiChoice Question 2"
-                  },
-                  "questiontext": {
-                    "format": "html",
-                    "text": "<p>Test Wizard Created Questions 2</p>"
-                  },
-                  "generalfeedback": {
-                    "format": "html",
-                    "text": ""
-                  },
-                  "defaultgrade": 1,
-                  "penalty": 0.3333333,
-                  "hidden": 0,
-                  "idnumber": "",
-                  "single": true,
-                  "shuffleanswers": true,
-                  "answernumbering": "abc",
-                  "showstandardinstruction": 0,
-                  "correctfeedback": {
-                    "format": "html",
-                    "text": "<p>Your answer is correct.</p>"
-                  },
-                  "partiallycorrectfeedback": {
-                    "format": "html",
-                    "text": "<p>Your answer is partially correct.</p>"
-                  },
-                  "incorrectfeedback": {
-                    "format": "html",
-                    "text": "<p>Your answer is incorrect.</p>"
-                  },
-                  "shownumcorrect": {},
-                  "answer": [
-                    {
-                      "fraction": 100,
-                      "format": "html",
-                      "text": "<p>a1</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    },
-                    {
-                      "fraction": 0,
-                      "format": "html",
-                      "text": "<p>a2</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    },
-                    {
-                      "fraction": 0,
-                      "format": "html",
-                      "text": "<p>a3</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    },
-                    {
-                      "fraction": 0,
-                      "format": "html",
-                      "text": "<p>a4</p>",
-                      "feedback": {
-                        "format": "html",
-                        "text": ""
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          }),
+          'questionjson': jsonEncode(formattedAssessmentsJson),
         },
       );
 
@@ -377,7 +323,7 @@ class ButtonContainer extends StatelessWidget {
       }
 
       final importResponseBody = jsonDecode(importResponse.body);
-      final questionIds = importResponseBody.map((question) => question['questionid']).toList();
+      final questionIds = (importResponseBody as List<dynamic>).map((question) => question['questionid']).toList();
 
       if (questionIds == null || questionIds.isEmpty) {
         logger.w('Question IDs not found in response.');
