@@ -178,58 +178,114 @@ class ButtonContainer extends StatelessWidget {
       for (var assessment in assessmentSet['assessments']) {
         if (assessmentSet['assessmentName'] == quizName) {
           for (var question in assessment['questions']) {
-            final formattedQuestion = {
-              'type': 'multichoice',
-              'name': {
-                'text': 'TestWizard Created MultiChoice Question',
-              },
-              'questiontext': {
-                'format': 'html',
-                'text': '<p>${question['questionText']}</p>',
-              },
-              'generalfeedback': {
-                'format': 'html',
-                'text': '',
-              },
-              'defaultgrade': 1,
-              'penalty': 0.3333333,
-              'hidden': 0,
-              'idnumber': '',
-              'single': true,
-              'shuffleanswers': true,
-              'answernumbering': 'abc',
-              'showstandardinstruction': 0,
-              'correctfeedback': {
-                'format': 'html',
-                'text': '<p>Your answer is correct.</p>',
-              },
-              'partiallycorrectfeedback': {
-                'format': 'html',
-                'text': '<p>Your answer is partially correct.</p>',
-              },
-              'incorrectfeedback': {
-                'format': 'html',
-                'text': '<p>Your answer is incorrect.</p>',
-              },
-              'shownumcorrect': {},
-              'answer': question['answerOptions']
-                  .asMap()
-                  .entries
-                  .map((entry) {
-                    final index = entry.key;
-                    final option = entry.value;
-                    return {
-                      'fraction': option == question['answer'] ? 100 : 0,
-                      'format': 'html',
-                      'text': '<p>$option</p>',
-                      'feedback': {
+            Map<String, dynamic> formattedQuestion;
+            if (question['questionType'] == 'Multiple Choice') {
+              formattedQuestion = {
+                'type': 'multichoice',
+                'name': {
+                  'text': 'TestWizard Created MultiChoice Question',
+                },
+                'questiontext': {
+                  'format': 'html',
+                  'text': '<p>${question['questionText']}</p>',
+                },
+                'generalfeedback': {
+                  'format': 'html',
+                  'text': '',
+                },
+                'defaultgrade': 1,
+                'penalty': 0.3333333,
+                'hidden': 0,
+                'idnumber': '',
+                'single': true,
+                'shuffleanswers': true,
+                'answernumbering': 'abc',
+                'showstandardinstruction': 0,
+                'correctfeedback': {
+                  'format': 'html',
+                  'text': '<p>Your answer is correct.</p>',
+                },
+                'partiallycorrectfeedback': {
+                  'format': 'html',
+                  'text': '<p>Your answer is partially correct.</p>',
+                },
+                'incorrectfeedback': {
+                  'format': 'html',
+                  'text': '<p>Your answer is incorrect.</p>',
+                },
+                'shownumcorrect': {},
+                'answer': question['answerOptions']
+                    .asMap()
+                    .entries
+                    .map((entry) {
+                      final index = entry.key;
+                      final option = entry.value;
+                      return {
+                        'fraction': option == question['answer'] ? 100 : 0,
                         'format': 'html',
-                        'text': '',
-                      },
-                    };
-                  })
-                  .toList(),
-            };
+                        'text': '<p>$option</p>',
+                        'feedback': {
+                          'format': 'html',
+                          'text': '',
+                        },
+                      };
+                    })
+                    .toList(),
+              };
+            } else if (question['questionType'] == 'Short Answer') {
+              formattedQuestion = {
+                'type': 'shortanswer',
+                'name': {
+                  'text': 'TestWizard Created ShortAnswer Question',
+                },
+                'questiontext': {
+                  'format': 'html',
+                  'text': '<p>${question['questionText']}</p>',
+                },
+                'generalfeedback': {
+                  'format': 'html',
+                  'text': '',
+                },
+                'defaultgrade': 1,
+                'penalty': 0.3333333,
+                'hidden': 0,
+                'idnumber': '',
+                'answer': question['answerOptions']
+                    .map((option) {
+                      return {
+                        'text': option,
+                        'fraction': option == question['answer'] ? 100 : 0,
+                        'feedback': {
+                          'format': 'html',
+                          'text': '',
+                        },
+                      };
+                    })
+                    .toList(),
+              };
+            } else if (question['questionType'] == 'Essay') {
+              formattedQuestion = {
+                'type': 'essay',
+                'name': {
+                  'text': 'TestWizard Created Essay Question',
+                },
+                'questiontext': {
+                  'format': 'html',
+                  'text': '<p>${question['questionText']}</p>',
+                },
+                'generalfeedback': {
+                  'format': 'html',
+                  'text': '',
+                },
+                'defaultgrade': 1,
+                'penalty': 0.3333333,
+                'hidden': 0,
+                'idnumber': '',
+              };
+            } else {
+              // If the question type is not supported, skip this question
+              continue;
+            }
             questions.add(formattedQuestion);
           }
         }
