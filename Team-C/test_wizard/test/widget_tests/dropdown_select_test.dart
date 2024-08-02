@@ -98,6 +98,8 @@ void main() {
       // Try to submit the form without selecting an option
       final formState = tester.state(find.byType(Form)) as FormState;
       formState.validate();
+      
+      await tester.pumpAndSettle();
 
       // Check if validation error is shown
       expect(find.text('Please select a valid option'), findsOneWidget);
