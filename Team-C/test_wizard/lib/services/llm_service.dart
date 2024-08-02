@@ -8,7 +8,7 @@ import 'package:test_wizard/providers/assessment_provider.dart';
 class LLMService {
   
   final String _url = 'https://api.perplexity.ai/chat/completions';
-  final String _apiKey = '';
+  final String _apiKey = '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';
   List<Map<String, String>> messages = [
     {
       'role': 'system',
