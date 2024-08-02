@@ -17,13 +17,13 @@ void main() {
 
     test('extractAssessment', () {
       String testString =
-          'this is some text ```json{"hello": "world"}``` this is the rest';
+          'this is some text ```json[{"hello": "world"}]``` this is the rest';
       String broken = 'This isnt json';
 
       final llm = LLMService();
       var (expected, _) = llm.extractAssessments(testString) ?? (null, null);
       var (expected2, _) = llm.extractAssessments(broken) ?? (null, null);
-      expect(expected, {"hello": "world"});
+      expect(expected, [{"hello": "world"}]);
       expect(expected2, null);
     });
 
