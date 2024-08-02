@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
@@ -23,6 +26,36 @@ class ViewAssessmentPage extends StatefulWidget {
 }
 
 class ViewTestState extends State<ViewAssessmentPage> {
+  String topic = '';
+  int courseId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAssessmentData();
+  }
+
+  Future<void> _loadAssessmentData() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/assessments.txt');
+      final fileContent = await file.readAsString();
+      final jsonData = jsonDecode(fileContent);
+
+      for (var assessmentSet in jsonData['assessmentSets']) {
+        if (assessmentSet['assessmentName'] == widget.assessmentName) {
+          setState(() {
+            topic = assessmentSet['course']['topic'] ?? 'Default Topic';
+            courseId = assessmentSet['course']['courseId'] ?? 0;
+          });
+          break;
+        }
+      }
+    } catch (e) {
+      logger.i('Error reading file: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScrollContainer(
@@ -50,10 +83,13 @@ class ViewTestState extends State<ViewAssessmentPage> {
                               builder: (context) => ModifyTestView(
                                 screenTitle:
                                     '${widget.assessmentName} ${assessment.assessmentVersion}',
-                                assessmentId: widget.assessmentId,
+                                    assessmentId: widget.assessmentId,
                                 assessmentIndex: assessmentProvider.getAssessmentsFromAssessmentSets(widget.assessmentSetIndex).indexOf(assessment),
                                 assessmentSetIndex: widget.assessmentSetIndex,
-                                assessment: assessment
+                                assessment: assessment,
+                                    assessmentName: widget.assessmentName,
+                                    topic: topic,
+                                    courseId: courseId,
                               ),
                             ),
                           );

@@ -12,18 +12,24 @@ import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
+import 'package:test_wizard/providers/user_provider.dart';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 class QuestionGenerateForm extends StatefulWidget {
   final String assessmentName;
   final int numberOfAssessments;
   final String topic;
   final String courseName;
+  final int courseId;
   const QuestionGenerateForm({
     super.key,
     required this.assessmentName,
     required this.numberOfAssessments,
     required this.topic,
     required this.courseName,
+    required this.courseId,
   });
 
   @override
@@ -134,17 +140,25 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                               },
                               child: const Text('Add Question'),
                             ),
-                            GenerateAssessmentsButton(
-                              formKey: _formKey,
-                              textEditingController: textEditingController,
-                              llmService: llmService,
-                              questionGenerationDetail:
-                                  questionGenerationDetail,
-                              assessmentProvider: assessment,
-                              assessmentName: widget.assessmentName,
-                              courseName: widget.courseName,
-                              exampleAssessmentSetIndex: 0,
-                              exampleAssessmentIndex: 0,
+                            Consumer<UserProvider>(
+                              builder: (context, userProvider, child) {
+                                return GenerateAssessmentsButton(
+                                  formKey: _formKey,
+                                  textEditingController: textEditingController,
+                                  llmService: llmService,
+                                  questionGenerationDetail:
+                                      questionGenerationDetail,
+                                  assessmentProvider: assessment,
+                                  assessmentName: widget.assessmentName,
+                                  courseName: widget.courseName,
+                                  exampleAssessmentSetIndex: 0,
+                                  exampleAssessmentIndex: 0,
+                                  moodleUrl: userProvider.moodleUrl ?? '',
+                                  token: userProvider.token ?? '',
+                                  topic: widget.topic,
+                                  courseId: widget.courseId,
+                                );
+                              },
                             ),
                           ],
                         );
@@ -243,6 +257,10 @@ class GenerateAssessmentsButton extends StatelessWidget {
   final String courseName;
   final int exampleAssessmentSetIndex;
   final int exampleAssessmentIndex;
+  final String? moodleUrl;
+  final String? token;
+  final String topic;
+  final int courseId;
 
   const GenerateAssessmentsButton(
       {super.key,
@@ -254,7 +272,11 @@ class GenerateAssessmentsButton extends StatelessWidget {
       required this.assessmentName,
       required this.courseName,
       required this.exampleAssessmentSetIndex,
-      required this.exampleAssessmentIndex});
+      required this.exampleAssessmentIndex,
+      required this.moodleUrl,
+      required this.token,
+      required this.topic,
+      required this.courseId});
 
   List<Assessment> getAssessmentFromOutput(List<dynamic> output, int id) {
     int questionId = 0; // same thing as assessmentId
@@ -327,8 +349,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    return Consumer<AssessmentProvider>(
-        builder: (context, assessmentProvider, child) {
+    return Consumer2<AssessmentProvider, UserProvider>(
+        builder: (context, assessmentProvider, userProvider, child) {
       return Column(
         children: [
           ElevatedButton(
@@ -357,7 +379,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     [],
                     assessmentName,
                     Course(
-                        0, courseName)); // course is always generated for now
+                        courseId, courseName, topic)); // course is always generated for now
                 // this gets incremented with each new assessment
                 int assessmentId = 0;
                 // manually check for error

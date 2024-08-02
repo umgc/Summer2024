@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_wizard/models/assessment.dart';
-import 'package:test_wizard/models/assessment_set.dart';
-import 'package:test_wizard/models/course.dart';
-import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
 import 'package:test_wizard/providers/user_provider.dart';
@@ -189,38 +185,38 @@ class LoginPageState extends State<LoginPage> {
                         // for now this button populates the state with some sample data
                         // if the Moodle login button is pressed
                         onPressed: () async {
-                          AssessmentSet aSet = AssessmentSet(
-                              [], 'Math Test', Course(1, 'Geometry 101'));
-                          Assessment a = Assessment(1, 1, true);
-                          a.questions = [
-                            Question(
-                              questionId: 1,
-                              questionText:
-                                  'How many sides does a square have?',
-                              questionType: 'shortAnswer',
-                              answer: '4',
-                              points: 10,
-                            ),
-                            Question(
-                              questionId: 2,
-                              questionText:
-                                  'How many sides does a triangle have?',
-                              questionType: 'shortAnswer',
-                              answer: '3',
-                              points: 10,
-                            ),
-                            Question(
-                              questionId: 3,
-                              questionText:
-                                  'How many sides does a rectangle have?',
-                              questionType: 'shortAnswer',
-                              answer: '4',
-                              points: 10,
-                            ),
-                          ];
-                          aSet.assessments.add(a);
-                          savedAssessments.addAssessmentSet(aSet);
-                          savedAssessments.saveAssessmentsToFile();
+                          // AssessmentSet aSet = AssessmentSet(
+                          //     [], 'Math Test', Course(1, 'Geometry 101'));
+                          // Assessment a = Assessment(1, 1, true);
+                          // a.questions = [
+                          //   Question(
+                          //     questionId: 1,
+                          //     questionText:
+                          //         'How many sides does a square have?',
+                          //     questionType: 'Short Answer',
+                          //     answer: '4',
+                          //     points: 10,
+                          //   ),
+                          //   Question(
+                          //     questionId: 2,
+                          //     questionText:
+                          //         'How many sides does a triangle have?',
+                          //     questionType: 'Short Answer',
+                          //     answer: '3',
+                          //     points: 10,
+                          //   ),
+                          //   Question(
+                          //     questionId: 3,
+                          //     questionText:
+                          //         'How many sides does a rectangle have?',
+                          //     questionType: 'Short Answer',
+                          //     answer: '4',
+                          //     points: 10,
+                          //   ),
+                          // ];
+                          // aSet.assessments.add(a);
+                          // savedAssessments.addAssessmentSet(aSet);
+                          // savedAssessments.saveAssessmentsToFile();
                           // Login logic
                           UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
                           await _login(userProvider);

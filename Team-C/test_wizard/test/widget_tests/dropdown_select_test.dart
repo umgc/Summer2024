@@ -10,66 +10,99 @@ void main() {
       controller = TextEditingController();
     });
 
-    Future<List<String>> fakeDropdownFunction(String optionName) async {
-      if (optionName == 'Course') {
-        return ['Select Course', 'Course 1', 'Course 2'];
-      } else {
-        throw ArgumentError.value(optionName);
-      }
-    }
+    testWidgets('DropdownSelect displays and interacts correctly', (tester) async {
+      final List<Map<String, dynamic>> options = [
+        {'id': 1, 'fullname': 'Select Course'},
+        {'id': 2, 'fullname': 'Course 1'},
+        {'id': 3, 'fullname': 'Course 2'}
+      ];
 
-    testWidgets('shows progress indicator before connecting', (tester) async {
       Widget app = MaterialApp(
         home: Scaffold(
           body: DropdownSelect(
             isDisabled: false,
             controller: controller,
             dropdownTitle: "Course",
-            future: fakeDropdownFunction,
+            options: options,
           ),
         ),
       );
-      await tester.pumpWidget(app);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
 
-    testWidgets('on error renders error message', (tester) async {
-      Widget app = MaterialApp(
-        home: Scaffold(
-          body: DropdownSelect(
-            isDisabled: false,
-            controller: controller,
-            dropdownTitle: "Wrong Value",
-            future: fakeDropdownFunction,
-          ),
-        ),
-      );
       await tester.pumpWidget(app);
+
+      // Check if DropdownSelect is displayed with the correct title
+      expect(find.text('Course'), findsOneWidget);
+      expect(find.byType(DropdownButtonFormField<Map<String, dynamic>>), findsOneWidget);
+
+      // Tap on the dropdown to open the list of options
+      await tester.tap(find.byType(DropdownButtonFormField<Map<String, dynamic>>));
       await tester.pumpAndSettle();
-      expect(
-          find.text('Error: Invalid argument: "Wrong Value"'), findsOneWidget);
+
+      // Check if the dropdown options are displayed
+      expect(find.widgetWithText(DropdownMenuItem<Map<String, dynamic>>, 'Course 1'), findsOneWidget);
+      expect(find.widgetWithText(DropdownMenuItem<Map<String, dynamic>>, 'Course 2'), findsOneWidget);
+
+      // Select an option and check if it updates the controller
+      await tester.tap(find.text('Course 1').last);
+      await tester.pumpAndSettle();
+
+      expect(controller.text, 'Course 1');
     });
 
-    testWidgets('on success renders list', (tester) async {
+    testWidgets('DropdownSelect shows disabled hint when isDisabled is true', (tester) async {
+      final List<Map<String, dynamic>> options = [
+        {'id': 1, 'fullname': 'Select Course'},
+        {'id': 2, 'fullname': 'Course 1'},
+        {'id': 3, 'fullname': 'Course 2'}
+      ];
+
       Widget app = MaterialApp(
         home: Scaffold(
           body: DropdownSelect(
-            isDisabled: false,
+            isDisabled: true,
             controller: controller,
             dropdownTitle: "Course",
-            future: fakeDropdownFunction,
+            options: options,
           ),
         ),
       );
+
       await tester.pumpWidget(app);
-      await tester.pump();
-      expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
+
+      // Check if DropdownSelect shows disabled hint
+      expect(find.text('Disabled without Moodle'), findsOneWidget);
+    });
+
+    testWidgets('DropdownSelect shows validation error when no option is selected', (tester) async {
+      final List<Map<String, dynamic>> options = [
+        {'id': 1, 'fullname': 'Select Course'},
+        {'id': 2, 'fullname': 'Course 1'},
+        {'id': 3, 'fullname': 'Course 2'}
+      ];
+
+      Widget app = MaterialApp(
+        home: Scaffold(
+          body: Form(
+            child: DropdownSelect(
+              isDisabled: false,
+              controller: controller,
+              dropdownTitle: "Course",
+              options: options,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(app);
+
+      // Try to submit the form without selecting an option
+      final formState = tester.state(find.byType(Form)) as FormState;
+      formState.validate();
+      
       await tester.pumpAndSettle();
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 1'),
-          findsOneWidget);
-      expect(find.widgetWithText(DropdownMenuItem<String>, 'Course 2'),
-          findsOneWidget);
+
+      // Check if validation error is shown
+      expect(find.text('Please select a valid option'), findsOneWidget);
     });
   });
 }

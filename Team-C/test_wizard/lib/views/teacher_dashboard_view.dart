@@ -7,6 +7,7 @@ import 'package:test_wizard/views/login_page_view.dart';
 import 'package:test_wizard/views/view_test_view.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
+import 'package:test_wizard/providers/user_provider.dart';
 
 class TeacherDashboard extends StatelessWidget {
   final String status;
@@ -56,7 +57,9 @@ class TeacherDashboard extends StatelessWidget {
                     foregroundColor: Colors.white, // Ensure text color is white
                   ),
                   onPressed: () {
-                    // put in logic for checking if logged in and then logging out if necessary
+                    if (status != 'guest') {
+                      Provider.of<UserProvider>(context, listen: false).logout();
+                    }
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const LoginPage(),

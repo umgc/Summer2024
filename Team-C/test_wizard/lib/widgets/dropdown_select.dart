@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:test_wizard/models/temp.dart';
-import 'package:test_wizard/utils/validators.dart';
 
 class DropdownSelect extends StatefulWidget {
   final TextEditingController controller;
   final String dropdownTitle;
   final bool isDisabled;
-  final Future<List<String>> Function(String) future;
+  final List<Map<String, dynamic>> options;
   const DropdownSelect({
     super.key,
     required this.isDisabled,
     required this.controller,
     required this.dropdownTitle,
-    this.future = TempModel.fetchDropdownOptions,
+    required this.options,
   });
 
   @override
@@ -20,47 +18,42 @@ class DropdownSelect extends StatefulWidget {
 }
 
 class DropdownSelectState extends State<DropdownSelect> {
-  String? selectedValue;
+  Map<String, dynamic>? selectedValue;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: widget.future(widget.dropdownTitle),
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return DropdownButtonFormField<String>(
-            value: selectedValue,
-            iconDisabledColor: Colors.grey[50],
-            disabledHint: const Text('Disabled without Moodle'),
-            onChanged: widget.isDisabled
-                ? null
-                : (String? newValue) {
-                    setState(() {
-                      if (newValue != null) {
-                        widget.controller.text = newValue;
-                        selectedValue = newValue;
-                      }
-                    });
-                  },
-            items: snapshot.data!.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            validator: widget.isDisabled
-                ? null
-                : Validators.checkOptionHasBeenSelected,
-            decoration: InputDecoration(
-              label: Text(widget.dropdownTitle),
-              border: const OutlineInputBorder(),
-            ),
-          );
-        }
-      },
+    return DropdownButtonFormField<Map<String, dynamic>>(
+      value: selectedValue,
+      iconDisabledColor: Colors.grey[50],
+      disabledHint: const Text('Disabled without Moodle'),
+      onChanged: widget.isDisabled
+          ? null
+          : (Map<String, dynamic>? newValue) {
+              setState(() {
+                if (newValue != null) {
+                  widget.controller.text = newValue['fullname'];
+                  selectedValue = newValue;
+                }
+              });
+            },
+      items: widget.options.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> value) {
+        return DropdownMenuItem<Map<String, dynamic>>(
+          value: value,
+          child: Text(value['fullname']),
+        );
+      }).toList(),
+      validator: widget.isDisabled
+          ? null
+          : (Map<String, dynamic>? value) {
+              if (value == null || value['fullname'] == 'Select Course') {
+                return 'Please select a valid option';
+              }
+              return null;
+            },
+      decoration: InputDecoration(
+        label: Text(widget.dropdownTitle),
+        border: const OutlineInputBorder(),
+      ),
     );
   }
 }
