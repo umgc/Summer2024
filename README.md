@@ -7,7 +7,7 @@ Welcome to the MindInSync application! This guide will help you set up and run t
 Before you start, make sure you have the following installed:
 
 - Flutter SDK: [Install Flutter](https://docs.flutter.dev/get-started/install)
-- Android Studio: [Download Android Studio][https://developer.android.com/studio]
+- Android Studio: [Download Android Studio](https://developer.android.com/studio)
 - Visual Studio Code: [Download VSCode](https://code.visualstudio.com/download)
 
 ## Getting Started
@@ -39,9 +39,9 @@ Before you start, make sure you have the following installed:
 - Add the service account json file to the assets directory
     - This will be used to connect to the Google Cloud Speech-to-Text transcriber. 
 
-### Running Flutter
+### Running the MindInSYNC application
 - Pick your emulator that you want to run (ex. Pixel 8 )
-    - Run the following command: ```flutter emulators --launch Pixel_8_Pro_API_34-ext12```
+    - Run the following command to pick the emulator: ```flutter emulators --launch Pixel_8_Pro_API_34-ext12```
 - Start the emulator: ```flutter run```
 
 ## Troubleshooting
