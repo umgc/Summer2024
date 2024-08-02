@@ -118,6 +118,10 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           String numOfStudents = numOfStudentsController.text;
                           String subjectDescription =
                               subjectDescriptionController.text;
+                          Map<String, dynamic>? selectedCourse = courseNames.firstWhere(
+                            (course) => course['fullname'] == courseNameController.text,
+                            orElse: () => {},
+                          );
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -126,6 +130,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                                 assessmentName: assessmentName,
                                 numberOfAssessments: int.parse(numOfStudents),
                                 topic: subjectDescription,
+                                courseId: selectedCourse['id'] ?? 0,
                               ),
                             ),
                           );
