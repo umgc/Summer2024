@@ -10,10 +10,12 @@ import 'package:mindinsync/BottomNavigation.dart';
 import 'package:mindinsync/Drawer.dart';
 import 'package:mindinsync/KnowledgeService.dart';
 import 'package:mindinsync/StorageService.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sound_stream/sound_stream.dart';
+//import 'package:sound_stream/sound_stream.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
 
 class PromptScreen extends StatefulWidget {
   const PromptScreen({super.key});
@@ -22,13 +24,15 @@ class PromptScreen extends StatefulWidget {
 }
 
 class _PromptScreenState extends State<PromptScreen> {
-  final RecorderStream _recorder = RecorderStream();
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   var knowledge;
   bool recognizing = false;
   bool recognizeFinished = false;
   String text = '';
   StreamSubscription<List<int>>? _audioStreamSubscription;
   BehaviorSubject<List<int>>? _audioStream;
+  StreamController<Food>? _recordingDataController;
+  StreamSubscription? _recordingDataSubscription;
   List<String> transcriptArray = [];
   var tran_store;
   var openai_key;
@@ -45,7 +49,8 @@ class _PromptScreenState extends State<PromptScreen> {
     super.initState();
     knowledge = KnowledgeService();
     tran_store = StorageService();
-    _recorder.initialize();
+    Permission.microphone.request();
+    //_recorder.initialize();
     loadKey();
     loadKnowledge();
 
@@ -82,34 +87,37 @@ class _PromptScreenState extends State<PromptScreen> {
   void loadKnowledge() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString("user_id");
-   
+
     print(userid);
-    var facts = knowledge.getKnowledge(int.parse(userid!));   
+    var facts = knowledge.getKnowledge(int.parse(userid!));
     facts.then((value) {
-      var inventory =  knowledge.getInventory();
-      inventory.then((inventory){
-      var transcripts = tran_store.getLatestTranscript();
-      transcripts.then((transcripts){
-      var past_transcripts = "";
-      for(var i = 0; i < transcripts.length; i++){
-        past_transcripts += (transcripts[i]).toString() + "\n";
-      }
-      //print(past_transcripts);
-      promptStart += knowledge.knowledgeLoaded + "}";
-      promptStart += " and the following inventory data {" + inventory + "}";  
-      promptStart += " and the following transcribed conversations recorded by the user " + past_transcripts;
-     // print(promptStart);
-      messages = [
-        OpenAIChatCompletionChoiceMessageModel(
-          content: [
-            OpenAIChatCompletionChoiceMessageContentItemModel.text(
-              promptStart,
+      var inventory = knowledge.getInventory();
+      inventory.then((inventory) {
+        var transcripts = tran_store.getLatestTranscript();
+        transcripts.then((transcripts) {
+          var past_transcripts = "";
+          for (var i = 0; i < transcripts.length; i++) {
+            past_transcripts += (transcripts[i]).toString() + "\n";
+          }
+          //print(past_transcripts);
+          promptStart += knowledge.knowledgeLoaded + "}";
+          promptStart +=
+              " and the following inventory data {" + inventory + "}";
+          promptStart +=
+              " and the following transcribed conversations recorded by the user " +
+                  past_transcripts;
+          // print(promptStart);
+          messages = [
+            OpenAIChatCompletionChoiceMessageModel(
+              content: [
+                OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                  promptStart,
+                ),
+              ],
+              role: OpenAIChatMessageRole.assistant,
             ),
-          ],
-          role: OpenAIChatMessageRole.assistant,
-        ),
-      ];
-      });
+          ];
+        });
       });
     });
   }
@@ -146,11 +154,23 @@ class _PromptScreenState extends State<PromptScreen> {
       ],
     );
 
+    await _recorder.openAudioSession();
+    // Stream to be consumed by speech recognizer
     _audioStream = BehaviorSubject<List<int>>();
-    _audioStreamSubscription = _recorder.audioStream.listen((event) {
-      _audioStream!.add(event);
+
+    _recordingDataController = StreamController<Food>();
+    // _audioStream = BehaviorSubject<List<int>>();
+    _recordingDataSubscription =
+        _recordingDataController?.stream.listen((buffer) {
+      if (buffer is FoodData) {
+          _audioStream!.add(buffer.data!);
+        }
     });
-    await _recorder.start();
+    await _recorder.startRecorder(
+        toStream: _recordingDataController!.sink,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: 16000);
 
     setState(() {
       recognizing = true;
@@ -196,9 +216,10 @@ class _PromptScreenState extends State<PromptScreen> {
   }
 
   void stopRecording() async {
-    await _recorder.stop();
+    await _recorder.stopRecorder();
     await _audioStreamSubscription?.cancel();
     await _audioStream?.close();
+    await _recordingDataSubscription?.cancel();
     setState(() {});
   }
 
@@ -246,28 +267,26 @@ class _PromptScreenState extends State<PromptScreen> {
       );
 
   void setTranscription() {
-
-    
-      if (!isLoaded) {
-        var args = ModalRoute.of(context)!.settings.arguments as String?;
-        if (args!.length > 0) {
-          if (args! == "supersecretaudiostartnobodygoingtofigureout") {
-            streamingRecognize();
-            setState(() {});
-          } else {
-            Future.delayed(const Duration(seconds: 2)).then((val) {
+    if (!isLoaded) {
+      var args = ModalRoute.of(context)!.settings.arguments as String?;
+      if (args!.length > 0) {
+        if (args! == "supersecretaudiostartnobodygoingtofigureout") {
+          streamingRecognize();
+          setState(() {});
+        } else {
+          Future.delayed(const Duration(seconds: 2)).then((val) {
             recognizeFinished = true;
             transcriptArray.add(args);
             setState(() {});
             promptLLM(args);
-            });
-          }
+          });
         }
-        isLoaded = true;
       }
+      isLoaded = true;
+    }
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     setTranscription();
     return Scaffold(
@@ -275,8 +294,8 @@ class _PromptScreenState extends State<PromptScreen> {
         automaticallyImplyLeading: false,
         title: const Text('Ask MindAI a question!'),
         centerTitle: true,
-        backgroundColor: Colors.blue[300],    
-        foregroundColor: Colors.black,  
+        backgroundColor: Colors.blue[300],
+        foregroundColor: Colors.black,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,8 +316,8 @@ class _PromptScreenState extends State<PromptScreen> {
                       itemBuilder: (BuildContext ctxt, int Index) {
                         return GestureDetector(
                           onTap: () {
-                            toggleTTS(
-                                transcriptArray[Index].replaceAll("MindAI:", ""));
+                            toggleTTS(transcriptArray[Index]
+                                .replaceAll("MindAI:", ""));
                           },
                           child: Container(
                             margin: EdgeInsets.all(5),
@@ -332,7 +351,7 @@ class _PromptScreenState extends State<PromptScreen> {
                         side: const BorderSide(
                             width: 2, // the thickness
                             color: Colors.grey // the color of the border
-                        )),
+                            )),
                     onPressed: recognizing ? stopRecording : streamingRecognize,
                     child: recognizing
                         ? const Text('Listening')

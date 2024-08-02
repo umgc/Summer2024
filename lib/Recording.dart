@@ -10,10 +10,12 @@ import 'package:mindinsync/StorageService.dart';
 import 'package:mindinsync/TranscriptionProcessor.dart';
 import 'package:mindinsync/db_helper.dart';
 import 'package:mindinsync/main.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sound_stream/sound_stream.dart';
+//import 'package:sound_stream/sound_stream.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
 
 class RecordScreen extends StatefulWidget {
   const RecordScreen({super.key});
@@ -22,7 +24,8 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
-  final RecorderStream _recorder = RecorderStream();
+  //final RecorderStream _recorder = RecorderStream();
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
 
   bool recognizing = false;
   bool recognizeFinished = false;
@@ -31,6 +34,8 @@ class _RecordScreenState extends State<RecordScreen> {
   BehaviorSubject<List<int>>? _audioStream;
   List<String> transcriptArray = [];
   List<int> speakerArray = [];
+  StreamController<Food>? _recordingDataController;
+  StreamSubscription? _recordingDataSubscription;
   var tran_store;
   var tran_process;
   List<String> speakers = [
@@ -57,28 +62,33 @@ class _RecordScreenState extends State<RecordScreen> {
     loadUsername();
     tran_store = StorageService();
     tran_process = TranscriptionProcessor();
-    _recorder.initialize();
+    Permission.microphone.request();
+    //_recorder.initialize();
 
     //streamingRecognize();
   }
+
+  /*void getMic() {
+
+  }*/
 
   void loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userEmail = prefs.getString("userEmail");
     String userName = await getUserName(userEmail!);
-    if(userName != null){
-      speakers[0] = userName+ ": ";
+    if (userName != null) {
+      speakers[0] = userName + ": ";
     }
   }
 
-Future<String> getUserName(String email) async {
+  Future<String> getUserName(String email) async {
     DBHelper db = DBHelper();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userName = prefs.getString("user_name");
-    if(userName == null){
-    userName = await db.getUserName(email);
+    if (userName == null) {
+      userName = await db.getUserName(email);
     }
-    prefs.setString("user_name",userName);
+    prefs.setString("user_name", userName);
     return userName;
   }
 
@@ -103,29 +113,45 @@ Future<String> getUserName(String email) async {
     final directory = await getApplicationDocumentsDirectory();
     var path = directory.path;
     Uint8List byteList;
-    try{
-    final File file = File(path + "/" + "register.wav");
-     byteList = await file.readAsBytes();
-    } on Exception catch (e){
+    try {
+      final File file = File(path + "/" + "register.wav");
+      byteList = await file.readAsBytes();
+    } on Exception catch (e) {
       var data = await rootBundle.load('assets/register.wav');
-      byteList = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      byteList =
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     }
     //var stream = _getAudioStream('register.wav');
     var data = await rootBundle.load('assets/register.wav');
     var started = false;
-  
+
+    await _recorder.openAudioSession();
+    // Stream to be consumed by speech recognizer
     _audioStream = BehaviorSubject<List<int>>();
-    _audioStreamSubscription = _recorder.audioStream.listen((event) {
+
+    _recordingDataController = StreamController<Food>();
+    // _audioStream = BehaviorSubject<List<int>>();
+    _recordingDataSubscription =
+        _recordingDataController?.stream.listen((buffer) {
       if (started == false) {
         _audioStream!.add(
             byteList //data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes)
             );
         started = true;
       } else {
-        _audioStream!.add(event);
+        if (buffer is FoodData) {
+          _audioStream!.add(buffer.data!);
+        }
       }
     });
-    await _recorder.start();
+
+    await Permission.microphone.request();
+
+    await _recorder.startRecorder(
+        toStream: _recordingDataController!.sink,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: 16000);
 
     setState(() {
       recognizing = true;
@@ -209,10 +235,10 @@ Future<String> getUserName(String email) async {
   }
 
   void stopRecording() async {
-    await _recorder.stop();
+    await _recorder.stopRecorder();
     await _audioStreamSubscription?.cancel();
     await _audioStream?.close();
-
+    await _recordingDataSubscription?.cancel();
     setState(() {});
   }
 
@@ -228,15 +254,16 @@ Future<String> getUserName(String email) async {
           dt.minute.toString() +
           dt.second.toString() +
           '.txt';
-      var insert = tran_store.insertTranscriptFile(file_name, transcriptArray.toString());
-      insert.then((value){
-       tran_process.processTranscription(
-          transcriptArray.toString(), file_name);
-      //var scripts = await tran_store.getTranscripts();
-     // for (int i = 0; i < scripts.length; i++) {
-      //  print(scripts[i]['keywords']);
-      //  print(scripts[i]['transcript_content']);
-    //  }
+      var insert = tran_store.insertTranscriptFile(
+          file_name, transcriptArray.toString());
+      insert.then((value) {
+        tran_process.processTranscription(
+            transcriptArray.toString(), file_name);
+        //var scripts = await tran_store.getTranscripts();
+        // for (int i = 0; i < scripts.length; i++) {
+        //  print(scripts[i]['keywords']);
+        //  print(scripts[i]['transcript_content']);
+        //  }
       });
     }
   }

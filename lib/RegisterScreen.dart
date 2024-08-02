@@ -20,6 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
+    Permission.microphone.request();
     _initializeRecorder();
   }
 
