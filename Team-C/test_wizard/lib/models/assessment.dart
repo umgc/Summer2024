@@ -29,13 +29,13 @@ class Assessment {
     var map = {"multipleChoice": [], "shortAnswer": [], "essay": []};
     for (var question in questions) {
       switch (question.questionType) {
-        case "Multiple Choice":
+        case "multipleChoice":
           map['multipleChoice']!.add({"QUESTION": question.questionText});
           break;
-        case "Short Answer":
+        case "shortAnswer":
           map['shortAnswer']!.add({"QUESTION": question.questionText});
           break;
-        case "Essay":
+        case "essay":
           map['essay']!.add({"QUESTION": question.questionText});
           break;
         default:

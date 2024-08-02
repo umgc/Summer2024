@@ -197,7 +197,7 @@ class LoginPageState extends State<LoginPage> {
                               questionId: 1,
                               questionText:
                                   'How many sides does a square have?',
-                              questionType: 'Short Answer',
+                              questionType: 'shortAnswer',
                               answer: '4',
                               points: 10,
                             ),
@@ -205,7 +205,7 @@ class LoginPageState extends State<LoginPage> {
                               questionId: 2,
                               questionText:
                                   'How many sides does a triangle have?',
-                              questionType: 'Short Answer',
+                              questionType: 'shortAnswer',
                               answer: '3',
                               points: 10,
                             ),
@@ -213,7 +213,7 @@ class LoginPageState extends State<LoginPage> {
                               questionId: 3,
                               questionText:
                                   'How many sides does a rectangle have?',
-                              questionType: 'Short Answer',
+                              questionType: 'shortAnswer',
                               answer: '4',
                               points: 10,
                             ),

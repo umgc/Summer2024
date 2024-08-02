@@ -22,7 +22,7 @@ class QRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? answer=(question.questionType=='Multiple Choice') ?   'Options: ' + question.answerOptions.toString() + ' Answer: ' +(question.answer??''):question.answer;
+    String? answer=(question.questionType=='multipleChoice') ?   'Options: ' + question.answerOptions.toString() + ' Answer: ' +(question.answer??''):question.answer;
     return Row(
       children: [
         Expanded(

@@ -117,9 +117,9 @@ class AssessmentProvider extends ChangeNotifier {
 
   Map<String, int> getQuestionTypeCount() {
     var questionCount = {
-      "Multiple Choice": 0,
-      "Short Answer": 0,
-      "Essay": 0,
+      "multipleChoice": 0,
+      "shortAnswer": 0,
+      "essay": 0,
     };
 
     for (Question question in a.questions) {

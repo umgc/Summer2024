@@ -32,7 +32,7 @@ void main() {
       'questions': [
         {
           'question': 'What is the powerhouse of the cell',
-          'type': 'multiple choice',
+          'type': 'multipleChoice',
           'choice1': 'mitochondria',
           'choice2': 'vacuole',
           'choice3': 'nucleus',
