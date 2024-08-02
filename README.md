@@ -36,8 +36,20 @@ Before you start, make sure you have the following installed:
 ### Add additional runtime components
 - Add the .env file to the root directory
     - This file will contain the OpenAI key needed to connect to ChatGPT.
+    - Ex: ```OPEN_AI_API_KEY = " "```
 - Add the service account json file to the assets directory
     - This will be used to connect to the Google Cloud Speech-to-Text transcriber. 
+    - Ex: ```{
+            "type": " ",
+            "project_id": " ",
+            "private_key_id": " ",
+            "private_key": " ",
+            "client_email": " ",
+            "client_id": " ",
+            "auth_uri": " ",
+            "token_uri": " ",
+            "universe_domain": "googleapis.com"
+        }```
 
 ### Running the MindInSYNC application
 - Pick your emulator that you want to run (ex. Pixel 8 )
