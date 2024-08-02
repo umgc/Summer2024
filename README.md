@@ -1,16 +1,55 @@
-# mindinsync
+# MindInSYNC
 
-A new Flutter project.
+Welcome to the MindInSync application! This guide will help you set up and run the application on an Android emulator using Flutter.
+
+## Prerequisites
+
+Before you start, make sure you have the following installed:
+
+- Flutter SDK: [Install Flutter](https://docs.flutter.dev/get-started/install)
+- Android Studio: [Download Android Studio][https://developer.android.com/studio]
+- Visual Studio Code: [Download VSCode](https://code.visualstudio.com/download)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Configure Visual Studio Code:
+- Open Visual Studio Code
+- [Install Flutter Extension](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) for VS Code.
+- Connect to [Github](https://github.com/umgc/Summer2024/tree/TeamA) to pull in the latest repo
+- Verify that you are working out of the "TeamA" branch
 
-A few resources to get you started if this is your first Flutter project:
+### Configure Android Studio
+- Open Android Studio
+- Install the following components:
+    - Android SDK Platform, API 34.0.5
+    - Android SDK Command-line Tools
+    - Android SDK Build-Tools
+    - Android SDK Platform-Tools
+    - Android Emulator
+- Setup the Android Emulator
+    - Go to Tools > Device Manager.
+	- Click on Create Virtual Device.
+	- Select a device definition and click Next.
+	- Select a system image (recommend using the latest stable release) and click Next.
+	- Click Finish to create the device.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Add additional runtime components
+- Add the .env file to the root directory
+    - This file will contain the OpenAI key needed to connect to ChatGPT.
+- Add the service account json file to the assets directory
+    - This will be used to connect to the Google Cloud Speech-to-Text transcriber. 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Running Flutter
+- Pick your emulator that you want to run (ex. Pixel 8 )
+    - Run the following command: ```flutter emulators --launch Pixel_8_Pro_API_34-ext12```
+- Start the emulator: ```flutter run```
+
+## Troubleshooting
+- Verify that all dependencies are up-to-date: ```flutter pub get```
+- Verify that flutter has all the components it needs to run: ```flutter doctor -v```
+- Verify fingerprint/face scan is setup in Android settings:
+    - Settings -> Security & Privacy -> Device Unlock
+    - Set a PIN then user the Fingerint Unlock function to set up a finger print.
+- Verify microphone is enabled on the emulator device:
+    - Settings -> Microphone -> Enable "Virtual microphone uses host audio input"
+    - Make sure the application prompts with "Use microphone while using" when using the application for the first time.
