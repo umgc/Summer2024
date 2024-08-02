@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_wizard/models/assessment.dart';
-import 'package:test_wizard/models/assessment_set.dart';
-import 'package:test_wizard/models/course.dart';
-import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/teacher_dashboard_view.dart';
 import 'package:test_wizard/providers/user_provider.dart';

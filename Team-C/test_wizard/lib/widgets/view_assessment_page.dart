@@ -52,7 +52,7 @@ class ViewTestState extends State<ViewAssessmentPage> {
         }
       }
     } catch (e) {
-      print('Error reading file: $e');
+      logger.i('Error reading file: $e');
     }
   }
 

@@ -13,6 +13,9 @@ import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 import 'package:test_wizard/providers/user_provider.dart';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 class QuestionGenerateForm extends StatefulWidget {
   final String assessmentName;
@@ -411,7 +414,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     if (context.mounted) {
                       Navigator.of(context).pop();
                     }
-                    print(e);
+                    logger.i(e);
                     break;
                   }
                 }
@@ -427,7 +430,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                   if (!kIsWeb) {
                     savedAssessments.saveAssessmentsToFile();
                   }
-                  print('Success!');
+                  logger.i('Success!');
                   if (context.mounted) {
                     Navigator.of(context).pop();
                     Navigator.of(context).popUntil(
