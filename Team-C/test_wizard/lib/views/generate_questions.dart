@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/models/assessment_set.dart';
@@ -9,7 +8,6 @@ import 'package:test_wizard/models/course.dart';
 import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/models/question_generation_detail.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
-import 'package:test_wizard/services/document_directory_service.dart';
 import 'package:test_wizard/services/llm_service.dart';
 import 'package:test_wizard/utils/validators.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
@@ -268,7 +266,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
     Map<dynamic,dynamic> keyValueOutputEntry;
     
     //figure out position in object and how to get the list of questions in the question type.
-    output.forEach((parseAssessment){
+    for (var parseAssessment in output) {
       dynamic assessment;
       if(assessment is Map<dynamic,dynamic>){
         keyValueOutputEntry = assessment.cast<dynamic,dynamic>();
@@ -322,7 +320,6 @@ class GenerateAssessmentsButton extends StatelessWidget {
           }
       assessmentList.add(newAssessment);
       }
-    );
     
     return assessmentList;
   }
@@ -396,7 +393,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                           List<Assessment> newAssessments = getAssessmentFromOutput(
                               extractedAssessments??[], assessmentId++);
                           if (newAssessments.isNotEmpty) {
-                          newAssessments.forEach((assessment){assessmentSet.assessments.add(assessment);});
+                          for (var assessment in newAssessments) {assessmentSet.assessments.add(assessment);}
                           assessmentProvider.addAssessmentSet(assessmentSet);
                           assessmentProvider.saveAssessmentsToFile;
                           generatedAssessmentsCount=assessmentSet.assessments.length;

@@ -21,7 +21,7 @@ class ModifyTestView extends StatelessWidget {
   final int assessmentIndex;
   final int assessmentSetIndex;
 
-  ModifyTestView({
+  const ModifyTestView({
     super.key,
     required this.screenTitle,
     required this.assessmentId,
