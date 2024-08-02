@@ -1,14 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment_set.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 
-class ViewAssessmentPage extends StatefulWidget {
+class ViewAssessmentPage extends StatelessWidget {
   final String assessmentName;
   final String course;
   final String assessmentId;
@@ -22,41 +20,6 @@ class ViewAssessmentPage extends StatefulWidget {
   });
 
   @override
-  State<ViewAssessmentPage> createState() => ViewTestState();
-}
-
-class ViewTestState extends State<ViewAssessmentPage> {
-  String topic = '';
-  int courseId = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAssessmentData();
-  }
-
-  Future<void> _loadAssessmentData() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/assessments.txt');
-      final fileContent = await file.readAsString();
-      final jsonData = jsonDecode(fileContent);
-
-      for (var assessmentSet in jsonData['assessmentSets']) {
-        if (assessmentSet['assessmentName'] == widget.assessmentName) {
-          setState(() {
-            topic = assessmentSet['course']['topic'] ?? 'Default Topic';
-            courseId = assessmentSet['course']['courseId'] ?? 0;
-          });
-          break;
-        }
-      }
-    } catch (e) {
-      logger.i('Error reading file: $e');
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ScrollContainer(
       child: Column(
@@ -65,13 +28,14 @@ class ViewTestState extends State<ViewAssessmentPage> {
           const SizedBox(height: 20),
           Consumer<AssessmentProvider>( 
             builder: (context, assessmentProvider, child) {
+            AssessmentSet assessmentSet = assessmentProvider.assessmentSets[assessmentSetIndex];
               return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: const [
                 DataColumn(label: Text('Version')),
               ],
-              rows: assessmentProvider.getAssessmentsFromAssessmentSets(widget.assessmentSetIndex).map((assessment) {
+              rows: assessmentProvider.getAssessmentsFromAssessmentSets(assessmentSetIndex).map((assessment) {
                 return DataRow(
                   cells: [
                     DataCell(
@@ -82,20 +46,20 @@ class ViewTestState extends State<ViewAssessmentPage> {
                             MaterialPageRoute(
                               builder: (context) => ModifyTestView(
                                 screenTitle:
-                                    '${widget.assessmentName} ${assessment.assessmentVersion}',
-                                    assessmentId: widget.assessmentId,
-                                assessmentIndex: assessmentProvider.getAssessmentsFromAssessmentSets(widget.assessmentSetIndex).indexOf(assessment),
-                                assessmentSetIndex: widget.assessmentSetIndex,
+                                    '$assessmentName ${assessment.assessmentVersion}',
+                                    assessmentId: assessmentId,
+                                assessmentIndex: assessmentProvider.getAssessmentsFromAssessmentSets(assessmentSetIndex).indexOf(assessment),
+                                assessmentSetIndex: assessmentSetIndex,
                                 assessment: assessment,
-                                    assessmentName: widget.assessmentName,
-                                    topic: topic,
-                                    courseId: courseId,
+                                    assessmentName: assessmentName,
+                                    topic: assessmentSet.course?.topic ?? '',
+                                    courseId:  assessmentSet.course?.courseId ?? 0,
                               ),
                             ),
                           );
                         },
                         child: Text(
-                          '${widget.assessmentName} ${assessment.assessmentVersion}',
+                          '$assessmentName ${assessment.assessmentVersion}',
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
