@@ -62,32 +62,6 @@ class QSet extends StatelessWidget {
                   labelText: isQuestion ? 'Question' : 'Answer',
                 ),
               ),
-              /*actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (isQuestion) {
-                      if (isRegenerate) {
-                        assessmentProvider
-                            .regenerateQuestion(question.questionText, controller.text);
-                      } else {
-                        Provider.of<QuestionAnswerProvider>(context, listen: false)
-                            .updateQuestion(question.questionText, controller.text);
-                      }
-                    } else {
-                      Provider.of<QuestionAnswerProvider>(context, listen: false)
-                          .updateAnswer(question.questionText, controller.text);
-                    }
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(isRegenerate ? 'Regenerate' : 'Save'),
-                ),
-              ],*/
             );
           },
         );
