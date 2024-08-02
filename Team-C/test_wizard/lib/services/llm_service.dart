@@ -110,20 +110,20 @@ Check your answers to ensure they are correct. Do not provide the work checking 
     int essayCount = typeMap['essay']!;
     int totalCount = multipleChoiceCount + shortAnswerCount + essayCount;
     return '''Please generate as many complete assessments as you can with {$totalCount} questions each based on the previous assessments you sent me. Do not repeat questions. Use the same format.
-QUESTION NUMBER:
+
 TYPE:
 QUESTION:
 ANSWER:
 
 Use the following format for multiple choice questions:
-QUESTION NUMBER:
+
 TYPE:
 QUESTION:
 OPTIONS:
 ANSWER:
 
 Use the following format for essay questions:
-QUESTION NUMBER:
+
 TYPE:
 QUESTION:
 RUBRIC:''';

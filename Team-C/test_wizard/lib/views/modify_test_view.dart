@@ -215,7 +215,7 @@ class ButtonContainer extends StatelessWidget {
         if (assessmentSet['assessmentName'] == quizName) {
           for (var question in assessment['questions']) {
             Map<String, dynamic> formattedQuestion;
-            if (question['questionType'] == 'Multiple Choice') {
+            if (question['questionType'] == 'multipleChoice') {
               formattedQuestion = {
                 'type': 'multichoice',
                 'name': {
@@ -267,7 +267,7 @@ class ButtonContainer extends StatelessWidget {
                     })
                     .toList(),
               };
-            } else if (question['questionType'] == 'Short Answer') {
+            } else if (question['questionType'] == 'shortAnswer') {
 
               formattedQuestion = {
                 "type": "shortanswer",
@@ -306,7 +306,7 @@ class ButtonContainer extends StatelessWidget {
                   }
                 ]
               };
-            } else if (question['questionType'] == 'Essay') {
+            } else if (question['questionType'] == 'essay') {
               formattedQuestion = {
                 'type': 'essay',
                 'name': {
