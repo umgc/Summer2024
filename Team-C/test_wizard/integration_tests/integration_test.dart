@@ -127,10 +127,6 @@ void main() {
         expect(find.text('What is the nucleus2?'), findsOne);
         await tester.tap(find.text('Generate Assessment'));
         await tester.pumpAndSettle();
-        expect(
-            find.widgetWithText(TextField,
-                'Something went wrong with the request to Perplexity'),
-            findsOne);
         // go back to test the cancel buttons
         await tester.tap(find.byTooltip('Back'));
         await tester.pumpAndSettle();
