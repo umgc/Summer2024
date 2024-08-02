@@ -138,17 +138,18 @@ class AssessmentTable extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Consumer<AssessmentProvider>(
-        builder: (context, savedAssessments, child) {
-          List<AssessmentSet> filteredAssessments = savedAssessments.assessmentSets;
+        builder: (context, assessmentProvider, child) {
+          assessmentProvider.loadAssessmentsFromFile();
+          List<AssessmentSet> filteredAssessments = assessmentProvider.assessmentSets;
           if (filter.isNotEmpty) {
-            filteredAssessments = savedAssessments.assessmentSets
+            filteredAssessments = assessmentProvider.assessmentSets
                 .where((curr) => [curr.assessmentName, curr.course?.courseName]
                     .any((value) =>
                         value?.toLowerCase().contains(filter) ?? false))
                 .toList();
           }
-          return !savedAssessments.assessmentSets
-                  .isNotEmpty // if there aren't any saved assessments
+          return assessmentProvider.assessmentSets
+                  .isEmpty // if there aren't any saved assessments
               ? const Text("We couldn't find any saved assessments.")
               // but if there are assessments display the table
               : DataTable(

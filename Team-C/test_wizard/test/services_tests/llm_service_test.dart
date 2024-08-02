@@ -17,13 +17,13 @@ void main() {
 
     test('extractAssessment', () {
       String testString =
-          'this is some text ```json{"hello": "world"}``` this is the rest';
+          'this is some text ```json[{"hello": "world"}]``` this is the rest';
       String broken = 'This isnt json';
 
       final llm = LLMService();
-      var (expected, _) = llm.extractAssessment(testString) ?? (null, null);
-      var (expected2, _) = llm.extractAssessment(broken) ?? (null, null);
-      expect(expected, {"hello": "world"});
+      var (expected, _) = llm.extractAssessments(testString) ?? (null, null);
+      var (expected2, _) = llm.extractAssessments(broken) ?? (null, null);
+      expect(expected, [{"hello": "world"}]);
       expect(expected2, null);
     });
 
@@ -32,7 +32,7 @@ void main() {
       'questions': [
         {
           'question': 'What is the powerhouse of the cell',
-          'type': 'multiple choice',
+          'type': 'multipleChoice',
           'choice1': 'mitochondria',
           'choice2': 'vacuole',
           'choice3': 'nucleus',

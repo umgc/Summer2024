@@ -1,28 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:test_wizard/widgets/cancel_button.dart';
-import 'package:test_wizard/widgets/qset.dart';
-import 'package:test_wizard/widgets/scroll_container.dart';
-import 'package:test_wizard/widgets/tw_app_bar.dart';
-import 'package:test_wizard/providers/question_answer_provider.dart';
-import 'package:test_wizard/widgets/column_header.dart';
-import 'package:test_wizard/widgets/deleted_questions.dart';
-import 'package:test_wizard/widgets/edit_prompt.dart';
+import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/providers/user_provider.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
+import 'package:test_wizard/widgets/column_header.dart';
+import 'package:test_wizard/widgets/qset.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
+import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 final logger = Logger();
 
 class ModifyTestView extends StatelessWidget {
+  final Assessment assessment;
   final String screenTitle;
   final String assessmentId;
+  final int assessmentIndex;
+  final int assessmentSetIndex;
   final String assessmentName;
   final String topic;
   final int courseId;
@@ -31,6 +33,9 @@ class ModifyTestView extends StatelessWidget {
     super.key,
     required this.screenTitle,
     required this.assessmentId,
+    required this.assessmentIndex,
+    required this.assessmentSetIndex,
+    required this.assessment,
     required this.assessmentName,
     required this.topic,
     required this.courseId,
@@ -38,31 +43,31 @@ class ModifyTestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => QuestionAnswerProvider(),
-      child: Scaffold(
-        appBar: TWAppBar(context: context, screenTitle: screenTitle),
-        backgroundColor: const Color(0xffe6f2ff),
-        body: ScrollContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              const ColumnHeaderRow(),
-              QSet(assessmentId: assessmentId),
-              ButtonContainer(
-                screenTitle: screenTitle,
-                assessmentName: assessmentName,
-                topic: topic,
-                courseId: courseId,
-              ),
-              const EditPrompt(),
-              const DeletedQuestions(),
-            ],
-          ),
-        ),
-      ),
-    );
+    return Consumer<AssessmentProvider>(
+        builder: (context, assessmentProvider, child) {
+      return Scaffold(
+          appBar: TWAppBar(context: context, screenTitle: screenTitle),
+          backgroundColor: const Color(0xffe6f2ff),
+          body: ScrollContainer(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                const SizedBox(height: 20),
+                const ColumnHeaderRow(),
+                QSet(
+                    assessmentId: assessmentId,
+                    assessmentIndex: assessmentIndex,
+                    assessmentSetIndex: assessmentSetIndex),
+                ButtonContainer(
+                    screenTitle: screenTitle,
+                    assessmentName: assessmentName,
+                    topic: topic,
+                    courseId: courseId,
+                    assessmentIndex: assessmentIndex,
+                    assessmentSetIndex: assessmentSetIndex,
+                    assessment: assessment)
+              ])));
+    });
   }
 }
 
@@ -78,33 +83,38 @@ class ColumnHeaderRow extends StatelessWidget {
         Flexible(
           fit: FlexFit.tight,
           child: Padding(
-            padding: EdgeInsets.only(left: 120.0), // Adjust the padding as needed
+            padding:
+                EdgeInsets.only(left: 120.0), // Adjust the padding as needed
             child: ColumnHeader(headerText: 'Answer'),
           ),
         ),
-        Expanded(child: ColumnHeader(headerText: 'Previous Question')),
+        //Expanded(child: ColumnHeader(headerText: 'Previous Question')),
       ],
     );
   }
 }
 
 class ButtonContainer extends StatelessWidget {
+  final Assessment assessment;
+  final int assessmentIndex;
+  final int assessmentSetIndex;
   final String screenTitle;
   final String assessmentName;
   final String topic;
   final int courseId;
 
-  const ButtonContainer({
-    super.key, 
-    required this.screenTitle,
-    required this.assessmentName,
-    required this.topic,
-    required this.courseId,
-  });
+  const ButtonContainer(
+      {super.key,
+      required this.screenTitle,
+      required this.assessmentName,
+      required this.topic,
+      required this.courseId,
+      required this.assessmentIndex,
+      required this.assessmentSetIndex,
+      required this.assessment});
 
   void _printQuestionsAndAnswers(BuildContext context) {
-    final questions =
-        Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
+    final questions = assessment.questions;
 
     final doc = pw.Document();
     doc.addPage(
@@ -113,18 +123,20 @@ class ButtonContainer extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text(screenTitle, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.Text(screenTitle,
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 20),
               ...questions.map((qa) {
                 return pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('Question: ${qa.questionText}'),
-                    pw.Text('Answer: ${qa.answerText}'),
+                    pw.Text('Answer: ${qa.answer}'),
                     pw.SizedBox(height: 20),
                   ],
                 );
-              }).toList(),
+              }),
             ],
           );
         },
@@ -137,8 +149,7 @@ class ButtonContainer extends StatelessWidget {
   }
 
   void _printQuestionsOnly(BuildContext context) {
-    final questions =
-        Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
+    final questions = assessment.questions;
 
     final doc = pw.Document();
     doc.addPage(
@@ -147,21 +158,25 @@ class ButtonContainer extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text(screenTitle, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.Text(screenTitle,
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 20),
-              pw.Text('Student Name:', style: pw.TextStyle(fontSize: 18)),
+              pw.Text('Student Name:', style: const pw.TextStyle(fontSize: 18)),
               pw.SizedBox(height: 20),
-              pw.Text('Date:', style: pw.TextStyle(fontSize: 18)),
-              pw.SizedBox(height: 60), 
+              pw.Text('Date:', style: const pw.TextStyle(fontSize: 18)),
+              pw.SizedBox(height: 60),
               ...questions.map((qa) {
                 return pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('Question: ${qa.questionText}'),
-                    pw.SizedBox(height: 80), 
+                    pw.Text(qa.answerOptions
+                        .toString()), //William told me to do this.
+                    pw.SizedBox(height: 80),
                   ],
                 );
-              }).toList(),
+              }),
             ],
           );
         },
@@ -172,28 +187,17 @@ class ButtonContainer extends StatelessWidget {
       onLayout: (PdfPageFormat format) async => doc.save(),
     );
   }
-  Future<String> _loadAssessmentsJson() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/assessments.txt');
-      return await file.readAsString();
-    } catch (e) {
-      logger.e('Failed to read assessments file: $e');
-      return '';
-    }
-  }
 
-  Map<String, dynamic> _reformatAssessmentsJson(String assessmentsJson, String quizName) {
-    final parsedJson = jsonDecode(assessmentsJson);
-
+  Map<String, dynamic> _reformatAssessmentsJson(
+      List<AssessmentSet> assessmentSets, String quizName) {
     final List<Map<String, dynamic>> questions = [];
 
-    for (var assessmentSet in parsedJson['assessmentSets']) {
-      for (var assessment in assessmentSet['assessments']) {
-        if (assessmentSet['assessmentName'] == quizName) {
-          for (var question in assessment['questions']) {
+    for (var assessmentSet in assessmentSets) {
+      for (var assessment in assessmentSet.assessments) {
+        if (assessmentSet.assessmentName == quizName) {
+          for (var question in assessment.questions) {
             Map<String, dynamic> formattedQuestion;
-            if (question['questionType'] == 'Multiple Choice') {
+            if (question.questionType == 'multipleChoice') {
               formattedQuestion = {
                 'type': 'multichoice',
                 'name': {
@@ -201,7 +205,7 @@ class ButtonContainer extends StatelessWidget {
                 },
                 'questiontext': {
                   'format': 'html',
-                  'text': '<p>${question['questionText']}</p>',
+                  'text': '<p>${question.questionText}</p>',
                 },
                 'generalfeedback': {
                   'format': 'html',
@@ -228,37 +232,29 @@ class ButtonContainer extends StatelessWidget {
                   'text': '<p>Your answer is incorrect.</p>',
                 },
                 'shownumcorrect': {},
-                'answer': question['answerOptions']
-                    .asMap()
-                    .entries
-                    .map((entry) {
-                      final option = entry.value;
-                      return {
-                        'fraction': option == question['answer'] ? 100 : 0,
-                        'format': 'html',
-                        'text': '<p>$option</p>',
-                        'feedback': {
-                          'format': 'html',
-                          'text': '',
-                        },
-                      };
-                    })
-                    .toList(),
+                'answer': question.answerOptions!.map((option) {
+                  return {
+                    'fraction': option == question.answer ? 100 : 0,
+                    'format': 'html',
+                    'text': '<p>$option</p>',
+                    'feedback': {
+                      'format': 'html',
+                      'text': '',
+                    },
+                  };
+                }).toList(),
               };
-            } else if (question['questionType'] == 'Short Answer') {
-
+            } else if (question.questionType == 'Short Answer') {
               formattedQuestion = {
                 "type": "shortanswer",
-                "name": {
-                  "text": "TestWizard Created Short Answer Question"
-                },
+                "name": {"text": "TestWizard Created Short Answer Question"},
                 "questiontext": {
                   "format": "html",
-                  "text": '<p>${question['questionText']}</p>'
+                  "text": '<p>${question.questionText}</p>'
                 },
                 "generalfeedback": {
                   "format": "html",
-                  "text": "<p>The answer is: ${question['answer']}</p>"
+                  "text": "<p>The answer is: ${question.answer}</p>"
                 },
                 "defaultgrade": 1.0000000,
                 "penalty": 0.3333333,
@@ -267,24 +263,18 @@ class ButtonContainer extends StatelessWidget {
                   {
                     "fraction": 100,
                     "format": "moodle_auto_format",
-                    "text": question['answer'],
-                    "feedback": {
-                      "format": "html",
-                      "text": "<p>Correct!</p>"
-                    }
+                    "text": question.answer,
+                    "feedback": {"format": "html", "text": "<p>Correct!</p>"}
                   },
                   {
                     "fraction": 0,
                     "format": "moodle_auto_format",
                     "text": "*",
-                    "feedback": {
-                      "format": "html",
-                      "text": "<p>Incorrect</p>"
-                    }
+                    "feedback": {"format": "html", "text": "<p>Incorrect</p>"}
                   }
                 ]
               };
-            } else if (question['questionType'] == 'Essay') {
+            } else if (question.questionType == 'essay') {
               formattedQuestion = {
                 'type': 'essay',
                 'name': {
@@ -292,7 +282,7 @@ class ButtonContainer extends StatelessWidget {
                 },
                 'questiontext': {
                   'format': 'html',
-                  'text': '<p>${question['questionText']}</p>',
+                  'text': '<p>${question.questionText}</p>',
                 },
                 'generalfeedback': {
                   'format': 'html',
@@ -328,8 +318,11 @@ class ButtonContainer extends StatelessWidget {
     };
   }
 
-  Future<void> addQuizToMoodle(BuildContext context, String quizName, String topic, int courseId) async {
+  Future<void> addQuizToMoodle(
+      BuildContext context, String quizName, String topic, int courseId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final assessmentProvider =
+        Provider.of<AssessmentProvider>(context, listen: false);
 
     if (userProvider.moodleUrl == null) {
       logger.w('Moodle URL is not provided.');
@@ -375,16 +368,6 @@ class ButtonContainer extends StatelessWidget {
 
       logger.i('Quiz added to Moodle successfully! Quiz ID: $quizId');
 
-      // Load questions from assessments.txt
-      final assessmentsJson = await _loadAssessmentsJson();
-      if (assessmentsJson.isEmpty) {
-        logger.e('No assessments data found.');
-        return;
-      }
-
-      // Reformat assessmentsJson
-      final formattedAssessmentsJson = _reformatAssessmentsJson(assessmentsJson, quizName);
-
       // Import questions
       final importResponse = await http.post(
         Uri.parse(url),
@@ -392,7 +375,8 @@ class ButtonContainer extends StatelessWidget {
           'wsfunction': importQuestionsFunction,
           'wstoken': userProvider.token!,
           'moodlewsrestformat': 'json',
-          'questionjson': jsonEncode(formattedAssessmentsJson),
+          'questionjson': jsonEncode(_reformatAssessmentsJson(
+              assessmentProvider.assessmentSets, quizName)),
         },
       );
 
@@ -402,7 +386,9 @@ class ButtonContainer extends StatelessWidget {
       }
 
       final importResponseBody = jsonDecode(importResponse.body);
-      final questionIds = (importResponseBody as List<dynamic>).map((question) => question['questionid']).toList();
+      final questionIds = (importResponseBody as List<dynamic>)
+          .map((question) => question['questionid'])
+          .toList();
 
       if (questionIds.isEmpty) {
         logger.w('Question IDs not found in response.');
@@ -425,7 +411,8 @@ class ButtonContainer extends StatelessWidget {
         );
 
         if (addQuestionResponse.statusCode != 200) {
-          logger.e('Failed to add question $questionId to quiz: ${addQuestionResponse.body}');
+          logger.e(
+              'Failed to add question $questionId to quiz: ${addQuestionResponse.body}');
           return;
         }
       }
@@ -438,32 +425,38 @@ class ButtonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Wrap(
-        alignment: WrapAlignment.end,
-        runSpacing: 10,
-        children: [
-          ElevatedButton(
-            onPressed: () => _printQuestionsAndAnswers(context),
-            child: const Text('Print'),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () => _printQuestionsOnly(context),
-            child: const Text('Print Questions Only'),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () async {
-              await addQuizToMoodle(context, assessmentName, topic, courseId);
-            },
-            child: const Text('Save'),
-          ),
-          const SizedBox(width: 10),
-          const CancelButton(),
-        ],
-      ),
-    );
+    return Consumer<AssessmentProvider>(
+        builder: (context, assessmentProvider, child) {
+      return Container(
+        margin: const EdgeInsets.only(top: 20),
+        child: Wrap(
+          alignment: WrapAlignment.end,
+          runSpacing: 10,
+          children: [
+            ElevatedButton(
+              onPressed: () => _printQuestionsAndAnswers(context),
+              child: const Text('Print'),
+            ),
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: () => _printQuestionsOnly(context),
+              child: const Text('Print Questions Only'),
+            ),
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: () async {
+                assessmentProvider.updateAssessment(
+                    assessmentSetIndex, assessmentIndex, assessment);
+                assessmentProvider.saveAssessmentsToFile();
+                await addQuizToMoodle(context, assessmentName, topic, courseId);
+              },
+              child: const Text('Save'),
+            ),
+            const SizedBox(width: 10),
+            const CancelButton(),
+          ],
+        ),
+      );
+    });
   }
 }

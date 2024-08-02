@@ -16,8 +16,9 @@ class Assessment {
   //List of questions related to the assessment
   List<Question> questions = [];
 
-  Assessment(
-      this.assessmentId, this.assessmentVersion, this.isExampleAssessment);
+
+  Assessment(this.assessmentId, this.assessmentVersion, this.isExampleAssessment);
+
 
   factory Assessment.fromJson(Map<String, dynamic> json) =>
       _$AssessmentFromJson(json);
@@ -28,13 +29,13 @@ class Assessment {
     var map = {"multipleChoice": [], "shortAnswer": [], "essay": []};
     for (var question in questions) {
       switch (question.questionType) {
-        case "Multiple Choice":
+        case "multipleChoice":
           map['multipleChoice']!.add({"QUESTION": question.questionText});
           break;
-        case "Short Answer":
+        case "shortAnswer":
           map['shortAnswer']!.add({"QUESTION": question.questionText});
           break;
-        case "Essay":
+        case "essay":
           map['essay']!.add({"QUESTION": question.questionText});
           break;
         default:
@@ -43,6 +44,7 @@ class Assessment {
     }
     try {
       String json = encoder.convert(map);
+      json = '[{$json}]';
       return json;
     } catch (e) {
       return '';

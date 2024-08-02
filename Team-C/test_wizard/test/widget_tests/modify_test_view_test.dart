@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:test_wizard/providers/question_answer_provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/views/modify_test_view.dart';
-import 'package:test_wizard/widgets/deleted_questions.dart';
+
 
 void main() {
   testWidgets('ModifyTestView has a title and DeletedQuestions widget', (WidgetTester tester) async {
     await tester.pumpWidget(
       ChangeNotifierProvider(
-        create: (_) => QuestionAnswerProvider(),
-        child: const MaterialApp(
+        create: (_) => AssessmentProvider(),
+        child: MaterialApp(
           home: ModifyTestView(
             screenTitle: 'Test Title',
             assessmentId: '1',
+            assessmentIndex: 1,
+            assessmentSetIndex: 1,
+            assessment: Assessment(1,1,false),
             assessmentName: 'Sample Assessment',
             topic: 'Sample Topic',
             courseId: 101,
@@ -26,6 +30,7 @@ void main() {
     expect(find.text('Test Title'), findsOneWidget);
 
     // Verify if the DeletedQuestions widget is present
-    expect(find.byType(DeletedQuestions), findsOneWidget);
+    //this widget is de-scoped
+    //expect(find.byType(DeletedQuestions), findsOneWidget);
   });
 }

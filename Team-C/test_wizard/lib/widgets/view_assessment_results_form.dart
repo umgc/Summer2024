@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:logger/logger.dart';
-final logger = Logger();
+
+var logger = Logger();
 
 class ViewAssessmentResultsForm extends StatefulWidget {
   const ViewAssessmentResultsForm({super.key});

@@ -46,4 +46,10 @@ class DocumentDirectoryService {
     // Write the file
     return file.writeAsString(encoder.convert(json));
   }
+  Future<File> writeToFile(String s) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString(s);
+  }
 }

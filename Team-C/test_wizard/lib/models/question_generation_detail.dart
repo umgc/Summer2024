@@ -18,7 +18,7 @@ class QuestionGenerationDetail {
   String assessmentType = "Quiz";
 
   //Question Type - Multiple Choice, Essay, Extended Response: Question Type Count
-  var questionType = {'multipleChoice': 0, 'Essay': 0, 'extendedResponse': 0};
+  var questionType = {'multipleChoice': 0, 'essay': 0, 'shortAnswer': 0};
 
   //this is to subjective and not helpful to the prompt.
   String? gradeLevel;

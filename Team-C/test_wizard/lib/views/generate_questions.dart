@@ -77,7 +77,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
           points: 0,
           questionId: id++,
           questionText: '',
-          questionType: 'Short Answer',
+          questionType: 'shortAnswer',
         ));
         return state;
       },
@@ -135,7 +135,7 @@ class QuestionGenerateFormState extends State<QuestionGenerateForm> {
                                   questionId: id++,
                                   points: 0,
                                   questionText: '',
-                                  questionType: 'Multiple Choice',
+                                  questionType: 'multipleChoice',
                                 ));
                               },
                               child: const Text('Add Question'),
@@ -206,15 +206,15 @@ class AddedQuestion extends StatelessWidget {
             value: question.questionType,
             items: const [
               DropdownMenuItem(
-                value: 'Multiple Choice',
+                value: 'multipleChoice',
                 child: Text('Multiple Choice'),
               ),
               DropdownMenuItem(
-                value: 'Short Answer',
+                value: 'shortAnswer',
                 child: Text('Short Answer'),
               ),
               DropdownMenuItem(
-                value: 'Essay',
+                value: 'essay',
                 child: Text('Essay'),
               ),
             ],
@@ -278,58 +278,79 @@ class GenerateAssessmentsButton extends StatelessWidget {
       required this.topic,
       required this.courseId});
 
-  Assessment getAssessmentFromOutput(Map<String, dynamic> output, int id) {
+  List<Assessment> getAssessmentFromOutput(List<dynamic> output, int id) {
     int questionId = 0; // same thing as assessmentId
     // generate a new assessment from the extracted
-    List<dynamic>? multipleChoiceQuestions = output['multipleChoice'] ?? [];
-    List<dynamic>? shortAnswerQuestions = output['shortAnswer'] ?? [];
-    List<dynamic>? essayQuestions = output['essay'] ?? [];
-    Assessment newAssessment = Assessment(id++, id,
-        false); // increment assessmentId after using so that version isn't 0 indexed
-    if (multipleChoiceQuestions != null) {
-      for (var question in multipleChoiceQuestions) {
-        newAssessment.questions.add(Question(
-          points: 0,
-          questionId: questionId++, // increment after use
-          questionType: 'Multiple Choice',
-          questionText: question['QUESTION'] ?? '',
-          answer:
-              question['ANSWER'] != null ? question['ANSWER'].toString() : '',
-          answerOptions: question['OPTIONS'] != null
-              ? question['OPTIONS'].cast<String>()
-              : [],
-        ));
+    List<Assessment> assessmentList = [];
+    List<dynamic> multipleChoiceQuestions = [];
+    List<dynamic> shortAnswerQuestions = [];
+    List<dynamic> essayQuestions = [];
+    Map<dynamic,dynamic> keyValueOutputEntry;
+    
+    //figure out position in object and how to get the list of questions in the question type.
+    for (var parseAssessment in output) {
+      dynamic assessment;
+      if(assessment is Map<dynamic,dynamic>){
+        keyValueOutputEntry = assessment.cast<dynamic,dynamic>();
+        assessment = keyValueOutputEntry.values;
+      }else{
+        assessment = parseAssessment;
       }
-    }
-    if (shortAnswerQuestions != null) {
-      for (var question in shortAnswerQuestions) {
-        newAssessment.questions.add(Question(
-          points: 0,
-          questionId: questionId++, // increment after use
-          questionType: 'Short Answer',
-          questionText: question['QUESTION'] ?? '',
-          answer: question['ANSWER'] ?? '',
-        ));
+        multipleChoiceQuestions = assessment['multipleChoice'] ?? [];
+        shortAnswerQuestions = assessment['shortAnswer'] ?? [];
+        essayQuestions = assessment['essay'] ?? [];
+        
+        Assessment newAssessment = Assessment(id++, id,
+            false);
+      // increment assessmentId after using so that version isn't 0 indexed
+          if (multipleChoiceQuestions.isNotEmpty) {
+
+            for (var question in multipleChoiceQuestions) {
+              
+              newAssessment.questions.add(Question(
+                points: 0,
+                questionId: questionId++, // increment after use
+                questionType: 'multipleChoice',
+                questionText: question['QUESTION'] ?? question['question'] ?? '',
+                answer:
+                    (question['ANSWER'] ?? question['answer']??'').toString(),
+                answerOptions: List<String>.from(question['OPTIONS'] ?? question['options']??[])
+              ));
+            }
+          }
+          if (shortAnswerQuestions.isNotEmpty) {
+            for (var question in shortAnswerQuestions) {
+              newAssessment.questions.add(Question(
+                points: 0,
+                questionId: questionId++, // increment after use
+                questionType: 'shortAnswer',
+                questionText: question['QUESTION'] ?? '',
+                answer: question['ANSWER'] ?? '',
+              ));
+            }
+          }
+          if (essayQuestions.isNotEmpty) {
+            for (var question in essayQuestions) {
+              newAssessment.questions.add(Question(
+                points: 0,
+                questionId: questionId++, // increment after use
+                questionType: 'essay',
+                questionText: question['QUESTION'] ?? '',
+                rubric: question['RUBRIC'] is String ? question['RUBRIC'] : '',
+              ));
+            }
+          }
+      assessmentList.add(newAssessment);
       }
-    }
-    if (essayQuestions != null) {
-      for (var question in essayQuestions) {
-        newAssessment.questions.add(Question(
-          points: 0,
-          questionId: questionId++, // increment after use
-          questionType: 'Essay',
-          questionText: question['QUESTION'] ?? '',
-          rubric: question['RUBRIC'] is String ? question['RUBRIC'] : '',
-        ));
-      }
-    }
-    return newAssessment;
+    
+    return assessmentList;
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Consumer2<AssessmentProvider, UserProvider>(
-        builder: (context, savedAssessments, userProvider, child) {
+        builder: (context, assessmentProvider, userProvider, child) {
       return Column(
         children: [
           ElevatedButton(
@@ -366,11 +387,15 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 // check the count of requests because it might be stuck in an endless loop.
                 int requestCount = 0;
                 // while we don't have the right number, we need to request the llm for more assessments
-                while (assessmentSet.assessments.length <
+                int generatedAssessmentsCount =0;
+                
+                while (generatedAssessmentsCount <
                     questionGenerationDetail.numberOfAssessments) {
-                  try {
+
+                  //try {
                     if (requestCount >
                         questionGenerationDetail.numberOfAssessments + 1) {
+                          
                       throw Exception('Endless Loop in LLM requests');
                     }
                     // make a request to the llm with the prompt
@@ -379,22 +404,31 @@ class GenerateAssessmentsButton extends StatelessWidget {
                     // on success
                     if (res.statusCode == 200) {
                       final finalResponse = res.body;
+                      
                       String? output = finalResponse;
                       // save the output to create thread behavior
                       llmService.addMessage(output);
                       // parse the whole output one assessment at a time
-                      while (output != null) {
-                        var (extractedAssessment, rest) =
-                            llmService.extractAssessment(output) ??
+                        var (extractedAssessments, rest) =
+                            llmService.extractAssessments(output) ??
                                 (null, null);
                         output = rest;
-
-                        if (extractedAssessment != null) {
-                          Assessment newAssessment = getAssessmentFromOutput(
-                              extractedAssessment, assessmentId++);
-                          assessmentSet.assessments.add(newAssessment);
+                          List<Assessment> newAssessments = getAssessmentFromOutput(
+                              extractedAssessments??[], assessmentId++);
+                          if (newAssessments.isNotEmpty) {
+                          for (var assessment in newAssessments) {assessmentSet.assessments.add(assessment);}
+                          
+                          //assessmentProvider.saveAssessmentsToFile;
+                          generatedAssessmentsCount=assessmentSet.assessments.length;
+                        }else{
+                          textEditingController.text =
+                          'Recieved empty resopnse from LLM';
+                            wasError = true;
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          break;
                         }
-                      }
                       questionGenerationDetail.prompt = llmService
                           .getMoreAssessmentsPrompt(assessmentProvider);
                       requestCount++;
@@ -407,16 +441,16 @@ class GenerateAssessmentsButton extends StatelessWidget {
                       }
                       break;
                     }
-                  } catch (e) {
+                  /*} catch (e) {
                     textEditingController.text =
                         'Something went wrong with parsing the returned data';
                     wasError = true;
                     if (context.mounted) {
                       Navigator.of(context).pop();
                     }
-                    logger.i(e);
+                    //print(e);
                     break;
-                  }
+                  }*/
                 }
                 // if we get here, we add the result set to state
                 // delete extra assessments if necessary
@@ -425,12 +459,12 @@ class GenerateAssessmentsButton extends StatelessWidget {
                       questionGenerationDetail.numberOfAssessments) {
                     assessmentSet.assessments.removeLast();
                   }
-                  savedAssessments.addAssessmentSet(assessmentSet);
+                  assessmentProvider.addAssessmentSet(assessmentSet);
                   // can't save to file using web browser
                   if (!kIsWeb) {
-                    savedAssessments.saveAssessmentsToFile();
+                    assessmentProvider.saveAssessmentsToFile();
                   }
-                  logger.i('Success!');
+                  //print('Success!');
                   if (context.mounted) {
                     Navigator.of(context).pop();
                     Navigator.of(context).popUntil(

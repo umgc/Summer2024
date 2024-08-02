@@ -38,7 +38,7 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //adds assessment to assessmentSet
+  //updates Assessment
   void updateAssessment(int assessmentSetIndex, int assessmentIndex, Assessment updatedAssessment){
     if(assessmentSetIndex < _savedAssessments.assessmentSets.length){
       if(assessmentIndex < _savedAssessments.assessmentSets[assessmentSetIndex].assessments.length){
@@ -60,6 +60,9 @@ class AssessmentProvider extends ChangeNotifier {
     // This call tells the widgets that are listening to this model to rebuild.
     notifyListeners();
   }
+
+
+  
 
   /// Removes all assessments from the list.
   void removeAll() {
@@ -100,6 +103,8 @@ class AssessmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  
+
   void removeQuestion(int id) {
     int foundIndex = a.questions.indexWhere((q) => q.questionId == id);
     // splice out the found question
@@ -112,9 +117,9 @@ class AssessmentProvider extends ChangeNotifier {
 
   Map<String, int> getQuestionTypeCount() {
     var questionCount = {
-      "Multiple Choice": 0,
-      "Short Answer": 0,
-      "Essay": 0,
+      "multipleChoice": 0,
+      "shortAnswer": 0,
+      "essay": 0,
     };
 
     for (Question question in a.questions) {
