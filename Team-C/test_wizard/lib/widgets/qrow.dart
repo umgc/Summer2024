@@ -5,18 +5,12 @@ import 'package:test_wizard/models/question.dart';
 
 class QRow extends StatelessWidget {
   final Question question;
-  final VoidCallback onEditQuestion;
-  final VoidCallback onRegenerateQuestion;
-  final VoidCallback onDeleteQuestion;
-  final VoidCallback onEditAnswer;
+  
   
   const QRow({
     super.key,
     required this.question,
-    required this.onEditQuestion,
-    required this.onRegenerateQuestion,
-    required this.onDeleteQuestion,
-    required this.onEditAnswer,
+    
 
   });
 

@@ -9,14 +9,13 @@ import 'package:test_wizard/widgets/scroll_container.dart';
 class ViewAssessmentPage extends StatelessWidget {
   final String assessmentName;
   final String course;
-  final String assessmentId;
   final int assessmentSetIndex;
   const ViewAssessmentPage({
     super.key,
     required this.assessmentSetIndex,
     required this.assessmentName,
     required this.course,
-    required this.assessmentId,
+
   });
 
   @override
@@ -47,7 +46,7 @@ class ViewAssessmentPage extends StatelessWidget {
                               builder: (context) => ModifyTestView(
                                 screenTitle:
                                     '$assessmentName ${assessment.assessmentVersion}',
-                                    assessmentId: assessmentId,
+                                    assessmentId: assessment.assessmentId.toString(),
                                 assessmentIndex: assessmentSet.assessments.indexOf(assessment),
                                 assessmentSetIndex: assessmentSetIndex,
                                 assessment: assessment,

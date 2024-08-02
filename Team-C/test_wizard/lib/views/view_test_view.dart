@@ -11,6 +11,7 @@ class CreateViewTest extends StatelessWidget {
     required this.assessmentSetIndex,
     required this.assessmentName,
     required this.courseName,
+    
   });
 
   @override
@@ -27,7 +28,6 @@ class CreateViewTest extends StatelessWidget {
         assessmentSetIndex: assessmentSetIndex,
         assessmentName: assessmentName,
         course: courseName,
-        assessmentId: 'MQ1V1',
       ),
     );
   }
