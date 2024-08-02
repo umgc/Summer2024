@@ -41,7 +41,7 @@ Before you start, make sure you have the following installed:
 
 ### Running the MindInSYNC application
 - Pick your emulator that you want to run (ex. Pixel 8 )
-    - Run the following command to pick the emulator: ```flutter emulators --launch Pixel_8_Pro_API_34-ext12```
+    - Run the following command to pick the emulator: ```flutter emulators --launch [emulator_name]```
 - Start the emulator: ```flutter run```
 
 ## Troubleshooting
