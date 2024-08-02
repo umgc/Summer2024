@@ -5,11 +5,11 @@ part 'course.g.dart';
 @JsonSerializable()
 class Course {
   // Name of the course
-  String courseName;
+  String? courseName;
   // Moodle Course Id
-  int courseId;
+  int? courseId;
   // Topic of the course
-  String topic;
+  String? topic;
 
   Course(this.courseId, this.courseName, this.topic);
 
