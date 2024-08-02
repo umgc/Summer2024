@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:test_wizard/views/view_test_view.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
+import 'package:logger/logger.dart';
+final logger = Logger();
 
 class ViewAssessmentResultsForm extends StatefulWidget {
   const ViewAssessmentResultsForm({super.key});
@@ -20,12 +22,12 @@ class AssessmentResultsFormState extends State<ViewAssessmentResultsForm> {
   @override
   Widget build(BuildContext context) {
     void setOverrideGrade(Map<String, dynamic> student, String value) {
-      print(student);
-      print(value);
+      logger.i(student);
+      logger.i(value);
       setState(() {
         students = students.map((currentStudent) {
           if (currentStudent['id'] == student['id']) {
-            print('changing the student grade');
+            logger.i('changing the student grade');
             return {
               // 'id': student['id'],
               // 'name': student['name'],

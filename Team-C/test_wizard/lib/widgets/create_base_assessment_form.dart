@@ -30,6 +30,9 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    // Prepare the course names from the filtered courses
+    List<Map<String, dynamic>> courseNames = userProvider.courses;
     // Build a Form widget using the _formKey created above.
     Size screenSize = MediaQuery.of(context).size;
     return ScrollContainer(
@@ -58,6 +61,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                     isDisabled: !user.isLoggedInToMoodle,
                     controller: courseNameController,
                     dropdownTitle: 'Course',
+                    options: courseNames,
                   );
                 }),
                 const SizedBox(
@@ -114,6 +118,10 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                           String numOfStudents = numOfStudentsController.text;
                           String subjectDescription =
                               subjectDescriptionController.text;
+                          Map<String, dynamic>? selectedCourse = courseNames.firstWhere(
+                            (course) => course['fullname'] == courseNameController.text,
+                            orElse: () => {},
+                          );
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -122,6 +130,7 @@ class BaseAssessmentFormState extends State<CreateBaseAssessmentForm> {
                                 assessmentName: assessmentName,
                                 numberOfAssessments: int.parse(numOfStudents),
                                 topic: subjectDescription,
+                                courseId: selectedCourse['id'] ?? 0,
                               ),
                             ),
                           );
