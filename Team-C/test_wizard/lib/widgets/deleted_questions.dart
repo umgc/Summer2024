@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/providers/question_answer_provider.dart';
 
 class DeletedQuestions extends StatelessWidget {
-  const DeletedQuestions({super.key});
+  final Assessment assessment;
+  const DeletedQuestions({super.key, required this.assessment});
 
   @override
   Widget build(BuildContext context) {

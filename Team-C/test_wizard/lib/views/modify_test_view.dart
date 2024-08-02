@@ -1,24 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:test_wizard/models/assessment.dart';
-import 'package:test_wizard/providers/assessment_provider.dart';
-import 'package:test_wizard/widgets/cancel_button.dart';
-import 'package:test_wizard/widgets/qset.dart';
-import 'package:test_wizard/widgets/scroll_container.dart';
-import 'package:test_wizard/widgets/tw_app_bar.dart';
-import 'package:test_wizard/providers/question_answer_provider.dart';
-import 'package:test_wizard/widgets/column_header.dart';
-import 'package:test_wizard/widgets/deleted_questions.dart';
-import 'package:test_wizard/widgets/edit_prompt.dart';
+import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:test_wizard/models/assessment.dart';
+import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/providers/user_provider.dart';
+import 'package:test_wizard/widgets/cancel_button.dart';
+import 'package:test_wizard/widgets/column_header.dart';
+import 'package:test_wizard/widgets/edit_prompt.dart';
+import 'package:test_wizard/widgets/qset.dart';
+import 'package:test_wizard/widgets/scroll_container.dart';
+import 'package:test_wizard/widgets/tw_app_bar.dart';
 
 final logger = Logger();
 
@@ -50,7 +48,7 @@ class ModifyTestView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => QuestionAnswerProvider(),
+      create: (context) => AssessmentProvider(),
       child: Scaffold(
         appBar: TWAppBar(context: context, screenTitle: screenTitle),
         backgroundColor: const Color(0xffe6f2ff),
@@ -70,8 +68,6 @@ class ModifyTestView extends StatelessWidget {
                 assessmentSetIndex: assessmentSetIndex, 
                 assessment:assessment 
               ),
-              //const EditPrompt(),
-              //const DeletedQuestions(),
             ],
           ),
         ),
@@ -125,8 +121,7 @@ class ButtonContainer extends StatelessWidget {
   );
   
   void _printQuestionsAndAnswers(BuildContext context) {
-    final questions =
-        Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
+    final questions = assessment.questions;
 
     final doc = pw.Document();
     doc.addPage(
@@ -142,7 +137,7 @@ class ButtonContainer extends StatelessWidget {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('Question: ${qa.questionText}'),
-                    pw.Text('Answer: ${qa.answerText}'),
+                    pw.Text('Answer: ${qa.answer}'),
                     pw.SizedBox(height: 20),
                   ],
                 );
@@ -159,8 +154,7 @@ class ButtonContainer extends StatelessWidget {
   }
 
   void _printQuestionsOnly(BuildContext context) {
-    final questions =
-        Provider.of<QuestionAnswerProvider>(context, listen: false).questions;
+    final questions = assessment.questions;
 
     final doc = pw.Document();
     doc.addPage(
@@ -180,7 +174,8 @@ class ButtonContainer extends StatelessWidget {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('Question: ${qa.questionText}'),
-                    pw.SizedBox(height: 80), 
+                    pw.Text(qa.answerOptions.toString()), //William told me to do this.
+                  pw.SizedBox(height: 80), 
                   ],
                 );
               }).toList(),
@@ -194,28 +189,16 @@ class ButtonContainer extends StatelessWidget {
       onLayout: (PdfPageFormat format) async => doc.save(),
     );
   }
-  Future<String> _loadAssessmentsJson() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/assessments.txt');
-      return await file.readAsString();
-    } catch (e) {
-      logger.e('Failed to read assessments file: $e');
-      return '';
-    }
-  }
 
-  Map<String, dynamic> _reformatAssessmentsJson(String assessmentsJson, String quizName) {
-    final parsedJson = jsonDecode(assessmentsJson);
-
+  Map<String, dynamic> _reformatAssessmentsJson(List<AssessmentSet> assessmentSets, String quizName) {
     final List<Map<String, dynamic>> questions = [];
 
-    for (var assessmentSet in parsedJson['assessmentSets']) {
-      for (var assessment in assessmentSet['assessments']) {
-        if (assessmentSet['assessmentName'] == quizName) {
-          for (var question in assessment['questions']) {
+    for (var assessmentSet in assessmentSets) {
+      for (var assessment in assessmentSet.assessments) {
+        if (assessmentSet.assessmentName == quizName) {
+          for (var question in assessment.questions) {
             Map<String, dynamic> formattedQuestion;
-            if (question['questionType'] == 'Multiple Choice') {
+            if (question.questionType == 'multipleChoice') {
               formattedQuestion = {
                 'type': 'multichoice',
                 'name': {
@@ -223,7 +206,7 @@ class ButtonContainer extends StatelessWidget {
                 },
                 'questiontext': {
                   'format': 'html',
-                  'text': '<p>${question['questionText']}</p>',
+                  'text': '<p>${question.questionText}</p>',
                 },
                 'generalfeedback': {
                   'format': 'html',
@@ -250,13 +233,10 @@ class ButtonContainer extends StatelessWidget {
                   'text': '<p>Your answer is incorrect.</p>',
                 },
                 'shownumcorrect': {},
-                'answer': question['answerOptions']
-                    .asMap()
-                    .entries
-                    .map((entry) {
-                      final option = entry.value;
+                'answer': question.answerOptions!
+                    .map((option) {
                       return {
-                        'fraction': option == question['answer'] ? 100 : 0,
+                        'fraction': option == question.answer ? 100 : 0,
                         'format': 'html',
                         'text': '<p>$option</p>',
                         'feedback': {
@@ -267,7 +247,7 @@ class ButtonContainer extends StatelessWidget {
                     })
                     .toList(),
               };
-            } else if (question['questionType'] == 'Short Answer') {
+            } else if (question.questionType == 'Short Answer') {
 
               formattedQuestion = {
                 "type": "shortanswer",
@@ -276,11 +256,11 @@ class ButtonContainer extends StatelessWidget {
                 },
                 "questiontext": {
                   "format": "html",
-                  "text": '<p>${question['questionText']}</p>'
+                  "text": '<p>${question.questionText}</p>'
                 },
                 "generalfeedback": {
                   "format": "html",
-                  "text": "<p>The answer is: ${question['answer']}</p>"
+                  "text": "<p>The answer is: ${question.answer}</p>"
                 },
                 "defaultgrade": 1.0000000,
                 "penalty": 0.3333333,
@@ -289,7 +269,7 @@ class ButtonContainer extends StatelessWidget {
                   {
                     "fraction": 100,
                     "format": "moodle_auto_format",
-                    "text": question['answer'],
+                    "text": question.answer,
                     "feedback": {
                       "format": "html",
                       "text": "<p>Correct!</p>"
@@ -306,7 +286,7 @@ class ButtonContainer extends StatelessWidget {
                   }
                 ]
               };
-            } else if (question['questionType'] == 'Essay') {
+            } else if (question.questionType == 'Essay') {
               formattedQuestion = {
                 'type': 'essay',
                 'name': {
@@ -314,7 +294,7 @@ class ButtonContainer extends StatelessWidget {
                 },
                 'questiontext': {
                   'format': 'html',
-                  'text': '<p>${question['questionText']}</p>',
+                  'text': '<p>${question.questionText}</p>',
                 },
                 'generalfeedback': {
                   'format': 'html',
@@ -352,6 +332,7 @@ class ButtonContainer extends StatelessWidget {
 
   Future<void> addQuizToMoodle(BuildContext context, String quizName, String topic, int courseId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final assessmentProvider = Provider.of<AssessmentProvider>(context, listen: false);
 
     if (userProvider.moodleUrl == null) {
       logger.w('Moodle URL is not provided.');
@@ -397,16 +378,6 @@ class ButtonContainer extends StatelessWidget {
 
       logger.i('Quiz added to Moodle successfully! Quiz ID: $quizId');
 
-      // Load questions from assessments.txt
-      final assessmentsJson = await _loadAssessmentsJson();
-      if (assessmentsJson.isEmpty) {
-        logger.e('No assessments data found.');
-        return;
-      }
-
-      // Reformat assessmentsJson
-      final formattedAssessmentsJson = _reformatAssessmentsJson(assessmentsJson, quizName);
-
       // Import questions
       final importResponse = await http.post(
         Uri.parse(url),
@@ -414,7 +385,7 @@ class ButtonContainer extends StatelessWidget {
           'wsfunction': importQuestionsFunction,
           'wstoken': userProvider.token!,
           'moodlewsrestformat': 'json',
-          'questionjson': jsonEncode(formattedAssessmentsJson),
+          'questionjson': jsonEncode(_reformatAssessmentsJson(assessmentProvider.assessmentSets, quizName)),
         },
       );
 
@@ -483,9 +454,7 @@ class ButtonContainer extends StatelessWidget {
                   assessmentProvider.updateAssessment(assessmentSetIndex, assessmentIndex, assessment);
                   assessmentProvider.saveAssessmentsToFile();
                   await addQuizToMoodle(context, assessmentName, topic, courseId);
-                }
-
-                 ,
+                },
                 child: const Text('Save'),
               ),
               const SizedBox(width: 10),
