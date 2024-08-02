@@ -70,8 +70,8 @@ class ModifyTestView extends StatelessWidget {
                 assessmentSetIndex: assessmentSetIndex, 
                 assessment:assessment 
               ),
-              const EditPrompt(),
-              const DeletedQuestions(),
+              //const EditPrompt(),
+              //const DeletedQuestions(),
             ],
           ),
         ),

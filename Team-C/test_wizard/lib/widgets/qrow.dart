@@ -36,14 +36,14 @@ class QRow extends StatelessWidget {
                 initialValue: (question.questionText),
                 onChanged: (value)=> {question.questionText=value},
               ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: onRegenerateQuestion,
-                    icon: const Icon(Icons.refresh),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     IconButton(
+              //       onPressed: onRegenerateQuestion,
+              //       icon: const Icon(Icons.refresh),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),
@@ -57,7 +57,6 @@ class QRow extends StatelessWidget {
                 initialValue: (answer  ?? 'no answer'),
                 onChanged: (value)=> {question.answer=value },
               ),
-              const Text('')//my janky attempt to get these aligned
             ],
           ),
           ),

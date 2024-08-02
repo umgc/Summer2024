@@ -388,6 +388,7 @@ class GenerateAssessmentsButton extends StatelessWidget {
                 int requestCount = 0;
                 // while we don't have the right number, we need to request the llm for more assessments
                 int generatedAssessmentsCount =0;
+                
                 while (generatedAssessmentsCount <
                     questionGenerationDetail.numberOfAssessments) {
 
@@ -416,8 +417,8 @@ class GenerateAssessmentsButton extends StatelessWidget {
                               extractedAssessments??[], assessmentId++);
                           if (newAssessments.isNotEmpty) {
                           for (var assessment in newAssessments) {assessmentSet.assessments.add(assessment);}
-                          assessmentProvider.addAssessmentSet(assessmentSet);
-                          assessmentProvider.saveAssessmentsToFile;
+                          
+                          //assessmentProvider.saveAssessmentsToFile;
                           generatedAssessmentsCount=assessmentSet.assessments.length;
                         }else{
                           textEditingController.text =

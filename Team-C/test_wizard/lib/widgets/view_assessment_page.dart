@@ -48,7 +48,7 @@ class ViewAssessmentPage extends StatelessWidget {
                                 screenTitle:
                                     '$assessmentName ${assessment.assessmentVersion}',
                                     assessmentId: assessmentId,
-                                assessmentIndex: assessmentProvider.getAssessmentsFromAssessmentSets(assessmentSetIndex).indexOf(assessment),
+                                assessmentIndex: assessmentSet.assessments.indexOf(assessment),
                                 assessmentSetIndex: assessmentSetIndex,
                                 assessment: assessment,
                                     assessmentName: assessmentName,

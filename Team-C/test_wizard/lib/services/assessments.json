@@ -1,0 +1,2774 @@
+{
+    "assessmentSets": [
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was Alexander's father?",
+                            "questionType": "multipleChoice",
+                            "answer": "Philip II of Macedon",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Philip II of Macedon",
+                                "Alexander the Great",
+                                "Ptolemy I Soter",
+                                "Cleopatra VII"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which city-state did the Sacred Band hail from?",
+                            "questionType": "multipleChoice",
+                            "answer": "Thebes",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Athens",
+                                "Sparta",
+                                "Thebes",
+                                "Macedon"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Who was the leader of the Persians against whom Alexander fought?",
+                            "questionType": "multipleChoice",
+                            "answer": "Darius III",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Darius III",
+                                "Artaxerxes II",
+                                "Xerxes I",
+                                "Cyrus the Great"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "Who was Alexander's father?",
+                            "questionType": "multipleChoice",
+                            "answer": "Philip II of Macedon",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Philip II of Macedon",
+                                "Alexander the Great",
+                                "Ptolemy I Soter",
+                                "Cleopatra VII"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which city-state did the Sacred Band hail from?",
+                            "questionType": "multipleChoice",
+                            "answer": "Thebes",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Athens",
+                                "Sparta",
+                                "Thebes",
+                                "Macedon"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Who was the leader of the Persians against whom Alexander fought?",
+                            "questionType": "multipleChoice",
+                            "answer": "Darius III",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Darius III",
+                                "Artaxerxes II",
+                                "Xerxes I",
+                                "Cyrus the Great"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "Alexander the Great",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "The conquests of alexander the great."
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was Alexander's father?",
+                            "questionType": "multipleChoice",
+                            "answer": "Philip II of Macedon",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Philip II of Macedon",
+                                "Alexander the Great",
+                                "Ptolemy I Soter",
+                                "Cleopatra VII"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which city-state did the Sacred Band hail from?",
+                            "questionType": "multipleChoice",
+                            "answer": "Thebes",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Athens",
+                                "Sparta",
+                                "Thebes",
+                                "Macedon"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Who was the leader of the Persians against whom Alexander fought?",
+                            "questionType": "multipleChoice",
+                            "answer": "Darius III",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Darius III",
+                                "Artaxerxes II",
+                                "Xerxes I",
+                                "Cyrus the Great"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "Who was Alexander's father?",
+                            "questionType": "multipleChoice",
+                            "answer": "Philip II of Macedon",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Philip II of Macedon",
+                                "Alexander the Great",
+                                "Ptolemy I Soter",
+                                "Cleopatra VII"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which city-state did the Sacred Band hail from?",
+                            "questionType": "multipleChoice",
+                            "answer": "Thebes",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Athens",
+                                "Sparta",
+                                "Thebes",
+                                "Macedon"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Who was the leader of the Persians against whom Alexander fought?",
+                            "questionType": "multipleChoice",
+                            "answer": "Darius III",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Darius III",
+                                "Artaxerxes II",
+                                "Xerxes I",
+                                "Cyrus the Great"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "Alexander the Great",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "The conquests of alexander the great."
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "What is the central theme of The Odyssey?",
+                            "questionType": "multipleChoice",
+                            "answer": "Hospitality and the rules that govern it",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Odysseus' journey home",
+                                "The war in Troy",
+                                "Hospitality and the rules that govern it"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Why was Odysseus trapped on Calypso's island?",
+                            "questionType": "multipleChoice",
+                            "answer": "He was a prisoner of Calypso",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "He was cursed by Poseidon",
+                                "He was a prisoner of Calypso",
+                                "He was a warrior in the Trojan War"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "What was the main reason for the suitors' presence in Odysseus' palace?",
+                            "questionType": "multipleChoice",
+                            "answer": "To court Odysseus' wife Penelope",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "To help Telemachus manage the palace",
+                                "To court Odysseus' wife Penelope",
+                                "To help Odysseus' son Telemachus"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main reason for Athena's intervention in The Odyssey?",
+                            "questionType": "multipleChoice",
+                            "answer": "To help Odysseus return home",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "To help Odysseus return home",
+                                "To help Telemachus manage the palace",
+                                "To help the suitors court Penelope"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "What was the significance of the Cyclops' curse on Odysseus?",
+                            "questionType": "multipleChoice",
+                            "answer": "It delayed Odysseus' return home",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "It made Odysseus a better warrior",
+                                "It delayed Odysseus' return home",
+                                "It made Odysseus a hero"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Why did Poseidon oppose Odysseus' return home?",
+                            "questionType": "multipleChoice",
+                            "answer": "Because Odysseus had angered him",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Because Odysseus had killed his son",
+                                "Because Odysseus had angered him",
+                                "Because Odysseus was a warrior"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "The Odyssey",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "Quiz about the theme of hospitality in the odyssey."
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "What is the central theme of The Odyssey?",
+                            "questionType": "multipleChoice",
+                            "answer": "Hospitality and the rules that govern it",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Odysseus' journey home",
+                                "The war in Troy",
+                                "Hospitality and the rules that govern it"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Why was Odysseus trapped on Calypso's island?",
+                            "questionType": "multipleChoice",
+                            "answer": "He was a prisoner of Calypso",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "He was cursed by Poseidon",
+                                "He was a prisoner of Calypso",
+                                "He was a warrior in the Trojan War"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "What was the main reason for the suitors' presence in Odysseus' palace?",
+                            "questionType": "multipleChoice",
+                            "answer": "To court Odysseus' wife Penelope",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "To help Telemachus manage the palace",
+                                "To court Odysseus' wife Penelope",
+                                "To help Odysseus' son Telemachus"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main reason for Athena's intervention in The Odyssey?",
+                            "questionType": "multipleChoice",
+                            "answer": "To help Odysseus return home",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "To help Odysseus return home",
+                                "To help Telemachus manage the palace",
+                                "To help the suitors court Penelope"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "What was the significance of the Cyclops' curse on Odysseus?",
+                            "questionType": "multipleChoice",
+                            "answer": "It delayed Odysseus' return home",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "It made Odysseus a better warrior",
+                                "It delayed Odysseus' return home",
+                                "It made Odysseus a hero"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Why did Poseidon oppose Odysseus' return home?",
+                            "questionType": "multipleChoice",
+                            "answer": "Because Odysseus had angered him",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Because Odysseus had killed his son",
+                                "Because Odysseus had angered him",
+                                "Because Odysseus was a warrior"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "The Odyssey",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "Quiz about the theme of hospitality in the odyssey."
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 4,
+                    "assessmentVersion": 5,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "World War 1",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "World War 1 Battles"
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 4,
+                    "assessmentVersion": 5,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "World War 1",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "World War 1 Battles"
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 4,
+                    "assessmentVersion": 5,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "World War 1",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "World War 1 Battles"
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 4,
+                    "assessmentVersion": 5,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "World War 1",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "World War 1 Battles"
+            }
+        },
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "questionText": "What was the main cause of the United States' entry into World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "The Zimmerman Telegram",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "The sinking of the Lusitania",
+                                "The Zimmerman Telegram",
+                                "The attack on Pearl Harbor"
+                            ]
+                        },
+                        {
+                            "questionId": 4,
+                            "questionText": "Which battle was the longest and bloodiest of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Verdun",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "Which country was the main force behind the Treaty of Versailles?",
+                            "questionType": "multipleChoice",
+                            "answer": "France",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "United Kingdom",
+                                "France"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 4,
+                    "assessmentVersion": 5,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 6,
+                            "questionText": "Which battle was the first major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of the Marne",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Marne",
+                                "Battle of Tannenberg",
+                                "Battle of Galicia"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "Which country was the main target of the German Spring Offensive?",
+                            "questionType": "multipleChoice",
+                            "answer": "United Kingdom",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "United States",
+                                "France",
+                                "United Kingdom"
+                            ]
+                        },
+                        {
+                            "questionId": 8,
+                            "questionText": "Which battle was the last major battle of World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Stalingrad",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Stalingrad"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "Who was the leader of the Allied Powers during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Georges Clemenceau",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Woodrow Wilson",
+                                "David Lloyd George",
+                                "Georges Clemenceau"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "Which battle was a turning point in the Western Front during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Battle of Amiens",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Battle of the Somme",
+                                "Battle of Verdun",
+                                "Battle of Amiens"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "Which country was the main target of the Ottoman Empire during World War I?",
+                            "questionType": "multipleChoice",
+                            "answer": "Serbia",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "Russia",
+                                "France",
+                                "Serbia"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "World War 1",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "World War 1 Battles"
+            }
+        }
+    ]
+}

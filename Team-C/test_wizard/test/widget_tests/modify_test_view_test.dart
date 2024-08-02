@@ -30,6 +30,7 @@ void main() {
     expect(find.text('Test Title'), findsOneWidget);
 
     // Verify if the DeletedQuestions widget is present
-    expect(find.byType(DeletedQuestions), findsOneWidget);
+    //this widget is de-scoped
+    //expect(find.byType(DeletedQuestions), findsOneWidget);
   });
 }
