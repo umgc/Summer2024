@@ -314,7 +314,6 @@ class _RecordScreenState extends State<RecordScreen> {
                   physics: ScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  reverse: true,
                   itemCount: transcriptArray.length,
                   itemBuilder: (BuildContext ctxt, int Index) {
                     return new Container(
