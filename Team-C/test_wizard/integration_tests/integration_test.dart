@@ -33,8 +33,8 @@ void main() {
         );
 
         // set up an assessment set for the app to find
-        AssessmentSet newSet = AssessmentSet(
-            [Assessment(0, 0, false)], 'Math Test', Course(0, 'Geometry 101', ''));
+        AssessmentSet newSet = AssessmentSet([Assessment(0, 0, false)],
+            'Math Test', Course(0, 'Geometry 101', ''));
         SavedAssessments saved = SavedAssessments();
         saved.assessmentSets = [newSet];
         saved.saveAssessmentsToFile();
@@ -139,7 +139,10 @@ void main() {
 
         await tester.tap(find.widgetWithText(ElevatedButton, 'Cancel'));
         await tester.pumpAndSettle();
+        // wait because the loading sometimes randomly takes too long?
+        await tester.pump(const Duration(seconds: 1));
         expect(find.text("Teacher's Dashboard"), findsOne);
+        await tester.pump(const Duration(seconds: 1));
 
         await tester.tap(find.text('Login with Moodle'));
         await tester.pumpAndSettle();
