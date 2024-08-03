@@ -66,7 +66,7 @@ factory KnowledgeService() {
 Future<String> getInventory() async{
     String knowledge = "";
     var inventory = "";
-    /*
+    
      await db.getConnection().then((conn)  async {
       // This needs needs a User ID to get the appropriate knowledge base contents.
       String sql = "SELECT * FROM Product";
@@ -80,7 +80,7 @@ Future<String> getInventory() async{
       });
       
     });
-    */
+    
     return inventory;
   }
 
