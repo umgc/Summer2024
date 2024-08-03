@@ -42,7 +42,7 @@ class _PromptScreenState extends State<PromptScreen> {
   var _controller = TextEditingController();
   List<OpenAIChatCompletionChoiceMessageModel> messages = [];
   String promptStart =
-      "You are a caregiver for a user suffering from Short Term Memory Loss, please do your best to answer their questions in 1 to 2 sentences based on all your knowledge in addition to the following knowledge data: {";
+      "You are a caregiver for a user suffering from Short Term Memory Loss, please do your best to answer their questions in 1 to 2 sentences based on the provided knowledge, indicating you don't have that information if not provided here, utilizing following knowledge data: {";
 
   @override
   void initState() {
@@ -225,6 +225,7 @@ class _PromptScreenState extends State<PromptScreen> {
   }
 
   void promptLLM(String question) async {
+    /*
     if (question.toLowerCase().contains("inventory") ||
         question.toLowerCase().contains("in stock")) {
       print("Recognized");
@@ -286,7 +287,7 @@ class _PromptScreenState extends State<PromptScreen> {
       });
       
       
-    } else {
+    } else {*/
       //recognizing = true;
       messages.add(
         OpenAIChatCompletionChoiceMessageModel(
@@ -313,7 +314,7 @@ class _PromptScreenState extends State<PromptScreen> {
         ),
       );
       transcriptArray.add("MindAI: " + mindResponse!);
-    }
+   // }
     setState(() {
       //recognizing = false;
       _controller.clear();
