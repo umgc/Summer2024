@@ -32,7 +32,7 @@ factory KnowledgeService() {
             //print(row[1]);
             knowledgeLoaded += row[1] + '.\n';
         }
-        print (knowledgeLoaded);
+        //print (knowledgeLoaded);
         db.closeConnection(conn);
       });
       
@@ -66,6 +66,7 @@ factory KnowledgeService() {
 Future<String> getInventory() async{
     String knowledge = "";
     var inventory = "";
+    /*
      await db.getConnection().then((conn)  async {
       // This needs needs a User ID to get the appropriate knowledge base contents.
       String sql = "SELECT * FROM Product";
@@ -79,9 +80,29 @@ Future<String> getInventory() async{
       });
       
     });
+    */
     return inventory;
   }
 
+
+Future<String> queryInventory(query) async{
+    String knowledge = "";
+    var inventory = "";
+     await db.getConnection().then((conn)  async {
+      // This needs needs a User ID to get the appropriate knowledge base contents.
+      String sql = query;
+       var temp = await conn.query(sql).then((results) {
+        for (var row in results) {
+            //print(row[1]);
+            inventory += "Item:" + row[3].toString()  + ", Count: " + row[1].toString() + ", Location: " + row[2].toString() + ", Price: " + row[0].toString()+ "\$" + '.\n';
+        }
+        print (inventory);
+        db.closeConnection(conn);
+      });
+      
+    });
+    return inventory;
+  }
 
 
 }

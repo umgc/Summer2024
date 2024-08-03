@@ -42,7 +42,7 @@ class _PromptScreenState extends State<PromptScreen> {
   var _controller = TextEditingController();
   List<OpenAIChatCompletionChoiceMessageModel> messages = [];
   String promptStart =
-      "You are an assistant for user suffering from Short Term Memory Loss, please do your best to answer their questions in 1 to 2 sentences based on all your knowledge in addition to the following knowledge data: {";
+      "You are a caregiver for a user suffering from Short Term Memory Loss, please do your best to answer their questions in 1 to 2 sentences based on all your knowledge in addition to the following knowledge data: {";
 
   @override
   void initState() {
@@ -52,6 +52,7 @@ class _PromptScreenState extends State<PromptScreen> {
     Permission.microphone.request();
     //_recorder.initialize();
     loadKey();
+    //knowledge.queryInventory("SELECT Price, Quantity, Location, ProductName FROM Product WHERE LOWER(ProductName) LIKE '%ssd%';");
     loadKnowledge();
 
     messages = [
@@ -163,8 +164,8 @@ class _PromptScreenState extends State<PromptScreen> {
     _recordingDataSubscription =
         _recordingDataController?.stream.listen((buffer) {
       if (buffer is FoodData) {
-          _audioStream!.add(buffer.data!);
-        }
+        _audioStream!.add(buffer.data!);
+      }
     });
     await _recorder.startRecorder(
         toStream: _recordingDataController!.sink,
@@ -224,32 +225,95 @@ class _PromptScreenState extends State<PromptScreen> {
   }
 
   void promptLLM(String question) async {
-    //recognizing = true;
-    messages.add(
-      OpenAIChatCompletionChoiceMessageModel(
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            question,
-          ),
-        ],
-        role: OpenAIChatMessageRole.user,
-      ),
-    );
+    if (question.toLowerCase().contains("inventory") ||
+        question.toLowerCase().contains("in stock")) {
+      print("Recognized");
+      var inventoryMessage = [
+        OpenAIChatCompletionChoiceMessageModel(
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(
+              "Can you write just a sql statement that searches a Product table in a MariaDB database, returning the Price, Quantity, Location, and ProductName. Please search within ProductName, searching with everything converted to lower case and only searching for singular nouns. The statement to search from is {" +
+                  question +
+                  "}. Please return only the SQL statement.",
+            ),
+          ],
+          role: OpenAIChatMessageRole.assistant,
+        ),
+      ];
+      OpenAIChatCompletionModel results = await OpenAI.instance.chat.create(
+          model: "gpt-4o-mini", messages: inventoryMessage, maxTokens: 150);
+      var inventory = results.choices[0].message.content!.first.text;
+      inventory = inventory!
+          .replaceAll("`", "")
+          .replaceAll("sql", "")
+          .replaceAll("\n", " ");
+      print(inventory);
+      var queryresults = knowledge.queryInventory(inventory);
+      print(queryresults);
+      queryresults.then((value) async{
+        inventoryMessage = [
+        OpenAIChatCompletionChoiceMessageModel(
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(
+              "You are an AI assistant for people suffering from STML, please answer the following question to the best of your ability within 1 to 2 sentences based on the following inventory {" +
+                  value +
+                  "}",
+            ),
+          ],
+          role: OpenAIChatMessageRole.assistant,
+        ),
+      ];
+      results = await OpenAI.instance.chat.create(
+          model: "gpt-4o-mini", messages: inventoryMessage, maxTokens: 150);
+      var response = results.choices[0].message.content!.first.text;
+      print(response);
+      transcriptArray.add("MindAI: " + response!);
+       messages.add(
+        OpenAIChatCompletionChoiceMessageModel(
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(
+              response!,
+            ),
+          ],
+          role: OpenAIChatMessageRole.assistant,
+        ),
+      );
+      setState(() {
+      //recognizing = false;
+      _controller.clear();
+      //_controller.clearComposing();
+    });
+      });
+      
+      
+    } else {
+      //recognizing = true;
+      messages.add(
+        OpenAIChatCompletionChoiceMessageModel(
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(
+              question,
+            ),
+          ],
+          role: OpenAIChatMessageRole.user,
+        ),
+      );
 
-    OpenAIChatCompletionModel results = await OpenAI.instance.chat
-        .create(model: "gpt-4o-mini", messages: messages, maxTokens: 150);
-    final mindResponse = results.choices[0].message.content!.first.text;
-    messages.add(
-      OpenAIChatCompletionChoiceMessageModel(
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            mindResponse!,
-          ),
-        ],
-        role: OpenAIChatMessageRole.assistant,
-      ),
-    );
-    transcriptArray.add("MindAI: " + mindResponse!);
+      OpenAIChatCompletionModel results = await OpenAI.instance.chat
+          .create(model: "gpt-4o-mini", messages: messages, maxTokens: 150);
+      final mindResponse = results.choices[0].message.content!.first.text;
+      messages.add(
+        OpenAIChatCompletionChoiceMessageModel(
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(
+              mindResponse!,
+            ),
+          ],
+          role: OpenAIChatMessageRole.assistant,
+        ),
+      );
+      transcriptArray.add("MindAI: " + mindResponse!);
+    }
     setState(() {
       //recognizing = false;
       _controller.clear();

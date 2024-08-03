@@ -62,8 +62,8 @@ class _TranscriptionDetailstate extends State<TranscriptionDetails> {
           children: [
             Center(
                 child: Container(
-              height: 100,
-              constraints: BoxConstraints(maxHeight: 100),
+              height: 150,
+              constraints: BoxConstraints(maxHeight: 150),
               margin: EdgeInsets.all(5),
               padding: EdgeInsets.all(10),
               //color: Colors.amber[600],
