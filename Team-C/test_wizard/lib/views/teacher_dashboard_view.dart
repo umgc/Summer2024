@@ -25,14 +25,14 @@ class TeacherDashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            //const SizedBox(height: 5),
             Center(
               child: SizedBox(
-                width: 300,
+                width: 150,
                 child: Image.asset('lib/assets/wizard2.png'),
               ),
             ),
-            const SizedBox(height: 20),
+            //const SizedBox(height: 5),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,7 +50,7 @@ class TeacherDashboard extends StatelessWidget {
                   },
                   child: const Text('Create Assessment'),
                 ),
-                const SizedBox(height: 20),
+                //const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xffff6600),
@@ -71,7 +71,7 @@ class TeacherDashboard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             status == 'guest'
                 ? const Center(
                     child: Text(
@@ -82,7 +82,7 @@ class TeacherDashboard extends StatelessWidget {
                 : const SizedBox(
                     height: 0,
                   ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             const SearchFilter(),
           ],
         ),
