@@ -232,7 +232,7 @@ class _PromptScreenState extends State<PromptScreen> {
         OpenAIChatCompletionChoiceMessageModel(
           content: [
             OpenAIChatCompletionChoiceMessageContentItemModel.text(
-              "Can you write just a sql statement that searches a Product table in a MariaDB database, returning the Price, Quantity, Location, and ProductName. Please search within ProductName, searching with everything converted to lower case and only searching for singular nouns. The statement to search from is {" +
+              "Can you write just a sql statement that searches a Product table in a MariaDB database, returning the Price, Quantity, Location, and ProductName. Please search within the ProductName making sure to use % in the search string, searching with everything converted to lower case and only searching for singular nouns. The statement to search from is {" +
                   question +
                   "}. Please return only the SQL statement.",
             ),
