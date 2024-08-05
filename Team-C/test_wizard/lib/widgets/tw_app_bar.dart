@@ -42,7 +42,7 @@ class TWAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? Tooltip(
               message: 'Back',
               child: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

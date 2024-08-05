@@ -34,7 +34,7 @@ class TeacherDashboard extends StatelessWidget {
                   Tooltip(
                     message: 'Wizard Image',
                     child: Container(
-                      padding: EdgeInsets.all(0), // Adjust the padding to make space for the border
+                      padding: const EdgeInsets.all(0), // Adjust the padding to make space for the border
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5), // Adjust border radius for the image
                         child: Image.asset(
@@ -80,8 +80,8 @@ class TeacherDashboard extends StatelessWidget {
               const SizedBox(height: 0), // Space between image and login button
               Row(
                 children: [
-                  Expanded(
-                    child: const Text(
+                  const Expanded(
+                    child: Text(
                       "Assessments",
                       style: TextStyle(
                         fontSize: 20,
@@ -107,8 +107,8 @@ class TeacherDashboard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 2), // Space between title and search box
-              Center(
-                child: const SearchFilter(), // Centered search filter
+              const Center(
+                child: SearchFilter(), // Centered search filter
               ),
               const SizedBox(height: 20), // Space before other content
             ],
