@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -9,11 +8,11 @@ import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:test_wizard/models/assessment.dart';
 import 'package:test_wizard/models/assessment_set.dart';
+import 'package:test_wizard/models/question.dart';
 import 'package:test_wizard/providers/assessment_provider.dart';
 import 'package:test_wizard/providers/user_provider.dart';
 import 'package:test_wizard/widgets/cancel_button.dart';
 import 'package:test_wizard/widgets/column_header.dart';
-import 'package:test_wizard/widgets/qset.dart';
 import 'package:test_wizard/widgets/scroll_container.dart';
 import 'package:test_wizard/widgets/tw_app_bar.dart';
 
@@ -57,7 +56,8 @@ class ModifyTestView extends StatelessWidget {
                 QSet(
                     assessmentId: assessmentId,
                     assessmentIndex: assessmentIndex,
-                    assessmentSetIndex: assessmentSetIndex),
+                    assessmentSetIndex: assessmentSetIndex,
+                    assessment: assessment), // Pass assessment
                 ButtonContainer(
                     screenTitle: screenTitle,
                     assessmentName: assessmentName,
@@ -83,13 +83,102 @@ class ColumnHeaderRow extends StatelessWidget {
         Flexible(
           fit: FlexFit.tight,
           child: Padding(
-            padding:
-                EdgeInsets.only(left: 120.0), // Adjust the padding as needed
+            padding: EdgeInsets.only(left: 120.0), // Adjust the padding as needed
             child: ColumnHeader(headerText: 'Answer'),
           ),
         ),
         //Expanded(child: ColumnHeader(headerText: 'Previous Question')),
       ],
+    );
+  }
+}
+
+class QSet extends StatelessWidget {
+  final String assessmentId;
+  final int assessmentIndex;
+  final int assessmentSetIndex;
+  final Assessment assessment; // Add assessment parameter
+
+  const QSet({
+    super.key,
+    required this.assessmentId,
+    required this.assessmentIndex,
+    required this.assessmentSetIndex,
+    required this.assessment, // Add assessment parameter
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: assessment.questions.map((question) {
+        return ListTile(
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(question.questionText),
+              ),
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  _editQuestion(context, question, true);
+                },
+              ),
+            ],
+          ),
+          subtitle: Row(
+            children: [
+              Expanded(
+                child: Text(question.answer ?? ''),
+              ),
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  _editQuestion(context, question, false);
+                },
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  void _editQuestion(BuildContext context, Question question, bool isQuestion) {
+    TextEditingController controller = TextEditingController(
+        text: isQuestion ? question.questionText : question.answer ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(isQuestion ? 'Edit Question' : 'Edit Answer'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: isQuestion ? 'Edit Question' : 'Edit Answer',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (isQuestion) {
+                  question.questionText = controller.text;
+                } else {
+                  question.answer = controller.text;
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -132,7 +221,7 @@ class ButtonContainer extends StatelessWidget {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('Question: ${qa.questionText}'),
-                    pw.Text('Answer: ${qa.answer}'),
+                    pw.Text('Answer: ${qa.answer ?? ''}'),
                     pw.SizedBox(height: 20),
                   ],
                 );
@@ -171,8 +260,7 @@ class ButtonContainer extends StatelessWidget {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('Question: ${qa.questionText}'),
-                    pw.Text(qa.answerOptions
-                        .toString()), //William told me to do this.
+                    pw.Text(qa.answerOptions.toString()),
                     pw.SizedBox(height: 80),
                   ],
                 );
