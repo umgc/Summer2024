@@ -27,20 +27,20 @@ class TeacherDashboard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 5), // Space between TWAppBar and content
+              const SizedBox(height: 0), // Space between TWAppBar and content
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Tooltip(
                     message: 'Wizard Image',
                     child: Container(
-                      padding: EdgeInsets.all(5), // Adjust the padding to make space for the border
+                      padding: EdgeInsets.all(0), // Adjust the padding to make space for the border
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5), // Adjust border radius for the image
                         child: Image.asset(
                           'lib/assets/wizard2.png',
-                          width: 250, // Adjust the width as needed
-                          height: 150, // Adjust the height as needed
+                          width: 300, // Adjust the width as needed
+                          height: 140, // Adjust the height as needed
                           fit: BoxFit.fitHeight, // Adjust the fit property as needed
                           semanticLabel: 'Wizard Image', // Alt text for accessibility
                         ),
@@ -55,7 +55,7 @@ class TeacherDashboard extends StatelessWidget {
                           'Login with Moodle for full access.',
                           style: TextStyle(fontSize: 14, color: Color(0xff0072bb)),
                         ),
-                      const SizedBox(height: 5), // Space between text and button
+                      const SizedBox(height: 2), // Space between text and button
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange,
@@ -77,7 +77,7 @@ class TeacherDashboard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10), // Space between image and login button
+              const SizedBox(height: 0), // Space between image and login button
               Row(
                 children: [
                   Expanded(
@@ -106,7 +106,7 @@ class TeacherDashboard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10), // Space between title and search box
+              const SizedBox(height: 2), // Space between title and search box
               Center(
                 child: const SearchFilter(), // Centered search filter
               ),
