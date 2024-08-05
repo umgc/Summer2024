@@ -1,0 +1,479 @@
+@startuml
+set namespaceSeparator ::
+
+class "intelligrade::api::compiler_module::compiler_api_service.dart::CompilerApiService" {
+  {static} +String port
+  {static} +String baseUrl
+  {static} +String compileUrl
+  {static} +dynamic compileAndGrade()
+}
+
+class "intelligrade::api::llm::llm_api.dart::LlmApi" {
+  +String apiKey
+  +Map<String, dynamic> convertHttpRespToJson()
+  +String getPostBody()
+  +Map<String, String> getPostHeaders()
+  +Uri getPostUrl()
+  +dynamic postMessage()
+  +List<String> parseQueryResponse()
+  +dynamic postToLlm()
+  +dynamic queryAI()
+}
+
+class "intelligrade::api::llm::prompt_engine.dart::PromptEngine" {
+  {static} +String prompt_quizgen_choice
+  {static} +String prompt_quizgen_truefalse
+  {static} +String prompt_quizgen_shortanswer
+  {static} +String prompt_quizgen_essay
+  {static} +String prompt_quizgen_code
+  {static} +String prompt_quizgen_xmlonly
+  {static} +String prompt_quizgen_choice_example
+  {static} +String prompt_quizgen_truefalse_example
+  {static} +String prompt_quizgen_shortanswer_example
+  {static} +String prompt_quizgen_essay_example
+  {static} +String prompt_quizgen_coding_example
+  {static} +String generatePrompt()
+}
+
+class "intelligrade::api::moodle::api_client.dart::ApiClient" {
+  +String baseUrl
+  +String token
+  +dynamic get()
+  +dynamic post()
+  -Response _processResponse()
+}
+
+class "intelligrade::api::moodle::api_response.dart::ApiResponse" {
+  +bool success
+  +T? data
+  +String message
+  +Map<String, dynamic> toJson()
+  {static} +ApiResponse<T> createSuccess()
+  {static} +ApiResponse<T> error()
+}
+
+class "intelligrade::api::moodle::assessment.dart::Assessment" {
+  +int id
+  +String name
+  +List<Question> questions
+  +Map<String, dynamic> toJson()
+}
+
+class "intelligrade::api::moodle::http.dart::HttpClient" {
+  {static} -HttpClient _instance
+  +Client client
+  +dynamic get()
+  +dynamic post()
+  +void dispose()
+}
+
+"intelligrade::api::moodle::http.dart::HttpClient" o-- "intelligrade::api::moodle::http.dart::HttpClient"
+"intelligrade::api::moodle::http.dart::HttpClient" o-- "http::src::client.dart::Client"
+
+class "intelligrade::api::moodle::http_connect.dart::HttpConnect" {
+  +dynamic post()
+}
+
+class "intelligrade::api::moodle::moodle_accessor.dart::MoodleAccessor" {
+  +ApiClient apiClient
+  +dynamic createUser()
+  +dynamic getCourses()
+  +dynamic getUser()
+  +dynamic processRequest()
+  +dynamic importQuestions()
+  +dynamic getAssessment()
+  +dynamic uploadAssessment()
+  +dynamic exportQuestions()
+  +dynamic login()
+}
+
+"intelligrade::api::moodle::moodle_accessor.dart::MoodleAccessor" o-- "intelligrade::api::moodle::api_client.dart::ApiClient"
+
+class "intelligrade::api::moodle::moodle_api_service.dart::MoodleAPIService" {
+  +MoodleAccessor moodleAccessor
+  +dynamic getCourses()
+  +dynamic getUser()
+  +dynamic uploadAssessment()
+  +dynamic getAssessment()
+  +dynamic importQuestions()
+  +dynamic exportQuestions()
+}
+
+"intelligrade::api::moodle::moodle_api_service.dart::MoodleAPIService" o-- "intelligrade::api::moodle::moodle_accessor.dart::MoodleAccessor"
+
+class "intelligrade::api::moodle::moodle_api_singleton.dart::MoodleApiSingleton" {
+  {static} +String baseUrl
+  {static} +String serverUrl
+  {static} +String jsonFormat
+  {static} +String errorKey
+  {static} -MoodleApiSingleton _instance
+  -String? _userToken
+  +bool isLoggedIn()
+  +dynamic login()
+  +void logout()
+  +dynamic getCourses()
+  +dynamic importQuiz()
+}
+
+"intelligrade::api::moodle::moodle_api_singleton.dart::MoodleApiSingleton" o-- "intelligrade::api::moodle::moodle_api_singleton.dart::MoodleApiSingleton"
+
+abstract class "intelligrade::api::moodle::moodle_connection.dart::MoodleConnection" {
+  +void setMoodleUrl()
+  +dynamic processRequest()
+}
+
+class "intelligrade::api::moodle::moodle_connection_impl.dart::MoodleConnectionImpl" {
+  -String _moodleUrl
+  -String _token
+  +void setMoodleUrl()
+  +dynamic processRequest()
+}
+
+"intelligrade::api::moodle::moodle_connection.dart::MoodleConnection" <|-- "intelligrade::api::moodle::moodle_connection_impl.dart::MoodleConnectionImpl"
+
+class "intelligrade::api::moodle::moodle_consts.dart::MoodleConsts" {
+  {static} +String moodleBaseUrl
+}
+
+class "intelligrade::api::moodle::question.dart::Question" {
+  +String text
+  +String type
+  +String response
+  +Map<String, dynamic> toJson()
+}
+
+class "intelligrade::controller::assessment_generator.dart::AssessmentGenerator" {
+  +String serverUrl
+  +dynamic generateAssessment()
+}
+
+class "intelligrade::controller::assessment_grader.dart::AssessmentGrader" {
+  +Quiz gradeAssessment()
+}
+
+class "intelligrade::controller::html_converter.dart::HtmlConverter" {
+  {static} +String convert()
+}
+
+class "intelligrade::controller::main_controller.dart::MainController" {
+  {static} -MainController _instance
+  +LlmApi llm
+  {static} +bool isLoggedIn
+  +ValueNotifier<bool> isUserLoggedInNotifier
+  +dynamic createAssessments()
+  +void gradeAssessment()
+  +void saveFileLocally()
+  +dynamic downloadAssessmentAsPdf()
+  +List<Quiz?> listAllAssessments()
+  +void updateFileLocally()
+  +void deleteLocalFile()
+  +dynamic postAssessmentToMoodle()
+  +dynamic compileCodeAndGetOutput()
+  +dynamic loginToMoodle()
+  +void logoutFromMoodle()
+  +dynamic getCourses()
+  +dynamic isUserLoggedIn()
+}
+
+"intelligrade::controller::main_controller.dart::MainController" o-- "intelligrade::controller::main_controller.dart::MainController"
+"intelligrade::controller::main_controller.dart::MainController" o-- "intelligrade::api::llm::llm_api.dart::LlmApi"
+"intelligrade::controller::main_controller.dart::MainController" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<bool>"
+
+class "intelligrade::controller::model::beans.dart::XmlConsts" {
+  {static} +String quiz
+  {static} +String question
+  {static} +String name
+  {static} +String description
+  {static} +String type
+  {static} +String text
+  {static} +String questiontext
+  {static} +String format
+  {static} +String answer
+  {static} +String fraction
+  {static} +String feedback
+  {static} +String generalfeedback
+  {static} +String attachmentsrequired
+  {static} +String responseformat
+  {static} +String responserequired
+  {static} +String defaultgrade
+  {static} +String responsetemplate
+  {static} +String graderinfo
+  {static} +String multichoice
+  {static} +String truefalse
+  {static} +String shortanswer
+  {static} +String essay
+  {static} +String html
+}
+
+class "intelligrade::controller::model::beans.dart::Quiz" {
+  +String? name
+  +String? description
+  +List<Question> questionList
+  +String toString()
+}
+
+class "intelligrade::controller::model::beans.dart::Question" {
+  +String name
+  +String type
+  +String questionText
+  +String? generalFeedback
+  +String? defaultGrade
+  +String? responseFormat
+  +String? responseRequired
+  +String? attachmentsRequired
+  +String? responseTemplate
+  +String? graderInfo
+  +List<Answer> answerList
+  +String toString()
+}
+
+class "intelligrade::controller::model::beans.dart::Answer" {
+  +String answerText
+  +String fraction
+  +String? feedbackText
+  +String toString()
+}
+
+class "intelligrade::controller::model::beans.dart::Course" {
+  +int id
+  +String shortName
+  +String fullName
+}
+
+class "intelligrade::controller::model::beans.dart::AssignmentForm" {
+  +QuestionType questionType
+  +String? gradingCriteria
+  +String subject
+  +String topic
+  +String gradeLevel
+  +int maximumGrade
+  +int? assignmentCount
+  +int questionCount
+  +String? codingLanguage
+  +String title
+}
+
+"intelligrade::controller::model::beans.dart::AssignmentForm" o-- "intelligrade::controller::model::beans.dart::QuestionType"
+
+class "intelligrade::controller::model::beans.dart::QuestionType" {
+  +int index
+  {static} +List<QuestionType> values
+  {static} +QuestionType multichoice
+}
+
+"intelligrade::controller::model::beans.dart::QuestionType" o-- "intelligrade::controller::model::beans.dart::QuestionType"
+"dart::core::Enum" <|-- "intelligrade::controller::model::beans.dart::QuestionType"
+
+class "intelligrade::controller::model::xml_converter.dart::XmlConverter" {
+  {static} +String cdata1
+  {static} +String cdata2
+  {static} +XmlDocument convertQuizToXml()
+}
+
+class "intelligrade::main.dart::MyApp" {
+  -ValueNotifier<ThemeMode> _themeModeNotifier
+  +Widget build()
+}
+
+"intelligrade::main.dart::MyApp" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<ThemeMode>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "intelligrade::main.dart::MyApp"
+
+class "intelligrade::ui::create_page.dart::CreatePage" {
+  {static} +MainController controller
+  +_CreatePageState createState()
+}
+
+"intelligrade::ui::create_page.dart::CreatePage" o-- "intelligrade::controller::main_controller.dart::MainController"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::create_page.dart::CreatePage"
+
+class "intelligrade::ui::create_page.dart::_CreatePageState" {
+  -String? _selectedSubject
+  -String? _selectedGradeLevel
+  -QuestionType? _selectedAssignmentType
+  -String? _selectedCodingLanguage
+  -int _numQuestions
+  -TextEditingController _topicController
+  -TextEditingController _titleController
+  -bool _isLoading
+  -GlobalKey<FormState> _formKey
+  +List<String> subjects
+  +List<String> gradeLevels
+  +List<QuestionType> assignmentTypes
+  +List<String> codingLanguages
+  +List<Course> courses
+  +void initState()
+  -List<QuestionType> _filterAssignmentTypes()
+  +Widget build()
+}
+
+"intelligrade::ui::create_page.dart::_CreatePageState" o-- "intelligrade::controller::model::beans.dart::QuestionType"
+"intelligrade::ui::create_page.dart::_CreatePageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"intelligrade::ui::create_page.dart::_CreatePageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::create_page.dart::_CreatePageState"
+
+class "intelligrade::ui::create_page.dart::UiAssignmentForm" {
+  +void Function() onCancel
+  +_UiAssignmentFormState createState()
+}
+
+"intelligrade::ui::create_page.dart::UiAssignmentForm" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::create_page.dart::UiAssignmentForm"
+
+class "intelligrade::ui::create_page.dart::_UiAssignmentFormState" {
+  -String? _selectedSubject
+  -String? _selectedGradeLevel
+  -QuestionType? _selectedAssignmentType
+  -String? _selectedCodingLanguage
+  -int _numQuestions
+  -TextEditingController _topicController
+  -TextEditingController _titleController
+  -bool _isLoading
+  -GlobalKey<FormState> _formKey
+  +List<String> subjects
+  +List<String> gradeLevels
+  +List<QuestionType> assignmentTypes
+  +List<String> codingLanguages
+  +List<Course> courses
+  +void initState()
+  -List<QuestionType> _filterAssignmentTypes()
+  +Widget build()
+}
+
+"intelligrade::ui::create_page.dart::_UiAssignmentFormState" o-- "intelligrade::controller::model::beans.dart::QuestionType"
+"intelligrade::ui::create_page.dart::_UiAssignmentFormState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"intelligrade::ui::create_page.dart::_UiAssignmentFormState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::create_page.dart::_UiAssignmentFormState"
+
+class "intelligrade::ui::grading_page.dart::GradingPage" {
+  {static} +MainController controller
+  +_GradingPageState createState()
+}
+
+"intelligrade::ui::grading_page.dart::GradingPage" o-- "intelligrade::controller::main_controller.dart::MainController"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::grading_page.dart::GradingPage"
+
+class "intelligrade::ui::grading_page.dart::_GradingPageState" {
+  -Course? _selectedCourse
+  -String? _selectedExam
+  -String? _selectedStudent
+  -String? _studentFileName
+  -String? _gradingFileName
+  -Uint8List? _studentFileBytes
+  -Uint8List? _gradingFileBytes
+  -List<String> _exams
+  -List<String> _students
+  +List<Course> courses
+  +bool readyForUpload()
+  -dynamic _compileAndGrade()
+  -void _showGradeOutput()
+  +void initState()
+  +dynamic pickStudentFile()
+  +dynamic pickGradingFile()
+  +Widget build()
+}
+
+"intelligrade::ui::grading_page.dart::_GradingPageState" o-- "intelligrade::controller::model::beans.dart::Course"
+"intelligrade::ui::grading_page.dart::_GradingPageState" o-- "dart::typed_data::Uint8List"
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::grading_page.dart::_GradingPageState"
+
+class "intelligrade::ui::header.dart::AppHeader" {
+  +String title
+  {static} +MainController controller
+  +Size preferredSize
+  +_AppHeaderState createState()
+}
+
+"intelligrade::ui::header.dart::AppHeader" o-- "intelligrade::controller::main_controller.dart::MainController"
+"intelligrade::ui::header.dart::AppHeader" o-- "dart::ui::Size"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::header.dart::AppHeader"
+"flutter::src::widgets::preferred_size.dart::PreferredSizeWidget" <|-- "intelligrade::ui::header.dart::AppHeader"
+
+class "intelligrade::ui::header.dart::_AppHeaderState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::header.dart::_AppHeaderState"
+
+class "intelligrade::ui::login_page.dart::LoginPage" {
+  {static} +MainController controller
+  +_LoginPageState createState()
+}
+
+"intelligrade::ui::login_page.dart::LoginPage" o-- "intelligrade::controller::main_controller.dart::MainController"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::login_page.dart::LoginPage"
+
+class "intelligrade::ui::login_page.dart::_LoginPageState" {
+  -TextEditingController _usernameController
+  -TextEditingController _passwordController
+  -void _showLoginFailedDialog()
+  +Widget build()
+  +void dispose()
+}
+
+"intelligrade::ui::login_page.dart::_LoginPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::login_page.dart::_LoginPageState"
+
+class "intelligrade::ui::setting_page.dart::Setting" {
+  +ValueNotifier<ThemeMode> themeModeNotifier
+  +_SettingPageState createState()
+}
+
+"intelligrade::ui::setting_page.dart::Setting" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<ThemeMode>"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::setting_page.dart::Setting"
+
+class "intelligrade::ui::setting_page.dart::_SettingPageState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::setting_page.dart::_SettingPageState"
+
+class "intelligrade::ui::submit_code_for_grading.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "intelligrade::ui::submit_code_for_grading.dart::MyApp"
+
+class "intelligrade::ui::submit_code_for_grading.dart::SubmitCodeScreen" {
+  +_SubmitCodeScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::submit_code_for_grading.dart::SubmitCodeScreen"
+
+class "intelligrade::ui::submit_code_for_grading.dart::_SubmitCodeScreenState" {
+  -TextEditingController _codeController
+  -String? _selectedExam
+  -String _statusMessage
+  -List<String> _exams
+  -void _submitCode()
+  +Widget build()
+}
+
+"intelligrade::ui::submit_code_for_grading.dart::_SubmitCodeScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::submit_code_for_grading.dart::_SubmitCodeScreenState"
+
+class "intelligrade::ui::view_exam_page.dart::ViewExamPage" {
+  {static} +MainController controller
+  +_ViewExamPageState createState()
+}
+
+"intelligrade::ui::view_exam_page.dart::ViewExamPage" o-- "intelligrade::controller::main_controller.dart::MainController"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "intelligrade::ui::view_exam_page.dart::ViewExamPage"
+
+class "intelligrade::ui::view_exam_page.dart::_ViewExamPageState" {
+  +List<Quiz?> quizzes
+  -bool _isUserLoggedIn
+  +void initState()
+  -dynamic _fetchQuizzes()
+  -dynamic _checkUserLoginStatus()
+  -void _showQuizDetails()
+  -void _editQuiz()
+  -dynamic _deleteQuiz()
+  -void _downloadQuiz()
+  -dynamic _postQuizToMoodle()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "intelligrade::ui::view_exam_page.dart::_ViewExamPageState"
+
+
+@enduml
