@@ -1,0 +1,60 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+  
+    {
+      "name": "TeamB",
+      "cwd": "TeamB",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "TeamB (profile mode)",
+      "cwd": "TeamB",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "TeamB (release mode)",
+      "cwd": "TeamB",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "test_wizard",
+      "cwd": "Team-C\\test_wizard",
+      "request": "launch",
+      "flutterMode": "debug",
+      "type": "dart",
+      "args": ["--dart-define-from-file=.env"]
+    },
+    {
+      "name": "test_wizard_macos",
+      "cwd": "${workspaceFolder}/Team-C/test_wizard/",
+      "type": "dart",
+      "flutterMode": "debug",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=.env"]
+    },
+    {
+      "name": "test_wizard (profile mode)",
+      "cwd": "Team-C\\test_wizard",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "test_wizard (release mode)",
+      "cwd": "Team-C\\test_wizard",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    }
+  ]
+}

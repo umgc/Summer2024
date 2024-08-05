@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Summer2024.iml" filepath="$PROJECT_DIR$/.idea/Summer2024.iml" />
+      <module fileurl="file://$PROJECT_DIR$/teacher_dashboard.iml" filepath="$PROJECT_DIR$/teacher_dashboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/teacher_dashboard_android.iml" filepath="$PROJECT_DIR$/android/teacher_dashboard_android.iml" />
     </modules>
   </component>
 </project>

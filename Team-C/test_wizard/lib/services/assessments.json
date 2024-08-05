@@ -1,0 +1,392 @@
+{
+    "assessmentSets": [
+        {
+            "assessments": [
+                {
+                    "assessmentId": 0,
+                    "assessmentVersion": 1,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "What is 5 x 4?",
+                            "questionType": "multipleChoice",
+                            "answer": "20",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "20",
+                                "15",
+                                "25",
+                                "30"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "What is 6 x 5?",
+                            "questionType": "multipleChoice",
+                            "answer": "30",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "25",
+                                "30",
+                                "35",
+                                "40"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "What is 1 x 9?",
+                            "questionType": "multipleChoice",
+                            "answer": "9",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "9",
+                                "18",
+                                "1",
+                                "0"
+                            ]
+                        },
+                        {
+                            "questionId": 3,
+                            "questionText": "What is 7 x 7?",
+                            "questionType": "multipleChoice",
+                            "answer": "49",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "49",
+                                "56",
+                                "63",
+                                "70"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 4,
+                            "questionText": "What is 2 x 8?",
+                            "questionType": "multipleChoice",
+                            "answer": "16",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "16",
+                                "14",
+                                "18",
+                                "20"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "What is 3 x 6?",
+                            "questionType": "multipleChoice",
+                            "answer": "18",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "18",
+                                "12",
+                                "15",
+                                "24"
+                            ]
+                        },
+                        {
+                            "questionId": 6,
+                            "questionText": "What is 4 x 5?",
+                            "questionType": "multipleChoice",
+                            "answer": "20",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "20",
+                                "25",
+                                "15",
+                                "30"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "What is 8 x 3?",
+                            "questionType": "multipleChoice",
+                            "answer": "24",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "24",
+                                "18",
+                                "21",
+                                "27"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 8,
+                            "questionText": "What is 9 x 2?",
+                            "questionType": "multipleChoice",
+                            "answer": "18",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "18",
+                                "20",
+                                "19",
+                                "21"
+                            ]
+                        },
+                        {
+                            "questionId": 9,
+                            "questionText": "What is 5 x 3?",
+                            "questionType": "multipleChoice",
+                            "answer": "15",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "15",
+                                "12",
+                                "18",
+                                "20"
+                            ]
+                        },
+                        {
+                            "questionId": 10,
+                            "questionText": "What is 2 x 7?",
+                            "questionType": "multipleChoice",
+                            "answer": "14",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "14",
+                                "16",
+                                "21",
+                                "28"
+                            ]
+                        },
+                        {
+                            "questionId": 11,
+                            "questionText": "What is 6 x 4?",
+                            "questionType": "multipleChoice",
+                            "answer": "24",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "24",
+                                "30",
+                                "36",
+                                "42"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 3,
+                    "assessmentVersion": 4,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 12,
+                            "questionText": "What is 3 x 4?",
+                            "questionType": "multipleChoice",
+                            "answer": "12",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "12",
+                                "15",
+                                "16",
+                                "18"
+                            ]
+                        },
+                        {
+                            "questionId": 13,
+                            "questionText": "What is 7 x 2?",
+                            "questionType": "multipleChoice",
+                            "answer": "14",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "14",
+                                "16",
+                                "18",
+                                "21"
+                            ]
+                        },
+                        {
+                            "questionId": 14,
+                            "questionText": "What is 1 x 8?",
+                            "questionType": "multipleChoice",
+                            "answer": "8",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "8",
+                                "16",
+                                "0",
+                                "9"
+                            ]
+                        },
+                        {
+                            "questionId": 15,
+                            "questionText": "What is 4 x 3?",
+                            "questionType": "multipleChoice",
+                            "answer": "12",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "12",
+                                "15",
+                                "16",
+                                "18"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 1,
+                    "assessmentVersion": 2,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 0,
+                            "questionText": "What is 5 x 4?",
+                            "questionType": "multipleChoice",
+                            "answer": "20",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "20",
+                                "15",
+                                "25",
+                                "30"
+                            ]
+                        },
+                        {
+                            "questionId": 1,
+                            "questionText": "What is 6 x 5?",
+                            "questionType": "multipleChoice",
+                            "answer": "30",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "25",
+                                "30",
+                                "35",
+                                "40"
+                            ]
+                        },
+                        {
+                            "questionId": 2,
+                            "questionText": "What is 1 x 9?",
+                            "questionType": "multipleChoice",
+                            "answer": "9",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "9",
+                                "18",
+                                "1",
+                                "0"
+                            ]
+                        },
+                        {
+                            "questionId": 3,
+                            "questionText": "What is 7 x 7?",
+                            "questionType": "multipleChoice",
+                            "answer": "49",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "49",
+                                "56",
+                                "63",
+                                "70"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "assessmentId": 2,
+                    "assessmentVersion": 3,
+                    "isExampleAssessment": false,
+                    "questions": [
+                        {
+                            "questionId": 4,
+                            "questionText": "What is 2 x 8?",
+                            "questionType": "multipleChoice",
+                            "answer": "16",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "16",
+                                "14",
+                                "18",
+                                "20"
+                            ]
+                        },
+                        {
+                            "questionId": 5,
+                            "questionText": "What is 3 x 6?",
+                            "questionType": "multipleChoice",
+                            "answer": "18",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "18",
+                                "12",
+                                "15",
+                                "24"
+                            ]
+                        },
+                        {
+                            "questionId": 6,
+                            "questionText": "What is 4 x 5?",
+                            "questionType": "multipleChoice",
+                            "answer": "20",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "20",
+                                "25",
+                                "15",
+                                "30"
+                            ]
+                        },
+                        {
+                            "questionId": 7,
+                            "questionText": "What is 8 x 3?",
+                            "questionType": "multipleChoice",
+                            "answer": "24",
+                            "rubric": null,
+                            "points": 0,
+                            "answerOptions": [
+                                "24",
+                                "18",
+                                "21",
+                                "27"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "assessmentName": "Multiplication",
+            "course": {
+                "courseName": "",
+                "courseId": 0,
+                "topic": "Multiplication tables"
+            }
+        }
+    ]
+}
