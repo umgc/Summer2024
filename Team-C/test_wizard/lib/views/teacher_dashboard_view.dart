@@ -71,7 +71,7 @@ class TeacherDashboard extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text(status == 'guest' ? 'Login' : 'Logout'),
+                        child: Text(status == 'guest' ? 'Login with Moodle' : 'Logout'),
                       ),
                     ],
                   ),
