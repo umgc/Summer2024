@@ -37,6 +37,18 @@ class TWAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: const Color(0xFFFF6600),
       foregroundColor: Colors.white,
+      automaticallyImplyLeading: implyLeading,
+      leading: implyLeading
+          ? Tooltip(
+              message: 'Back',
+              child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            )
+          : null,
       bottom: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF0072BB),
@@ -48,7 +60,6 @@ class TWAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      automaticallyImplyLeading: implyLeading,
       title: Row(
         children: [
           // Leading widget

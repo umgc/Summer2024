@@ -11,6 +11,7 @@ class CreateBaseAssessmentView extends StatelessWidget {
       appBar: TWAppBar(
         context: context,
         screenTitle: 'Create Assessment',
+        implyLeading: true,
       ),
       body: const CreateBaseAssessmentForm(),
     );

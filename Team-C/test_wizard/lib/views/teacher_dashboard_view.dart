@@ -20,71 +20,99 @@ class TeacherDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffe6f2ff),
-      appBar: TWAppBar(context: context, screenTitle: "Teacher's Dashboard"),
+      appBar: TWAppBar(context: context, screenTitle: "Teacher's Dashboard", implyLeading: true,),
       body: ScrollContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 20),
-            Center(
-              child: SizedBox(
-                width: 300,
-                child: Image.asset('lib/assets/wizard2.png'),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff0072bb),
-                    foregroundColor: Colors.white, // Ensure text color is white
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const CreateBaseAssessmentView(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 0.0), // Adjust vertical padding
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 5), // Space between TWAppBar and content
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Tooltip(
+                    message: 'Wizard Image',
+                    child: Container(
+                      padding: EdgeInsets.all(5), // Adjust the padding to make space for the border
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5), // Adjust border radius for the image
+                        child: Image.asset(
+                          'lib/assets/wizard2.png',
+                          width: 250, // Adjust the width as needed
+                          height: 150, // Adjust the height as needed
+                          fit: BoxFit.fitHeight, // Adjust the fit property as needed
+                          semanticLabel: 'Wizard Image', // Alt text for accessibility
+                        ),
                       ),
-                    );
-                  },
-                  child: const Text('Create Assessment'),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffff6600),
-                    foregroundColor: Colors.white, // Ensure text color is white
-                  ),
-                  onPressed: () {
-                    if (status != 'guest') {
-                      Provider.of<UserProvider>(context, listen: false).logout();
-                    }
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
-                      ),
-                    );
-                  },
-                  child:
-                      Text(status == 'guest' ? 'Login with Moodle' : 'Logout'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            status == 'guest'
-                ? const Center(
-                    child: Text(
-                      'For full access, login is required.',
-                      style: TextStyle(fontSize: 16, color: Color(0xff0072bb)),
                     ),
-                  )
-                : const SizedBox(
-                    height: 0,
                   ),
-            const SizedBox(height: 20),
-            const SearchFilter(),
-          ],
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (status == 'guest')
+                        const Text(
+                          'Login with Moodle for full access.',
+                          style: TextStyle(fontSize: 14, color: Color(0xff0072bb)),
+                        ),
+                      const SizedBox(height: 5), // Space between text and button
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepOrange,
+                          foregroundColor: Colors.white, // Ensure text color is white
+                        ),
+                        onPressed: () {
+                          if (status != 'guest') {
+                            Provider.of<UserProvider>(context, listen: false).logout();
+                          }
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        },
+                        child: Text(status == 'guest' ? 'Login' : 'Logout'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10), // Space between image and login button
+              Row(
+                children: [
+                  Expanded(
+                    child: const Text(
+                      "Assessments",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff0072bb),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff0072bb),
+                      foregroundColor: Colors.white, // Ensure text color is white
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CreateBaseAssessmentView(),
+                        ),
+                      );
+                    },
+                    child: const Text('Create Assessment'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10), // Space between title and search box
+              Center(
+                child: const SearchFilter(), // Centered search filter
+              ),
+              const SizedBox(height: 20), // Space before other content
+            ],
+          ),
         ),
       ),
     );
@@ -105,12 +133,12 @@ class SearchFilterState extends State<SearchFilter> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.center, // Center search filter content
       children: [
         TextField(
           controller: _controller,
           decoration: InputDecoration(
-            labelText: 'Search...',
+            labelText: 'Search Assessments...',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
             ),
